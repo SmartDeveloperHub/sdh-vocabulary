@@ -1,0 +1,4 @@
+*.ttl linguist-language=RDF/Turtle
+*.rdf linguist-language=RDF/XML
+*.owl linguist-language=OWL
+*.sparql linguist-language=Sparql
