@@ -1,0 +1,370 @@
+#
+# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+#   This file is part of the Smart Developer Hub Project:
+#     http://smartdeveloperhub.github.io/
+#
+#   Center for Open Middleware
+#     http://www.centeropenmiddleware.com/
+# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+#   Copyright (C) 2015 Center for Open Middleware.
+# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#             http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+#   Artifact    : org.sdh.vocabulary:sdh-vocabulary:1.0.0-SNAPSHOT
+#   Bundle      : sdh-vocabulary-1.0.0-SNAPSHOT.jar
+# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+#
+
+##----------------------------------------------------------------------------##
+#     __    __    __    __    __    __    __    __    __    __    __    __     #
+#  __/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__  #
+# /  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \ #
+# \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/ #
+# /  \__/                                                                 /  \ #
+# \__/                     _____                      __                  \__/ #
+# /  \                    / ___/____ ___  ____ ______/ /_                 /  \ #
+# \__/                    \__ \/ __ `__ \/ __ `/ ___/ __/                 \__/ #
+# /  \                   ___/ / / / / / / /_/ / /  / /_                   /  \ #
+# \__/    ____          /____/_/_/_/ /_/\__,_/_/   \__/   __  __      __  \__/ #
+# /  \   / __ \___ _   _____  / /___  ____  ___  _____   / / / /_  __/ /_ /  \ #
+# \__/  / / / / _ \ | / / _ \/ / __ \/ __ \/ _ \/ ___/  / /_/ / / / / __ \\__/ #
+# /  \ / /_/ /  __/ |/ /  __/ / /_/ / /_/ /  __/ /     / __  / /_/ / /_/ //  \ #
+# \__//_____/\___/|___/\___/_/\____/ .___/\___/_/     /_/ /_/\__,_/_.___/ \__/ #
+# /  \                            /_/                                     /  \ #
+# \__/                __   __        __                  __               \__/ #
+# /  \          \  / /  \ /  `  /\  |__) |  | |     /\  |__) \ /          /  \ #
+# \__/           \/  \__/ \__, /~~\ |__) \__/ |___ /~~\ |  \  |           \__/ #
+# /  \__                                                                  /  \ #
+# \__/  \__    __    __    __    __    __    __    __    __    __    __   \__/ #
+# /  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \ #
+# \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/ #
+#    \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/    #
+#                                                                              #
+##----------------------------------------------------------------------------##
+#   __        __   __                            __   __   ___                 #
+#  /  ` |    |  \ /  \ |\/|  /\  | |\ |    |\/| /  \ |  \ |__  |               #
+#  \__, |    |__/ \__/ |  | /~~\ | | \|    |  | \__/ |__/ |___ |___            #
+#        __  __             ___                                                #
+#  |\/| /  \ |  \ |  | |    |__                                                #
+#  |  | \__/ |__/ \__/ |___ |___                                               # 
+#                                                                              #
+##----------------------------------------------------------------------------##
+
+##-- PREFIXES ----------------------------------------------------------------##
+
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+@prefix sdh:      <${vocabulary.base}sdh#> .
+@prefix platform: <${vocabulary.base}platform#> .
+@prefix ci:       <${vocabulary.base}ci#> .
+@prefix scm:      <${vocabulary.base}scm#> .
+@prefix org:      <${vocabulary.base}organization#> .
+@prefix metrics:  <${vocabulary.base}metrics#> .
+
+@prefix oslc:        <http://open-services.net/ns/core#> .
+@prefix oslc_auto:   <http://open-services.net/ns/auto#> .
+@prefix oslc_asset:  <http://open-services.net/ns/asset#> .
+@prefix oslc_config: <http://open-services.net/ns/config#> .
+
+@prefix doap:    <http://usefulinc.com/ns/doap#> .
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix dcterms: <http://purl.org/dc/terms/> . 
+
+# PROV ontology
+@prefix prov: <http://www.w3.org/ns/prov#> .
+# Dublin Core Metadata Element Set, Version 1.1
+@prefix dc:   <http://purl.org/dc/elements/1.1/> .
+# Web of Trust Ontology
+@prefix wot:  <http://xmlns.com/wot/0.1/> . 
+# SemWeb Vocab Status Ontology
+@prefix vs:   <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+# Resource Directory Description Language (RDDL)
+@prefix rddl: <http://www.rddl.org/> .
+
+##-- MODULE DECLARATION ------------------------------------------------------##
+
+<${vocabulary.base}ci> rdf:type owl:Ontology ;
+  owl:versionIRI <${vocabulary.base}v1/ci> ;
+  owl:imports 
+    <${vocabulary.base}v1/platform> , 
+    <${vocabulary.base}v1/oslc_auto_plus> .
+
+##-- ENUMERATIONS-------------------------------------------------------------##
+
+ci:ExecutionState a owl:Class ;
+  owl:equivalentClass [ 
+    a owl:Class ;
+    owl:oneOf (
+      oslc_auto:inProgress
+      oslc_auto:canceled
+      oslc_auto:complete
+    )
+  ] .
+
+ci:ExecutionVerdict a owl:Class ;
+  owl:equivalentClass [ 
+    a owl:Class ;
+    owl:oneOf (
+      oslc_auto:passed
+      oslc_auto:failed
+      oslc_auto:warning
+      oslc_auto:unavailable
+      oslc_auto:error
+    )
+  ] .
+
+##-- CLASSES -----------------------------------------------------------------##
+
+ci:Build a owl:Class ;
+  rdfs:subClassOf oslc_auto:AutomationPlan ;
+  rdfs:subClassOf [ 
+    a owl:Restriction ;
+    owl:onProperty ci:hasExecution ;
+    owl:minQualifiedCardinality "0"^^xsd:nonNegativeInteger ;
+    owl:onClass ci:Execution
+  ] , [ 
+    a owl:Restriction ;
+    owl:onProperty ci:location ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger ;
+  ] , [ 
+    a owl:Restriction ;
+    owl:onProperty ci:codebase ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger ;
+  ] ;
+  owl:disjointUnionOf (
+    ci:SimpleBuild
+    ci:CompositeBuild
+  ) .
+
+ci:SubBuild a owl:Class ;
+  rdfs:subClassOf ci:Build .
+
+ci:CompositeBuild a owl:Class ;
+  rdfs:subClassOf ci:Build ;
+  rdfs:subClassOf [ 
+    a owl:Restriction ;
+    owl:onProperty ci:includesBuild ;
+    owl:minCardinality "1"^^xsd:nonNegativeInteger 
+  ] .
+
+ci:Execution a owl:Class ;
+  rdfs:subClassOf oslc_auto:AutomationRequest ;
+  rdfs:subClassOf [ 
+    a owl:Restriction ;
+    owl:onProperty oslc_auto:state ;
+    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+    owl:onClass ci:ExecutionState
+  ] , [ 
+    a owl:Restriction ;
+    owl:onProperty ci:hasResult ;
+    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+    owl:onClass ci:ExecutionResult 
+  ] , [ 
+    a owl:Restriction ;
+    owl:onProperty ci:location ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger ;
+  ] ;
+  owl:disjointUnionOf (
+    ci:RunningExecution
+    ci:AbortedExecution
+    ci:FinishedExecution
+  ) .
+
+ci:RunningExecution a owl:Class ;
+  rdfs:subClassOf ci:Execution ;
+  rdfs:subClassOf [ 
+    a owl:Restriction ;
+    owl:onProperty oslc_auto:state ;
+    owl:hasValue oslc_auto:inProgress
+  ] , [ 
+    a owl:Restriction ;
+    owl:onProperty ci:hasResult ;
+    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+    owl:onClass ci:UnavailableExecutionResult 
+  ] .
+
+ci:AbortedExecution a owl:Class ;
+  rdfs:subClassOf ci:Execution ;
+  rdfs:subClassOf [ 
+    a owl:Restriction ;
+    owl:onProperty oslc_auto:state ;
+    owl:hasValue oslc_auto:canceled
+  ] , [ 
+    a owl:Restriction ;
+    owl:onProperty ci:hasResult ;
+    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+    owl:onClass ci:UnavailableExecutionResult;
+  ] .
+
+ci:FinishedExecution a owl:Class ;
+  rdfs:subClassOf ci:Execution ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty oslc_auto:state ;
+    owl:hasValue oslc_auto:complete
+  ] , [ 
+    a owl:Restriction ;
+    owl:onProperty ci:hasResult ;
+    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+    owl:onClass ci:AvailableExecutionResult 
+  ] , [ 
+    a owl:Restriction ;
+    owl:onProperty ci:finished ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger ;
+  ].
+
+ci:ExecutionResult a owl:Class ;
+  rdfs:subClassOf oslc_auto:AutomationResult ;
+  rdfs:subClassOf [ 
+    a owl:Restriction ;
+    owl:onProperty oslc_auto:verdict ;
+    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+    owl:onClass ci:ExecutionVerdict
+  ] , [ 
+    a owl:Restriction ;
+    owl:onProperty ci:location ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger ;
+  ] ;
+  owl:disjointUnionOf (
+    ci:UnavailableExecutionResult
+    ci:AvailableExecutionResult
+  ) .
+
+ci:UnavailableExecutionResult a owl:Class ;
+  rdfs:subClassOf ci:ExecutionResult ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty oslc_auto:state ;
+    owl:allValuesFrom [
+      a owl:Class ;
+      owl:oneOf ( 
+        oslc_auto:inProgress
+        oslc_auto:canceled
+      ) 
+    ] 
+  ] , [ 
+    a owl:Restriction ;
+    owl:onProperty oslc_auto:verdict ;
+    owl:hasValue oslc_auto:unavailable
+  ] .
+
+ci:AvailableExecutionResult a owl:Class ;
+  rdfs:subClassOf ci:ExecutionResult ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty oslc_auto:state ;
+    owl:hasValue oslc_auto:complete
+  ] , [ 
+    a owl:Restriction ;
+    owl:onProperty oslc_auto:verdict ;
+    owl:allValuesFrom [
+      a owl:Class ;
+      owl:oneOf ( 
+        oslc_auto:passed
+        oslc_auto:warning
+        oslc_auto:failed
+      ) 
+    ] 
+  ] .
+
+ci:CIHarvester a owl:Class ;
+  rdfs:subClassOf platform:Harvester ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty platform:vocabulary ;
+    owl:someValuesFrom ci:CIVocabulary 
+  ] , [ 
+    a owl:Restriction ;
+    owl:onProperty platform:hasResourceType ;
+    owl:hasValue ci:Build
+  ] , [ 
+    a owl:Restriction ;
+    owl:onProperty platform:providesDomain ;
+    owl:hasValue ci:CIDomain ;
+  ] .  
+
+ci:CIVocabulary a owl:Class ;
+  rdfs:subClassOf platform:Vocabulary ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty platform:implements ;
+    owl:hasValue ci:CIDomain
+  ] .  
+
+##-- PROPERTIES --------------------------------------------------------------##
+
+ci:includesBuild
+  a owl:ObjectProperty ;
+  a owl:InverseFunctionalProperty ;
+  rdfs:domain ci:CompositeBuild ;
+  rdfs:range ci:SubBuild .
+
+ci:hasExecution 
+  a owl:ObjectProperty ;
+  a owl:InverseFunctionalProperty ;
+  owl:inverseOf oslc_auto:executesAutomationPlan .
+
+ci:hasResult 
+  a owl:ObjectProperty ;
+  a owl:FunctionalProperty ;
+  a owl:InverseFunctionalProperty ;
+  owl:inverseOf oslc_auto:producedByAutomationRequest .
+
+ci:finished 
+  a owl:DatatypeProperty ;
+  rdfs:range xsd:dateTime.
+
+ci:hasBuild a owl:ObjectProperty ;
+  a owl:InverseFunctionalProperty ;
+  rdfs:subPropertyOf platform:hasResource ;
+  rdfs:domain ci:CIHarvester ;
+  rdfs:range ci:Build .
+
+ci:location a owl:DatatypeProperty ;
+  a owl:FunctionalProperty ;
+  rdfs:range xsd:anyURI .
+
+ci:codebase a owl:DatatypeProperty ;
+  a owl:FunctionalProperty ;
+  rdfs:domain ci:Build ;
+  rdfs:range xsd:anyURI .
+
+##-- INDIVIDUALS -------------------------------------------------------------##
+
+_:DifferentStates a owl:AllDifferent ;
+  owl:members (
+    oslc_auto:inProgress
+    oslc_auto:canceled
+    oslc_auto:complete
+  ) .
+
+_:DifferentVerdicts a owl:AllDifferent ;
+  owl:members (
+    oslc_auto:passed
+    oslc_auto:failed
+    oslc_auto:warning
+    oslc_auto:unavailable
+    oslc_auto:error
+  ) .
+
+ci:CIDomain a platform:Domain ;
+  platform:identifier "CI" ;
+  platform:title "Continuous Integration" ;
+  platform:description "Continuous Integration Domain" .
+
+##----------------------------------------------------------------------------##
+#  MODULE END                                                                  #
+##----------------------------------------------------------------------------##

@@ -1,0 +1,152 @@
+#
+# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+#   This file is part of the Smart Developer Hub Project:
+#     http://smartdeveloperhub.github.io/
+#
+#   Center for Open Middleware
+#     http://www.centeropenmiddleware.com/
+# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+#   Copyright (C) 2015 Center for Open Middleware.
+# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#             http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+#   Artifact    : org.sdh.vocabulary:sdh-vocabulary:1.0.0-SNAPSHOT
+#   Bundle      : sdh-vocabulary-1.0.0-SNAPSHOT.jar
+# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+#
+
+##-- DECLARATION -------------------------------------------------------------##
+
+@prefix owl:        <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:        <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms:    <http://purl.org/dc/terms/> .
+@prefix oslc_auto:  <http://open-services.net/ns/auto#> .
+@prefix platform:   <${vocabulary.base}platform#> .
+@prefix metrics:    <${vocabulary.base}metrics#> .
+@prefix ci:         <${vocabulary.base}ci#> .
+
+@base <${vocabulary.base}v1/> .
+
+<vocabulary> owl:imports <${vocabulary.base}v1/sdh> .
+
+##-- INDIVIDUALS--------------------------------------------------------------##
+
+<cis> 
+# a platform:MicroService ;
+  platform:vocabulary <cis#vocab> ;
+  ci:hasBuild <a1> .
+
+<cis#vocab> 
+ a ci:CIVocabulary ;
+#  platform:implements ci:CIDomain ;
+  platform:source "${vocabulary.base}v1/ci.ttl"^^xsd:anyURI .
+
+<a1> 
+# a ci:Build ;
+  dcterms:title "An example build" ;
+  dcterms:identifier "example-build" ;
+  dcterms:created "2015-04-28T09:00:00Z"^^xsd:dateTime ;
+  ci:location "http://ci.smartdeveloperhub.org/jobs/example-build"^^xsd:anyURI ;
+  ci:codebase "http://git.smartdeveloperhub.org/example-build"^^xsd:anyURI ;
+  ci:hasExecution <e1> .
+
+<e1> 
+  a ci:Execution ;
+  dcterms:title "Execution 1 of an example build" ;
+  dcterms:identifier "1" ;
+  dcterms:created "2015-04-28T09:30:00Z"^^xsd:dateTime ;
+  ci:location "http://ci.smartdeveloperhub.org/jobs/example-build/1/"^^xsd:anyURI ;
+#  oslc_auto:executesAutomationPlan <a1> ;
+  oslc_auto:state oslc_auto:complete ;
+  ci:finished "2015-04-28T10:00:00Z"^^xsd:dateTime ;
+  ci:hasResult <r1> .
+
+<r1> 
+  a ci:ExecutionResult ;
+  dcterms:title "Result of execution 1 of an example build" ;
+  dcterms:identifier "example-build/1" ;
+  dcterms:created "2015-04-28T10:00:00Z"^^xsd:dateTime ;
+  oslc_auto:state oslc_auto:complete ;
+  oslc_auto:verdict oslc_auto:passed ;
+#  oslc_auto:producedByAutomationRequest <e1> ;
+  oslc_auto:reportsOnAutomationPlan <a1> ;
+  ci:location "http://ci.smartdeveloperhub.org/jobs/example-build/1/"^^xsd:anyURI .
+
+<ep1> a platform:Endpoint;
+  platform:providesOperation <ep1/op1> .
+
+<ep1/op1> a platform:Operation ;
+  platform:identifier "get-total-builds" ;
+  platform:title "getTotalBuilds" ;
+  platform:description "Retrieve the total number of builds available between ?begin and ?end" ;
+  platform:hasResult <ep1/op1#result> ;
+  platform:hasSignature <ep1/op1#signature> .
+
+<ep1/op1#result> a platform:Result ;
+  platform:targetType xsd:unsignedLong ;
+  platform:isSequence "false"^^xsd:boolean .
+
+<ep1/op1#signature> a platform:Signature ;
+  platform:hasParameter <ep1/op1#beginParam> , <ep1/op1#endParam> .
+
+<ep1/op1#beginParam> a platform:Parameter ;
+  platform:name "begin" ;
+  platform:targetType xsd:dateTime ;
+  platform:isOptional "false"^^xsd:boolean ;
+  platform:isSequence "false"^^xsd:boolean .
+
+<ep1/op1#endParam> a platform:Parameter ;
+  platform:name "end" ;
+  platform:targetType xsd:dateTime ;
+  platform:isOptional "false"^^xsd:boolean ;
+  platform:isSequence "false"^^xsd:boolean .
+
+<m1> a metrics:MetricDefinition ;
+  platform:identifier "get-total-builds" ;
+  platform:title "getTotalBuilds" ;
+  platform:description "Retrieve the total number of builds available between ?begin and ?end" ;
+  platform:hasResult <m1#result> ;
+  platform:hasSignature <m1#signature> .
+
+<m1#result> a platform:Result ;
+  platform:targetType xsd:unsignedLong ;
+  platform:isSequence "false"^^xsd:boolean .
+
+<m1#signature> a platform:Signature ;
+  platform:hasParameter <m1#beginParam> , <m1#endParam> .
+
+<m1#beginParam> a platform:Parameter ;
+  platform:name "begin" ;
+  platform:targetType xsd:dateTime ;
+  platform:isOptional "false"^^xsd:boolean ;
+  platform:isSequence "false"^^xsd:boolean .
+
+<m1#endParam> a platform:Parameter ;
+  platform:name "end" ;
+  platform:targetType xsd:dateTime ;
+  platform:isOptional "false"^^xsd:boolean ;
+  platform:isSequence "false"^^xsd:boolean .
+
+<ms>
+# a metrics:MicroService ;
+  platform:vocabulary <ms#vocab> ;
+  metrics:calculatesMetric <m1> ;
+  metrics:hasEndpoint <ms/e1> .
+
+<ms#vocab> 
+ a metrics:MetricVocabulary ;
+#  platform:implements metrics:MetricDomain ;
+  platform:source "${vocabulary.base}v1/metrics.ttl"^^xsd:anyURI .
+
+<ms/e1> a metrics:MetricEndpoint ;
+  metrics:supports <m1> .

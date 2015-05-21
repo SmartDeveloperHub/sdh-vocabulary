@@ -1,0 +1,237 @@
+#
+# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+#   This file is part of the Smart Developer Hub Project:
+#     http://smartdeveloperhub.github.io/
+#
+#   Center for Open Middleware
+#     http://www.centeropenmiddleware.com/
+# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+#   Copyright (C) 2015 Center for Open Middleware.
+# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#             http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+#   Artifact    : org.sdh.vocabulary:sdh-vocabulary:1.0.0-SNAPSHOT
+#   Bundle      : sdh-vocabulary-1.0.0-SNAPSHOT.jar
+# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+#
+
+##----------------------------------------------------------------------------##
+#     __    __    __    __    __    __    __    __    __    __    __    __     #
+#  __/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__  #
+# /  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \ #
+# \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/ #
+# /  \__/                                                                 /  \ #
+# \__/                     _____                      __                  \__/ #
+# /  \                    / ___/____ ___  ____ ______/ /_                 /  \ #
+# \__/                    \__ \/ __ `__ \/ __ `/ ___/ __/                 \__/ #
+# /  \                   ___/ / / / / / / /_/ / /  / /_                   /  \ #
+# \__/    ____          /____/_/_/_/ /_/\__,_/_/   \__/   __  __      __  \__/ #
+# /  \   / __ \___ _   _____  / /___  ____  ___  _____   / / / /_  __/ /_ /  \ #
+# \__/  / / / / _ \ | / / _ \/ / __ \/ __ \/ _ \/ ___/  / /_/ / / / / __ \\__/ #
+# /  \ / /_/ /  __/ |/ /  __/ / /_/ / /_/ /  __/ /     / __  / /_/ / /_/ //  \ #
+# \__//_____/\___/|___/\___/_/\____/ .___/\___/_/     /_/ /_/\__,_/_.___/ \__/ #
+# /  \                            /_/                                     /  \ #
+# \__/                __   __        __                  __               \__/ #
+# /  \          \  / /  \ /  `  /\  |__) |  | |     /\  |__) \ /          /  \ #
+# \__/           \/  \__/ \__, /~~\ |__) \__/ |___ /~~\ |  \  |           \__/ #
+# /  \__                                                                  /  \ #
+# \__/  \__    __    __    __    __    __    __    __    __    __    __   \__/ #
+# /  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \ #
+# \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/ #
+#    \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/    #
+#                                                                              #
+##----------------------------------------------------------------------------##
+#   __   __        __               ___  __             ___    __              #
+#  /  \ /__` |    /  `     /\  |  |  |  /  \  |\/|  /\   |  | /  \ |\ |        #
+#  \__/ .__/ |___ \__,    /~~\ \__/  |  \__/  |  | /~~\  |  | \__/ | \|        #
+#                                                                              ##                                                                              #
+#        __   __             ___                                               #
+#  |\/| /  \ |  \ |  | |    |__                                                #
+#  |  | \__/ |__/ \__/ |___ |___                                               #
+#                                                                              #
+##----------------------------------------------------------------------------##
+
+##-- PREFIXES ----------------------------------------------------------------##
+
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+@prefix sdh:      <${vocabulary.base}sdh#> .
+@prefix platform: <${vocabulary.base}platform#> .
+@prefix ci:       <${vocabulary.base}ci#> .
+@prefix scm:      <${vocabulary.base}scm#> .
+@prefix org:      <${vocabulary.base}organization#> .
+@prefix metrics:  <${vocabulary.base}metrics#> .
+
+@prefix oslc:        <http://open-services.net/ns/core#> .
+@prefix oslc_auto:   <http://open-services.net/ns/auto#> .
+@prefix oslc_asset:  <http://open-services.net/ns/asset#> .
+@prefix oslc_config: <http://open-services.net/ns/config#> .
+
+@prefix doap:    <http://usefulinc.com/ns/doap#> .
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix dcterms: <http://purl.org/dc/terms/> . 
+
+# PROV ontology
+@prefix prov: <http://www.w3.org/ns/prov#> .
+# Dublin Core Metadata Element Set, Version 1.1
+@prefix dc:   <http://purl.org/dc/elements/1.1/> .
+# Web of Trust Ontology
+@prefix wot:  <http://xmlns.com/wot/0.1/> . 
+# SemWeb Vocab Status Ontology
+@prefix vs:   <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+# Resource Directory Description Language (RDDL)
+@prefix rddl: <http://www.rddl.org/> .
+
+##-- MODULE DECLARATION ------------------------------------------------------##
+
+<${vocabulary.base}oslc_auto_plus> rdf:type owl:Ontology ;
+  owl:versionIRI <${vocabulary.base}v1/oslc_auto_plus> ;
+  owl:imports 
+    <${vocabulary.base}v1/oslc_core_plus> .
+# We should import and refine, but as the implementation is flawed we need to
+# provide the implementation in here
+#    <${vocabulary.base}external/oslc/auto.rdf> .
+
+##-- ENUMERATIONS-------------------------------------------------------------##
+
+##-- CLASSES -----------------------------------------------------------------##
+
+oslc_auto:AutomationPlan a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty dcterms:identifier ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger 
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty dcterms:created ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger 
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty dcterms:title ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger 
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty dcterms:description;
+    owl:maxCardinality "1"^^xsd:nonNegativeInteger
+  ] .
+
+oslc_auto:AutomationRequest a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty dcterms:identifier ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger 
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty dcterms:created ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger 
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty dcterms:title ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger 
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty dcterms:description ;
+    owl:maxCardinality "1"^^xsd:nonNegativeInteger 
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty oslc_auto:executesAutomationPlan ;
+    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+    owl:onClass oslc_auto:AutomationPlan
+  ] , [ 
+    a owl:Restriction ;
+    owl:onProperty oslc_auto:state ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger 
+  ] .
+
+oslc_auto:AutomationResult a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty dcterms:identifier ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger 
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty dcterms:created ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger 
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty dcterms:title ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger 
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty dcterms:description ;
+    owl:maxCardinality "1"^^xsd:nonNegativeInteger
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty oslc_auto:producedByAutomationRequest ;
+    owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+    owl:onClass oslc_auto:AutomationRequest 
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty oslc_auto:reportsOnAutomationPlan ;
+    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+    owl:onClass oslc_auto:AutomationPlan 
+  ] , [ 
+    a owl:Restriction ;
+    owl:onProperty oslc_auto:state ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger 
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty oslc_auto:verdict ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger
+  ] .
+
+##-- PROPERTIES --------------------------------------------------------------##
+
+oslc_auto:reportsOnAutomationPlan a owl:ObjectProperty ;
+  rdfs:domain oslc_auto:AutomationResult .
+  
+oslc_auto:executesAutomationPlan a owl:ObjectProperty ;
+  rdfs:domain oslc_auto:AutomationRequest .
+
+oslc_auto:producedByAutomationRequest a owl:ObjectProperty ;
+  rdfs:domain oslc_auto:AutomationResult .
+
+oslc_auto:state a owl:ObjectProperty .
+
+oslc_auto:verdict a owl:ObjectProperty ;
+  rdfs:domain oslc_auto:AutomationResult .
+
+# In order to enable the following property chain, the cardinality restriction
+# of the property in oslc_auto:ExecutionResult should be removed. Also, to
+# ensure the traceability the max cardinality restriction of 
+# oslc_auto:producedByAutomationRequest in oslc_auto:ExecutionResult should be
+# change to an strict cardinality restriction.
+# oslc_auto:reportsOnAutomationPlan 
+#  owl:propertyChainAxiom ( 
+#    oslc_auto:producedByAutomationRequest 
+#    oslc_auto:executesAutomationPlan 
+#  ) .
+
+##-- INDIVIDUALS -------------------------------------------------------------##
+
+##-- REFINEMENTS -------------------------------------------------------------##
+
+dcterms:created a owl:DatatypeProperty .
+
+dcterms:identifier a owl:DatatypeProperty .
+
+dcterms:title a owl:DatatypeProperty .
+
+dcterms:description a owl:DatatypeProperty .
+
+##----------------------------------------------------------------------------##
+#  MODULE END                                                                  #
+##----------------------------------------------------------------------------##

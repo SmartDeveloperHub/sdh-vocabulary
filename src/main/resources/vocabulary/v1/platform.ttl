@@ -1,0 +1,286 @@
+#
+# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+#   This file is part of the Smart Developer Hub Project:
+#     http://smartdeveloperhub.github.io/
+#
+#   Center for Open Middleware
+#     http://www.centeropenmiddleware.com/
+# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+#   Copyright (C) 2015 Center for Open Middleware.
+# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#             http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+#   Artifact    : org.sdh.vocabulary:sdh-vocabulary:1.0.0-SNAPSHOT
+#   Bundle      : sdh-vocabulary-1.0.0-SNAPSHOT.jar
+# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+#
+
+##----------------------------------------------------------------------------##
+#     __    __    __    __    __    __    __    __    __    __    __    __     #
+#  __/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__  #
+# /  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \ #
+# \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/ #
+# /  \__/                                                                 /  \ #
+# \__/                     _____                      __                  \__/ #
+# /  \                    / ___/____ ___  ____ ______/ /_                 /  \ #
+# \__/                    \__ \/ __ `__ \/ __ `/ ___/ __/                 \__/ #
+# /  \                   ___/ / / / / / / /_/ / /  / /_                   /  \ #
+# \__/    ____          /____/_/_/_/ /_/\__,_/_/   \__/   __  __      __  \__/ #
+# /  \   / __ \___ _   _____  / /___  ____  ___  _____   / / / /_  __/ /_ /  \ #
+# \__/  / / / / _ \ | / / _ \/ / __ \/ __ \/ _ \/ ___/  / /_/ / / / / __ \\__/ #
+# /  \ / /_/ /  __/ |/ /  __/ / /_/ / /_/ /  __/ /     / __  / /_/ / /_/ //  \ #
+# \__//_____/\___/|___/\___/_/\____/ .___/\___/_/     /_/ /_/\__,_/_.___/ \__/ #
+# /  \                            /_/                                     /  \ #
+# \__/                __   __        __                  __               \__/ #
+# /  \          \  / /  \ /  `  /\  |__) |  | |     /\  |__) \ /          /  \ #
+# \__/           \/  \__/ \__, /~~\ |__) \__/ |___ /~~\ |  \  |           \__/ #
+# /  \__                                                                  /  \ #
+# \__/  \__    __    __    __    __    __    __    __    __    __    __   \__/ #
+# /  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \ #
+# \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/ #
+#    \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/    #
+#                                                                              #
+##----------------------------------------------------------------------------##
+#   __            ___  ___  __   __                 __   __             ___    # 
+#  |__) |     /\   |  |__  /  \ |__)  |\/|    |\/| /  \ |  \ |  | |    |__     # 
+#  |    |___ /~~\  |  |    \__/ |  \  |  |    |  | \__/ |__/ \__/ |___ |___    # 
+#                                                                              #
+##----------------------------------------------------------------------------##
+
+##-- PREFIXES ----------------------------------------------------------------##
+
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+@prefix sdh:      <${vocabulary.base}sdh#> .
+@prefix platform: <${vocabulary.base}platform#> .
+@prefix ci:       <${vocabulary.base}ci#> .
+@prefix scm:      <${vocabulary.base}scm#> .
+@prefix org:      <${vocabulary.base}organization#> .
+@prefix metrics:  <${vocabulary.base}metrics#> .
+
+@prefix oslc:        <http://open-services.net/ns/core#> .
+@prefix oslc_auto:   <http://open-services.net/ns/auto#> .
+@prefix oslc_asset:  <http://open-services.net/ns/asset#> .
+@prefix oslc_config: <http://open-services.net/ns/config#> .
+
+@prefix doap:    <http://usefulinc.com/ns/doap#> .
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix dcterms: <http://purl.org/dc/terms/> . 
+
+# PROV ontology
+@prefix prov:   <http://www.w3.org/ns/prov#> .
+# Dublin Core Metadata Element Set, Version 1.1
+@prefix dc:     <http://purl.org/dc/elements/1.1/> .
+# Dublin Core Metadata Initiative Type Vocabulary
+@prefix dctype: <http://purl.org/dc/dcmitype/> .
+# Web of Trust Ontology
+@prefix wot:    <http://xmlns.com/wot/0.1/> . 
+# SemWeb Vocab Status Ontology
+@prefix vs:     <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+# Resource Directory Description Language (RDDL)
+@prefix rddl:   <http://www.rddl.org/> .
+
+##-- MODULE DECLARATION ------------------------------------------------------##
+
+<${vocabulary.base}platform> rdf:type owl:Ontology ;
+  owl:versionIRI <${vocabulary.base}v1/platform> ;
+# TODO: Import simplified versions
+  owl:imports 
+    <${vocabulary.base}external/dcmi/dcterms.rdf> ,
+    <${vocabulary.base}external/dcmi/dctype.rdf> .
+
+##-- ENUMERATIONS-------------------------------------------------------------##
+
+##-- CLASSES -----------------------------------------------------------------##
+
+platform:MicroService a owl:Class ;
+  rdfs:subClassOf dctype:Service ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty platform:domain ;
+    owl:minCardinality "1"^^xsd:nonNegativeInteger
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty platform:vocabulary ;
+    owl:minCardinality "1"^^xsd:nonNegativeInteger
+  ] .
+
+platform:LinkedDataMicroService a owl:Class ;
+  rdfs:subClassOf platform:MicroService ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty platform:providesDomain ;
+    owl:minCardinality "1"^^xsd:nonNegativeInteger
+  ] .
+
+platform:Harvester a owl:Class ;
+  rdfs:subClassOf platform:LinkedDataMicroService .
+
+platform:Domain a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty platform:identifier ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger .
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty platform:title ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger .
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty platform:description ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger .
+  ] .
+
+platform:Vocabulary a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty platform:implements ;
+    owl:minCardinality "1"^^xsd:nonNegativeInteger
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty platform:source ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger ;
+  ] .
+
+platform:Endpoint a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty platform:providesOperation ;
+    owl:minCardinality "1"^^xsd:nonNegativeInteger
+  ] .  
+
+platform:Operation a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty platform:identifier ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger .
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty platform:title ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger .
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty platform:description ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger .
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty platform:hasResult ;
+    owl:maxCardinality "1"^^xsd:nonNegativeInteger
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty platform:hasSignature;
+    owl:cardinality "1"^^xsd:nonNegativeInteger
+  ] .
+
+platform:Signature a owl:Class .
+  
+platform:ValueType a owl:Class ;
+  rdfs:subClassOf  [
+    a owl:Restriction ;
+    owl:onProperty platform:targetType;
+    owl:cardinality "1"^^xsd:nonNegativeInteger
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty platform:isSequence;
+    owl:cardinality "1"^^xsd:nonNegativeInteger
+  ] .
+
+platform:Result a owl:Class ;
+  rdfs:subClassOf platform:ValueType .
+
+platform:Parameter a owl:Class ;
+  rdfs:subClassOf platform:ValueType ;
+  rdfs:subClassOf  [
+    a owl:Restriction ;
+    owl:onProperty platform:name;
+    owl:cardinality "1"^^xsd:nonNegativeInteger
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty platform:isOptional;
+    owl:cardinality "1"^^xsd:nonNegativeInteger
+  ] .
+
+##-- PROPERTIES --------------------------------------------------------------##
+
+platform:domain a owl:ObjectProperty ;
+  rdfs:range platform:Domain .
+
+platform:providesDomain a owl:ObjectProperty ;
+  rdfs:domain platform:LinkedDataMicroService ;
+  rdfs:subPropertyOf platform:domain .
+
+platform:consumesDomain a owl:ObjectProperty ;
+  rdfs:domain platform:LinkedDataMicroService ;
+  rdfs:subPropertyOf platform:domain .
+
+platform:vocabulary a owl:ObjectProperty ;
+  rdfs:range platform:Vocabulary .
+
+platform:implements a owl:ObjectProperty ;
+  rdfs:domain platform:Vocabulary ;
+  rdfs:range platform:Domain .
+
+platform:providesOperation a owl:ObjectProperty ;
+  rdfs:domain platform:Endpoint ;
+  rdfs:range platform:Operation .
+
+platform:hasResult a owl:ObjectProperty ;
+  rdfs:domain platform:Operation ;
+  rdfs:range platform:Result .
+
+platform:hasSignature a owl:ObjectProperty ;
+  rdfs:domain platform:Operation ;
+  rdfs:range platform:Signature .
+
+platform:hasParameter a owl:ObjectProperty ;
+  rdfs:domain platform:Signature ;
+  rdfs:range platform:Parameter .
+
+platform:name a owl:ObjectProperty ;
+  rdfs:range xsd:string .
+
+platform:targetType a owl:ObjectProperty ;
+  rdfs:range rdfs:Class .
+
+platform:isSequence a owl:ObjectProperty ;
+  rdfs:range xsd:boolean .
+
+platform:isOptional a owl:ObjectProperty ;
+  rdfs:range xsd:boolean .
+
+##-- REFINEMENTS -------------------------------------------------------------##
+
+platform:source a owl:DatatypeProperty ;
+  rdfs:subPropertyOf dcterms:source ;
+  rdfs:range xsd:anyURI .
+
+platform:identifier a owl:DatatypeProperty ;
+  rdfs:subPropertyOf dcterms:identifier ;
+  rdfs:range xsd:string .
+
+platform:title a owl:DatatypeProperty ;
+  rdfs:subPropertyOf dcterms:title ;
+  rdfs:range xsd:string .
+
+platform:description a owl:DatatypeProperty ;
+  rdfs:subPropertyOf dcterms:description;
+  rdfs:range xsd:string .
+
+##-- INDIVIDUALS--------------------------------------------------------------##
+
+##----------------------------------------------------------------------------##
+#  MODULE END                                                                  #
+##----------------------------------------------------------------------------##

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+
+    #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+      This file is part of the Smart Developer Hub Project:
+        http://smartdeveloperhub.github.io/
+
+      Center for Open Middleware
+        http://www.centeropenmiddleware.com/
+    #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+      Copyright (C) 2015 Center for Open Middleware.
+    #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+      Licensed under the Apache License, Version 2.0 (the "License");
+      you may not use this file except in compliance with the License.
+      You may obtain a copy of the License at
+
+                http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing, software
+      distributed under the License is distributed on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+      See the License for the specific language governing permissions and
+      limitations under the License.
+    #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+      Artifact    : org.sdh.vocabulary:sdh-vocabulary:1.0.0-SNAPSHOT
+      Bundle      : sdh-vocabulary-1.0.0-SNAPSHOT.jar
+    #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+
+-->
+<catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    <uri id="User Entered Import Resolution" name="${vocabulary.base}v1/metrics" uri="${buildDirectoryURI}vocabulary/v1/metrics.ttl"/>
+    <uri id="User Entered Import Resolution" name="${vocabulary.base}v1/organization" uri="${buildDirectoryURI}vocabulary/v1/organization.ttl"/>
+    <uri id="User Entered Import Resolution" name="${vocabulary.base}v1/oslc_scm_plus" uri="${buildDirectoryURI}vocabulary/v1/oslc_scm_plus.ttl"/>
+    <uri id="User Entered Import Resolution" name="${vocabulary.base}v1/scm" uri="${buildDirectoryURI}vocabulary/v1/scm.ttl"/>
+    <uri id="User Entered Import Resolution" name="${vocabulary.base}v1/oslc_core_plus" uri="${buildDirectoryURI}vocabulary/v1/oslc_core_plus.ttl"/>
+    <uri id="User Entered Import Resolution" name="${vocabulary.base}v1/oslc_auto_plus" uri="${buildDirectoryURI}vocabulary/v1/oslc_auto_plus.ttl"/>
+    <uri id="User Entered Import Resolution" name="${vocabulary.base}v1/ci" uri="${buildDirectoryURI}vocabulary/v1/ci.ttl"/>
+    <uri id="User Entered Import Resolution" name="${vocabulary.base}external/dcmi/dctype.rdf" uri="${buildDirectoryURI}vocabulary/external/dcmi/dctype.rdf"/>
+    <uri id="User Entered Import Resolution" name="${vocabulary.base}external/dcmi/dcterms.rdf" uri="${buildDirectoryURI}vocabulary/external/dcmi/dcterms.rdf"/>
+    <uri id="User Entered Import Resolution" name="${vocabulary.base}v1/platform" uri="${buildDirectoryURI}vocabulary/v1/platform.ttl"/>
+    <uri id="User Entered Import Resolution" name="${vocabulary.base}v1/sdh" uri="${buildDirectoryURI}vocabulary/v1/sdh.ttl"/>
+    <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base=""/>
+</catalog>
