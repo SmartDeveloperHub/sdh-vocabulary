@@ -1,7 +1,7 @@
 /**
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  *   This file is part of the Smart Developer Hub Project:
- *     http://smartdeveloperhub.github.io/
+ *     http://www.smartdeveloperhub.org/
  *
  *   Center for Open Middleware
  *     http://www.centeropenmiddleware.com/
@@ -20,14 +20,50 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
- *   Artifact    : org.sdh.vocabulary:sdh-vocabulary:1.0.0-SNAPSHOT
+ *   Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:1.0.0-SNAPSHOT
  *   Bundle      : sdh-vocabulary-1.0.0-SNAPSHOT.jar
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  */
-package org.sdh.vocabulary.ci;
+package org.smartdeveloperhub.vocabulary.ci;
 
-interface Value {
+import java.util.EnumSet;
 
-	String lexicalForm();
+public enum State {
+	IN_PROGRESS("inProgress","Running",Verdict.UNAVAILABLE),
+	CANCELED("canceled","Aborted",Verdict.UNAVAILABLE),
+	COMPLETE("complete","Finished",Verdict.PASSED,Verdict.FAILED,Verdict.WARNING),
+	;
+
+	private final String[] types;
+	private final String resourceName;
+	private final EnumSet<Verdict> compatibleVerdicts;
+	final Verdict preferredVerdict;
+
+	private State(String name, String type,Verdict preferredVerdict, Verdict... otherCompatibleVerdicts) {
+		this.resourceName = "oslc_auto:"+name;
+		this.types=new String[] {
+			"oslc_auto:AutomationRequest",
+			"ci:Execution",
+			"ci:"+type+"Execution"
+		};
+		this.preferredVerdict = preferredVerdict;
+		this.compatibleVerdicts=EnumSet.of(preferredVerdict, otherCompatibleVerdicts);
+	}
+
+	String resourceName() {
+		return this.resourceName;
+	}
+
+	String[] types() {
+		return this.types;
+	}
+
+	Verdict preferredVerdict() {
+		return this.preferredVerdict;
+	}
+
+	boolean isCompatible(Verdict verdict) {
+		return this.compatibleVerdicts.contains(verdict);
+	}
 
 }

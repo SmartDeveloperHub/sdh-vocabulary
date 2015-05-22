@@ -2,7 +2,7 @@
 
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
       This file is part of the Smart Developer Hub Project:
-        http://smartdeveloperhub.github.io/
+        http://www.smartdeveloperhub.org/
 
       Center for Open Middleware
         http://www.centeropenmiddleware.com/
@@ -21,7 +21,7 @@
       See the License for the specific language governing permissions and
       limitations under the License.
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
-      Artifact    : org.sdh.vocabulary:sdh-vocabulary:1.0.0-SNAPSHOT
+      Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:1.0.0-SNAPSHOT
       Bundle      : sdh-vocabulary-1.0.0-SNAPSHOT.jar
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
 
@@ -37,12 +37,12 @@
 	<!-- =================================================================== -->
 
 	<parent>
-		<groupId>org.sdh</groupId>
+		<groupId>org.smartdeveloperhub</groupId>
 		<artifactId>sdh-build</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
-	<groupId>org.sdh.vocabulary</groupId>
+	<groupId>org.smartdeveloperhub.vocabulary</groupId>
 	<artifactId>sdh-vocabulary</artifactId>
 
 	<!-- =================================================================== -->
@@ -194,7 +194,7 @@
 				<filtering>true</filtering>
 				<includes>
 					<include>vocabulary${file.separator}v1${file.separator}*.ttl</include>
-					<include>org${file.separator}sdh${file.separator}vocabulary${file.separator}vocabulary.properties</include>
+					<include>org${file.separator}smartdeveloperhub${file.separator}vocabulary${file.separator}vocabulary.properties</include>
 				</includes>
 			</resource>
 			<resource>

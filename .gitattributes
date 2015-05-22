@@ -1,2 +1,2 @@
-*.ttl linguist-language=Turtle
-*.sparql linguist-language=SPARQL
+**/*.ttl linguist-language=Turtle
+**/*.sparql linguist-language=SPARQL

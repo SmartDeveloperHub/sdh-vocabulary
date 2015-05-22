@@ -1,7 +1,7 @@
 /**
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  *   This file is part of the Smart Developer Hub Project:
- *     http://smartdeveloperhub.github.io/
+ *     http://www.smartdeveloperhub.org/
  *
  *   Center for Open Middleware
  *     http://www.centeropenmiddleware.com/
@@ -20,34 +20,43 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
- *   Artifact    : org.sdh.vocabulary:sdh-vocabulary:1.0.0-SNAPSHOT
+ *   Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:1.0.0-SNAPSHOT
  *   Bundle      : sdh-vocabulary-1.0.0-SNAPSHOT.jar
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  */
-package org.sdh.vocabulary.ci;
+package org.smartdeveloperhub.vocabulary.ci;
 
-import java.util.EnumSet;
-
-public enum State {
-	IN_PROGRESS("inProgress","Running",Verdict.UNAVAILABLE),
-	CANCELED("canceled","Aborted",Verdict.UNAVAILABLE),
-	COMPLETE("complete","Finished",Verdict.PASSED,Verdict.FAILED,Verdict.WARNING),
+public enum BuildType {
+	BUILD(),
+	SUB("Sub"),
+	COMPOSITE("Composite"),
 	;
 
 	private final String[] types;
 	private final String resourceName;
-	private final EnumSet<Verdict> compatibleVerdicts;
-	final Verdict preferredVerdict;
 
-	private State(String name, String type,Verdict preferredVerdict, Verdict... otherCompatibleVerdicts) {
-		this.resourceName = "oslc_auto:"+name;
-		this.types=new String[] {
-			"oslc_auto:AutomationRequest",
-			"ci:Execution",
-			"ci:"+type+"Execution"
-		};
-		this.preferredVerdict = preferredVerdict;
-		this.compatibleVerdicts=EnumSet.of(preferredVerdict, otherCompatibleVerdicts);
+	private BuildType() {
+		this(
+			new String[] {
+				"oslc_auto:AutomationPlan",
+				"ci:Build"
+			}
+		);
+	}
+
+	private BuildType(String name) {
+		this(
+			new String[] {
+			"oslc_auto:AutomationPlan",
+			"ci:Build",
+			"ci:"+name+"Build"
+			}
+		);
+	}
+
+	private BuildType(String[] types) {
+		this.types=types;
+		this.resourceName=types[types.length-1];
 	}
 
 	String resourceName() {
@@ -56,14 +65,6 @@ public enum State {
 
 	String[] types() {
 		return this.types;
-	}
-
-	Verdict preferredVerdict() {
-		return this.preferredVerdict;
-	}
-
-	boolean isCompatible(Verdict verdict) {
-		return this.compatibleVerdicts.contains(verdict);
 	}
 
 }

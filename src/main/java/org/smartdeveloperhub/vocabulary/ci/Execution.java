@@ -1,7 +1,7 @@
 /**
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  *   This file is part of the Smart Developer Hub Project:
- *     http://smartdeveloperhub.github.io/
+ *     http://www.smartdeveloperhub.org/
  *
  *   Center for Open Middleware
  *     http://www.centeropenmiddleware.com/
@@ -20,11 +20,11 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
- *   Artifact    : org.sdh.vocabulary:sdh-vocabulary:1.0.0-SNAPSHOT
+ *   Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:1.0.0-SNAPSHOT
  *   Bundle      : sdh-vocabulary-1.0.0-SNAPSHOT.jar
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  */
-package org.sdh.vocabulary.ci;
+package org.smartdeveloperhub.vocabulary.ci;
 
 import java.util.List;
 

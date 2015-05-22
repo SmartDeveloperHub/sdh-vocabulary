@@ -1,7 +1,7 @@
 /**
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  *   This file is part of the Smart Developer Hub Project:
- *     http://smartdeveloperhub.github.io/
+ *     http://www.smartdeveloperhub.org/
  *
  *   Center for Open Middleware
  *     http://www.centeropenmiddleware.com/
@@ -20,11 +20,11 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
- *   Artifact    : org.sdh.vocabulary:sdh-vocabulary:1.0.0-SNAPSHOT
+ *   Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:1.0.0-SNAPSHOT
  *   Bundle      : sdh-vocabulary-1.0.0-SNAPSHOT.jar
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  */
-package org.sdh.vocabulary;
+package org.smartdeveloperhub.vocabulary;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,7 +40,7 @@ public final class VocabularyUtil {
 
 	private static synchronized String vocabularyBase() throws AssertionError {
 		if(vocabularyBase==null) {
-			URL resource = ClassLoader.getSystemResource("org/sdh/vocabulary/vocabulary.properties");
+			URL resource = ClassLoader.getSystemResource("org/smartdeveloperhub/vocabulary/vocabulary.properties");
 			if(resource==null) {
 				throw new AssertionError("Could not find vocabulary properties");
 			}
