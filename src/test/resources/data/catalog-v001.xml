@@ -37,6 +37,8 @@
     <uri id="User Entered Import Resolution" name="${vocabulary.base}v1/ci" uri="${buildDirectoryURI}vocabulary/v1/ci.ttl"/>
     <uri id="User Entered Import Resolution" name="${vocabulary.base}external/dcmi/dctype.rdf" uri="${buildDirectoryURI}vocabulary/external/dcmi/dctype.rdf"/>
     <uri id="User Entered Import Resolution" name="${vocabulary.base}external/dcmi/dcterms.rdf" uri="${buildDirectoryURI}vocabulary/external/dcmi/dcterms.rdf"/>
+    <uri id="User Entered Import Resolution" name="${vocabulary.base}external/doap/doap.rdf" uri="${buildDirectoryURI}vocabulary/external/doap/doap.rdf"/>
+    <uri id="User Entered Import Resolution" name="${vocabulary.base}external/foaf/foaf.rdf" uri="${buildDirectoryURI}vocabulary/external/foaf/foaf.rdf"/>
     <uri id="User Entered Import Resolution" name="${vocabulary.base}v1/platform" uri="${buildDirectoryURI}vocabulary/v1/platform.ttl"/>
     <uri id="User Entered Import Resolution" name="${vocabulary.base}v1/sdh" uri="${buildDirectoryURI}vocabulary/v1/sdh.ttl"/>
     <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base=""/>
