@@ -26,7 +26,7 @@
 #
 
 PREFIX oslc_auto: <http://open-services.net/ns/auto#>
-PREFIX ci: <${vocabulary.base}ci#>
+PREFIX ci: <http://www.smartdeveloperhub.org/vocabulary/ci#>
 
 SELECT (COUNT(?build) as ?total_builds)
 WHERE {

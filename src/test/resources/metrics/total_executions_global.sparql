@@ -25,7 +25,7 @@
 # #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
 #
 
-PREFIX ci: <${vocabulary.base}ci#>
+PREFIX ci: <http://www.smartdeveloperhub.org/vocabulary/ci#>
 
 SELECT (COUNT(?execution) as ?total_executions)
 WHERE {

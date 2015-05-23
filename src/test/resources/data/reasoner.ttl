@@ -31,13 +31,13 @@
 @prefix xsd:        <http://www.w3.org/2001/XMLSchema#> .
 @prefix dcterms:    <http://purl.org/dc/terms/> .
 @prefix oslc_auto:  <http://open-services.net/ns/auto#> .
-@prefix platform:   <${vocabulary.base}platform#> .
-@prefix metrics:    <${vocabulary.base}metrics#> .
-@prefix ci:         <${vocabulary.base}ci#> .
+@prefix platform:   <http://www.smartdeveloperhub.org/vocabulary/platform#> .
+@prefix metrics:    <http://www.smartdeveloperhub.org/vocabulary/metrics#> .
+@prefix ci:         <http://www.smartdeveloperhub.org/vocabulary/ci#> .
 
-@base <${vocabulary.base}v1/> .
+@base <http://www.smartdeveloperhub.org/vocabulary/v1/> .
 
-<vocabulary> owl:imports <${vocabulary.base}v1/sdh> .
+<vocabulary> owl:imports <http://www.smartdeveloperhub.org/vocabulary/v1/sdh> .
 
 ##-- INDIVIDUALS--------------------------------------------------------------##
 
@@ -49,7 +49,7 @@
 <cis#vocab> 
  a ci:CIVocabulary ;
 #  platform:implements ci:CIDomain ;
-  platform:source "${vocabulary.base}v1/ci.ttl"^^xsd:anyURI .
+  platform:source "http://www.smartdeveloperhub.org/vocabulary/v1/ci.ttl"^^xsd:anyURI .
 
 <a1> 
 # a ci:Build ;
@@ -146,7 +146,7 @@
 <ms#vocab> 
  a metrics:MetricVocabulary ;
 #  platform:implements metrics:MetricDomain ;
-  platform:source "${vocabulary.base}v1/metrics.ttl"^^xsd:anyURI .
+  platform:source "http://www.smartdeveloperhub.org/vocabulary/v1/metrics.ttl"^^xsd:anyURI .
 
 <ms/e1> a metrics:MetricEndpoint ;
   metrics:supports <m1> .

@@ -26,7 +26,7 @@
 #
 
 PREFIX oslc_auto: <http://open-services.net/ns/auto#>
-PREFIX ci: <${vocabulary.base}ci#>
+PREFIX ci: <http://www.smartdeveloperhub.org/vocabulary/ci#>
 PREFIX dcterms: <http://purl.org/dc/terms/>
 
 SELECT ?build ?execution ((?finished - ?created) as ?execution_time)

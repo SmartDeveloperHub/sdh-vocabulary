@@ -26,7 +26,7 @@
 #
 
 PREFIX oslc_auto: <http://open-services.net/ns/auto#>
-PREFIX ci: <${vocabulary.base}ci#>
+PREFIX ci: <http://www.smartdeveloperhub.org/vocabulary/ci#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX ex: <http://example.org/function#>
 

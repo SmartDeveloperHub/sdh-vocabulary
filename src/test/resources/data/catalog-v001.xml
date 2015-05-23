@@ -28,18 +28,18 @@
 
 -->
 <catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-    <uri id="User Entered Import Resolution" name="${vocabulary.base}v1/metrics" uri="${buildDirectoryURI}vocabulary/v1/metrics.ttl"/>
-    <uri id="User Entered Import Resolution" name="${vocabulary.base}v1/organization" uri="${buildDirectoryURI}vocabulary/v1/organization.ttl"/>
-    <uri id="User Entered Import Resolution" name="${vocabulary.base}v1/oslc_scm_plus" uri="${buildDirectoryURI}vocabulary/v1/oslc_scm_plus.ttl"/>
-    <uri id="User Entered Import Resolution" name="${vocabulary.base}v1/scm" uri="${buildDirectoryURI}vocabulary/v1/scm.ttl"/>
-    <uri id="User Entered Import Resolution" name="${vocabulary.base}v1/oslc_core_plus" uri="${buildDirectoryURI}vocabulary/v1/oslc_core_plus.ttl"/>
-    <uri id="User Entered Import Resolution" name="${vocabulary.base}v1/oslc_auto_plus" uri="${buildDirectoryURI}vocabulary/v1/oslc_auto_plus.ttl"/>
-    <uri id="User Entered Import Resolution" name="${vocabulary.base}v1/ci" uri="${buildDirectoryURI}vocabulary/v1/ci.ttl"/>
-    <uri id="User Entered Import Resolution" name="${vocabulary.base}external/dcmi/dctype.rdf" uri="${buildDirectoryURI}vocabulary/external/dcmi/dctype.rdf"/>
-    <uri id="User Entered Import Resolution" name="${vocabulary.base}external/dcmi/dcterms.rdf" uri="${buildDirectoryURI}vocabulary/external/dcmi/dcterms.rdf"/>
-    <uri id="User Entered Import Resolution" name="${vocabulary.base}external/doap/doap.rdf" uri="${buildDirectoryURI}vocabulary/external/doap/doap.rdf"/>
-    <uri id="User Entered Import Resolution" name="${vocabulary.base}external/foaf/foaf.rdf" uri="${buildDirectoryURI}vocabulary/external/foaf/foaf.rdf"/>
-    <uri id="User Entered Import Resolution" name="${vocabulary.base}v1/platform" uri="${buildDirectoryURI}vocabulary/v1/platform.ttl"/>
-    <uri id="User Entered Import Resolution" name="${vocabulary.base}v1/sdh" uri="${buildDirectoryURI}vocabulary/v1/sdh.ttl"/>
+    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/sdh" uri="${buildDirectoryURI}vocabulary/v1/sdh.ttl"/>
+    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/platform" uri="${buildDirectoryURI}vocabulary/v1/platform.ttl"/>
+    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/ci" uri="${buildDirectoryURI}vocabulary/v1/ci.ttl"/>
+    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/scm" uri="${buildDirectoryURI}vocabulary/v1/scm.ttl"/>
+    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/metrics" uri="${buildDirectoryURI}vocabulary/v1/metrics.ttl"/>
+    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/organization" uri="${buildDirectoryURI}vocabulary/v1/organization.ttl"/>
+    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/oslc_core_plus" uri="${buildDirectoryURI}vocabulary/v1/oslc_core_plus.ttl"/>
+    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/oslc_auto_plus" uri="${buildDirectoryURI}vocabulary/v1/oslc_auto_plus.ttl"/>
+    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/oslc_scm_plus" uri="${buildDirectoryURI}vocabulary/v1/oslc_scm_plus.ttl"/>
+    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/external/dcmi/dctype.rdf" uri="${buildDirectoryURI}vocabulary/external/dcmi/dctype.rdf"/>
+    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/external/dcmi/dcterms.rdf" uri="${buildDirectoryURI}vocabulary/external/dcmi/dcterms.rdf"/>
+    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/external/doap/doap.rdf" uri="${buildDirectoryURI}vocabulary/external/doap/doap.rdf"/>
+    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/external/foaf/foaf.rdf" uri="${buildDirectoryURI}vocabulary/external/foaf/foaf.rdf"/>
     <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base=""/>
 </catalog>

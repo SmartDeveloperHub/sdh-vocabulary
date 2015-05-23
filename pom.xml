@@ -60,8 +60,6 @@
 	<properties>
 		<sesame.version>2.7.9</sesame.version>
 		<jena.version>2.11.1</jena.version>
-		<vocabulary.domain>http://www.smartdeveloperhub.org/</vocabulary.domain>
-		<vocabulary.base>${vocabulary.domain}vocabulary/</vocabulary.base>
 		<buildDirectoryURI>NULL</buildDirectoryURI>
 	</properties>
 
@@ -188,23 +186,6 @@
 	</dependencies>
 
 	<build>
-		<resources>
-			<resource>
-				<directory>src${file.separator}main${file.separator}resources</directory>
-				<filtering>true</filtering>
-				<includes>
-					<include>vocabulary${file.separator}v1${file.separator}*.ttl</include>
-					<include>org${file.separator}smartdeveloperhub${file.separator}vocabulary${file.separator}vocabulary.properties</include>
-				</includes>
-			</resource>
-			<resource>
-				<directory>src${file.separator}main${file.separator}resources</directory>
-				<filtering>true</filtering>
-				<includes>
-					<include>vocabulary${file.separator}external${file.separator}**${file.separator}*.rdf</include>
-				</includes>
-			</resource>
-		</resources>
 		<testResources>
 			<testResource>
 				<directory>src${file.separator}test${file.separator}resources</directory>
