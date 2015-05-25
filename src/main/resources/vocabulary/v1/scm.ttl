@@ -362,6 +362,34 @@ foaf:Person rdfs:subClassOf [ rdf:type owl:Restriction ;
                               owl:onDataRange xsd:string
                             ] .
 
+:SCMHarvester a owl:Class ;
+  rdfs:subClassOf platform:Harvester ;
+  rdfs:subClassOf [
+    rdf:type owl:Restriction ;
+    owl:onProperty platform:vocabulary ;
+    owl:someValuesFrom :SCMVocabulary 
+  ] , [ 
+    rdf:type owl:Restriction ;
+    owl:onProperty platform:hasResourceType ;
+    owl:hasValue doap:Repository
+  ] , [ 
+    rdf:type owl:Restriction ;
+    owl:onProperty :hasRepository ;
+    owl:allValuesFrom doap:Repository
+  ] , [ 
+    rdf:type owl:Restriction ;
+    owl:onProperty platform:providesDomain ;
+    owl:hasValue :SCMDomain ;
+  ] .  
+
+:SCMVocabulary a owl:Class ;
+  rdfs:subClassOf platform:Vocabulary ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty platform:implements ;
+    owl:hasValue :SCMDomain
+  ] .  
+
 ##-- PROPERTIES --------------------------------------------------------------##
 
 #################################################################
@@ -603,6 +631,11 @@ doap:location rdf:type owl:ObjectProperty .
              rdfs:range foaf:Person .        
 
 ##-- INDIVIDUALS--------------------------------------------------------------##
+
+:SCMDomain rdf:type platform:Domain ;
+  platform:identifier "SCM" ;
+  platform:title "Software Configuration Management" ;
+  platform:description "Software Configuration Management" .
 
 ##----------------------------------------------------------------------------##
 #  MODULE END                                                                  #
