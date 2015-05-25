@@ -100,7 +100,8 @@
 
 <scm> rdf:type owl:Ontology ;
   owl:versionIRI <v1/scm> ;
-  owl:imports <external/doap/doap.rdf> ;
+  owl:imports <external/doap/doap.rdf> ,
+              <v1/platform> ;
   rdfs:comment """This ontology models a part of the concepts involved in a SCM system. 
                   We have resctricted the ontology to the concepts and the relations needed by
                   the system to calculate the following set of metrics:
@@ -537,8 +538,8 @@ doap:location rdf:type owl:ObjectProperty .
 
 
 
-###  http://usefulinc.com/ns/doap#repository
-
+###  http://www.smartdeveloperhub.org/vocabulary/sdh/v1/scm#hasRepository
+:hasRepository rdf:type owl:ObjectProperty .
 
 
 
