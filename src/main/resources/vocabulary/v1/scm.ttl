@@ -95,7 +95,7 @@
 @prefix rddl: <http://www.rddl.org/> .
 
 ##-- MODULE DECLARATION ------------------------------------------------------##
-
+@prefix :  <http://www.smartdeveloperhub.org/vocabulary/scm#> .
 @base <http://www.smartdeveloperhub.org/vocabulary/> .
 
 <scm> rdf:type owl:Ontology ;
@@ -163,7 +163,7 @@ doap:Repository rdf:type owl:Class ;
                                 [ rdf:type owl:Restriction ;
                                   owl:onProperty :isPublic ;
                                   owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                                  owl:onDataRange xsd:string
+                                  owl:onDataRange xsd:boolean
                                 ] ,
                                 [ rdf:type owl:Restriction ;
                                   owl:onProperty :firstCommit ;
@@ -207,7 +207,7 @@ doap:Repository rdf:type owl:Class ;
                                 [ rdf:type owl:Restriction ;
                                   owl:onProperty :isArchived ;
                                   owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                                  owl:onDataRange xsd:string
+                                  owl:onDataRange xsd:boolean
                                 ] ,
                                 [ rdf:type owl:Restriction ;
                                   owl:onProperty foaf:depiction ;
