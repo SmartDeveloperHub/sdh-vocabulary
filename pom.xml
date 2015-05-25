@@ -220,6 +220,17 @@
 					</execution>
 				</executions>
 			</plugin>
+			<!-- Skip external ontologies from license maintenance -->
+			<plugin>
+				<groupId>com.mycila</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<excludes>
+						<exclude>src/main/resources/vocabulary/external/**</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
