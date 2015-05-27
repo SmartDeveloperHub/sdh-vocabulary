@@ -176,7 +176,7 @@ doap:Repository rdf:type owl:Class ;
                                   owl:someValuesFrom foaf:Person
                                 ] ,
                                 [ rdf:type owl:Restriction ;
-                                  owl:onProperty :LastBuildDate ;
+                                  owl:onProperty :lastBuildDate ;
                                   owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                   owl:onDataRange xsd:dateTime
                                 ] ,
@@ -406,9 +406,9 @@ doap:name rdf:type owl:DatatypeProperty .
 
 
 
-###  http://www.smartdeveloperhub.org/vocabulary/sdh/v1/scm#LastBuildDate
+###  http://www.smartdeveloperhub.org/vocabulary/sdh/v1/scm#lastBuildDate
 
-:LastBuildDate rdf:type owl:DatatypeProperty ;
+:lastBuildDate rdf:type owl:DatatypeProperty ;
                
                rdfs:subPropertyOf :date .
 
