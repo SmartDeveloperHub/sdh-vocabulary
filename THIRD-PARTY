@@ -1,3 +1,7 @@
+This repository contains third-party ontologies. Find below the list of ontologies
+together with location from where they were retrieved, the date when they were
+retrieved, and their license.
+
 DOAP (http://usefulinc.com/ns/doap#) : src/main/resources/vocabulary/external/doap/doap.rdf
 + Retrieved from: http://usefulinc.com/ns/doap#
 + Retrieved on: May 25, 2015
