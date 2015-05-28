@@ -135,15 +135,15 @@ platform:Domain a owl:Class ;
   rdfs:subClassOf [
     a owl:Restriction ;
     owl:onProperty platform:identifier ;
-    owl:cardinality "1"^^xsd:nonNegativeInteger .
+    owl:cardinality "1"^^xsd:nonNegativeInteger 
   ] , [
     a owl:Restriction ;
     owl:onProperty platform:title ;
-    owl:cardinality "1"^^xsd:nonNegativeInteger .
+    owl:cardinality "1"^^xsd:nonNegativeInteger 
   ] , [
     a owl:Restriction ;
     owl:onProperty platform:description ;
-    owl:cardinality "1"^^xsd:nonNegativeInteger .
+    owl:cardinality "1"^^xsd:nonNegativeInteger 
   ] .
 
 platform:Vocabulary a owl:Class ;
@@ -168,15 +168,15 @@ platform:Operation a owl:Class ;
   rdfs:subClassOf [
     a owl:Restriction ;
     owl:onProperty platform:identifier ;
-    owl:cardinality "1"^^xsd:nonNegativeInteger .
+    owl:cardinality "1"^^xsd:nonNegativeInteger 
   ] , [
     a owl:Restriction ;
     owl:onProperty platform:title ;
-    owl:cardinality "1"^^xsd:nonNegativeInteger .
+    owl:cardinality "1"^^xsd:nonNegativeInteger 
   ] , [
     a owl:Restriction ;
     owl:onProperty platform:description ;
-    owl:cardinality "1"^^xsd:nonNegativeInteger .
+    owl:cardinality "1"^^xsd:nonNegativeInteger 
   ] , [
     a owl:Restriction ;
     owl:onProperty platform:hasResult ;
