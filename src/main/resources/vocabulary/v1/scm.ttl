@@ -259,6 +259,11 @@ doap:Repository rdf:type owl:Class ;
 :Branch rdf:type owl:Class ;
         
         rdfs:subClassOf [ rdf:type owl:Restriction ;
+                          owl:onProperty doap:name ;
+                          owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                          owl:onDataRange xsd:dateTime
+                        ] ,
+			[ rdf:type owl:Restriction ;
                           owl:onProperty :createdOn ;
                           owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                           owl:onDataRange xsd:dateTime
@@ -328,7 +333,7 @@ foaf:Person rdfs:subClassOf [ rdf:type owl:Restriction ;
                             ] ,
                             [ rdf:type owl:Restriction ;
                               owl:onProperty foaf:mbox ;
-                              owl:someValuesFrom foaf:Document
+                              owl:someValuesFrom rdfs:Resource
                             ] ,
                             [ rdf:type owl:Restriction ;
                               owl:onProperty foaf:img ;
