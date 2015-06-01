@@ -152,6 +152,11 @@ doap:Repository rdf:type owl:Class ;
                                   owl:onClass rdfs:Resource ;
                                   owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                 ] ,
+				[ rdf:type owl:Restriction ;
+                                  owl:onProperty :owner ;
+                                  owl:onClass foaf:Person ;
+                                  owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                ] ,
                                 [ rdf:type owl:Restriction ;
                                   owl:onProperty :repositoryId ;
                                   owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
@@ -634,7 +639,16 @@ doap:location rdf:type owl:ObjectProperty .
              
              rdfs:domain :Action ;
              
-             rdfs:range foaf:Person .        
+             rdfs:range foaf:Person .   
+
+###  http://www.smartdeveloperhub.org/vocabulary/sdh/v1/scm#owner
+
+:owner rdf:type owl:ObjectProperty ;
+             
+             rdfs:domain doap:Repository ;
+             
+             rdfs:range foaf:Person .   
+     
 
 ##-- INDIVIDUALS--------------------------------------------------------------##
 
