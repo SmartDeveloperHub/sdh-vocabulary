@@ -216,6 +216,11 @@ ci:FinishedExecution a owl:Class ;
   rdfs:subClassOf [
     a owl:Restriction ;
     owl:onProperty oslc_auto:state ;
+    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+    owl:onClass ci:ExecutionState
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty oslc_auto:state ;
     owl:hasValue oslc_auto:complete
   ] , [ 
     a owl:Restriction ;
