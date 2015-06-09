@@ -118,7 +118,8 @@
 
 ###  http://usefulinc.com/ns/doap#Project
 
-doap:Project rdfs:subClassOf [ rdf:type owl:Restriction ;
+:Project rdfs:subClassOf doap:Project,
+                            [ rdf:type owl:Restriction ;
                                owl:onProperty :projectId ;
                                owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                owl:onDataRange xsd:string
@@ -131,16 +132,16 @@ doap:Project rdfs:subClassOf [ rdf:type owl:Restriction ;
 
 ###  http://usefulinc.com/ns/doap#Repository
 
-doap:Repository rdf:type owl:Class ;
-                
-                rdfs:subClassOf [ rdf:type owl:Restriction ;
+:Repository rdf:type owl:Class ;                
+                rdfs:subClassOf doap:Repository, 
+                                [ rdf:type owl:Restriction ;
                                   owl:onProperty :createdOn ;
                                   owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                   owl:onDataRange xsd:dateTime
                                 ] ,
                                 [ rdf:type owl:Restriction ;
                                   owl:onProperty doap:tester ;
-                                  owl:someValuesFrom foaf:Person
+                                  owl:someValuesFrom :Person
                                 ] ,
                                 [ rdf:type owl:Restriction ;
                                   owl:onProperty doap:description ;
@@ -152,9 +153,9 @@ doap:Repository rdf:type owl:Class ;
                                   owl:onClass rdfs:Resource ;
                                   owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                 ] ,
-				[ rdf:type owl:Restriction ;
+				                        [ rdf:type owl:Restriction ;
                                   owl:onProperty :owner ;
-                                  owl:onClass foaf:Person ;
+                                  owl:onClass :Person ;
                                   owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                 ] ,
                                 [ rdf:type owl:Restriction ;
@@ -164,7 +165,7 @@ doap:Repository rdf:type owl:Class ;
                                 ] ,
                                 [ rdf:type owl:Restriction ;
                                   owl:onProperty doap:maintainer ;
-                                  owl:someValuesFrom foaf:Person
+                                  owl:someValuesFrom :Person
                                 ] ,
                                 [ rdf:type owl:Restriction ;
                                   owl:onProperty :isPublic ;
@@ -178,7 +179,7 @@ doap:Repository rdf:type owl:Class ;
                                 ] ,
                                 [ rdf:type owl:Restriction ;
                                   owl:onProperty doap:developer ;
-                                  owl:someValuesFrom foaf:Person
+                                  owl:someValuesFrom :Person
                                 ] ,
                                 [ rdf:type owl:Restriction ;
                                   owl:onProperty :lastBuildDate ;
@@ -237,7 +238,7 @@ doap:Repository rdf:type owl:Class ;
                                 ] ,
                                 [ rdf:type owl:Restriction ;
                                   owl:onProperty doap:documenter ;
-                                  owl:someValuesFrom foaf:Person
+                                  owl:someValuesFrom :Person
                                 ] .
 
 
@@ -248,7 +249,7 @@ doap:Repository rdf:type owl:Class ;
         
         rdfs:subClassOf [ rdf:type owl:Restriction ;
                           owl:onProperty :performedBy ;
-                          owl:onClass foaf:Person ;
+                          owl:onClass :Person ;
                           owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                         ] ,
                         [ rdf:type owl:Restriction ;
@@ -331,7 +332,8 @@ doap:Repository rdf:type owl:Class ;
 
 ###  http://xmlns.com/foaf/0.1/Person
 
-foaf:Person rdfs:subClassOf [ rdf:type owl:Restriction ;
+:Person rdfs:subClassOf foaf:Person, 
+                            [ rdf:type owl:Restriction ;
                               owl:onProperty :lastCommit ;
                               owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                               owl:onDataRange xsd:dateTime
@@ -382,11 +384,11 @@ foaf:Person rdfs:subClassOf [ rdf:type owl:Restriction ;
   ] , [ 
     rdf:type owl:Restriction ;
     owl:onProperty platform:hasResourceType ;
-    owl:hasValue doap:Repository
+    owl:hasValue :Repository
   ] , [ 
     rdf:type owl:Restriction ;
     owl:onProperty :hasRepository ;
-    owl:allValuesFrom doap:Repository
+    owl:allValuesFrom :Repository
   ] , [ 
     rdf:type owl:Restriction ;
     owl:onProperty platform:providesDomain ;
@@ -444,7 +446,7 @@ doap:name rdf:type owl:DatatypeProperty .
 
 :defaultBranchName rdf:type owl:DatatypeProperty ;
                    
-                   rdfs:domain doap:Repository ;
+                   rdfs:domain :Repository ;
                    
                    rdfs:range xsd:string .
 
@@ -557,7 +559,7 @@ doap:location rdf:type owl:ObjectProperty .
 
 :codebase rdf:type owl:ObjectProperty ;
           
-          rdfs:domain doap:Repository ;
+          rdfs:domain :Repository ;
           
           rdfs:range rdfs:Resource .
 
@@ -567,7 +569,7 @@ doap:location rdf:type owl:ObjectProperty .
 
 :defaultBranch rdf:type owl:ObjectProperty ;
                
-               rdfs:domain doap:Repository ;
+               rdfs:domain :Repository ;
                
                rdfs:range :Branch .
 
@@ -577,7 +579,7 @@ doap:location rdf:type owl:ObjectProperty .
 
 :hasBranch rdf:type owl:ObjectProperty ;
            
-           rdfs:domain doap:Repository ;
+           rdfs:domain :Repository ;
            
            rdfs:range :Branch .
 
@@ -595,9 +597,9 @@ doap:location rdf:type owl:ObjectProperty .
 
 :isRepositoryOf rdf:type owl:ObjectProperty ;
                 
-                rdfs:range doap:Project ;
+                rdfs:range :Project ;
                 
-                rdfs:domain doap:Repository ;
+                rdfs:domain :Repository ;
                 
                 owl:inverseOf doap:repository .
 
@@ -639,15 +641,15 @@ doap:location rdf:type owl:ObjectProperty .
              
              rdfs:domain :Action ;
              
-             rdfs:range foaf:Person .   
+             rdfs:range :Person .   
 
 ###  http://www.smartdeveloperhub.org/vocabulary/sdh/v1/scm#owner
 
 :owner rdf:type owl:ObjectProperty ;
              
-             rdfs:domain doap:Repository ;
+             rdfs:domain :Repository ;
              
-             rdfs:range foaf:Person .   
+             rdfs:range :Person .   
      
 
 ##-- INDIVIDUALS--------------------------------------------------------------##
