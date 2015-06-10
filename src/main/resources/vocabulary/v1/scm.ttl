@@ -551,7 +551,10 @@ doap:location rdf:type owl:ObjectProperty .
 
 
 ###  http://www.smartdeveloperhub.org/vocabulary/sdh/v1/scm#hasRepository
-:hasRepository rdf:type owl:ObjectProperty .
+:hasRepository a owl:InverseFunctionalProperty ;
+  rdfs:subPropertyOf platform:hasResource ;
+  rdfs:domain :SCMHarvester ;
+  rdfs:range :Repository .
 
 
 
