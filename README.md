@@ -1,5 +1,5 @@
 # Smart Developer Hub Vocabulary
-Vocabulary for the Smart Developer Hub project
+Vocabulary for the Smart Developer Hub project.
 
 For more information, please visit the [Smart Developer Hub website](http://www.smartdeveloperhub.org/).
 
