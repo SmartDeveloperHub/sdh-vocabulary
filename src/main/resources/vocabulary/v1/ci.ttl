@@ -299,6 +299,10 @@ ci:CIHarvester a owl:Class ;
     owl:hasValue ci:Build
   ] , [ 
     a owl:Restriction ;
+    owl:onProperty platform:hasResource ;
+    owl:someValuesFrom ci:Build
+  ] , [ 
+    a owl:Restriction ;
     owl:onProperty platform:providesDomain ;
     owl:hasValue ci:CIDomain ;
   ] .  

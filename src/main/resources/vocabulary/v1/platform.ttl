@@ -129,7 +129,13 @@ platform:LinkedDataMicroService a owl:Class ;
   ] .
 
 platform:Harvester a owl:Class ;
-  rdfs:subClassOf platform:LinkedDataMicroService .
+  rdfs:subClassOf platform:LinkedDataMicroService ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty platform:hasResourceType ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger 
+  ] .
+  
 
 platform:Domain a owl:Class ;
   rdfs:subClassOf [
@@ -227,6 +233,13 @@ platform:providesDomain a owl:ObjectProperty ;
 platform:consumesDomain a owl:ObjectProperty ;
   rdfs:domain platform:LinkedDataMicroService ;
   rdfs:subPropertyOf platform:domain .
+
+platform:hasResourceType a owl:ObjectProperty ;
+  rdfs:domain platform:Harvester ;
+  rdfs:range rdfs:Class .
+
+platform:hasResource a owl:ObjectProperty ;
+  rdfs:domain platform:Harvester .
 
 platform:vocabulary a owl:ObjectProperty ;
   rdfs:range platform:Vocabulary .
