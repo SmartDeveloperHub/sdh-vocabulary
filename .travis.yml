@@ -11,9 +11,13 @@ before_script:
   -out local.pubring.gpg -d
 script:
 - if [ ${TRAVIS_PULL_REQUEST} = 'false' ]; then mvn deploy -Dossrh -Dcodebase.directory=`pwd`
+  -Dcoverage.reports.dir=`pwd`/target/all
   --settings target/config/ci/settings.xml; else mvn verify -Dcodebase.directory=`pwd`
+  -Dcoverage.reports.dir=`pwd`/target/all
   --settings target/config/ci/settings.xml; fi
+after_success:
 - if [ ${TRAVIS_PULL_REQUEST} = 'false' ]; then mvn sonar:sonar -Dcodebase.directory=`pwd`
+  -Dcoverage.reports.dir=`pwd`/target/all
   --settings target/config/ci/settings.xml; else mvn clean; fi
 env:
   global:
