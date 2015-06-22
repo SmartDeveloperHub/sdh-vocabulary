@@ -267,7 +267,7 @@
         rdfs:subClassOf [ rdf:type owl:Restriction ;
                           owl:onProperty doap:name ;
                           owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                          owl:onDataRange xsd:dateTime
+                          owl:onDataRange xsd:string
                         ] ,
 			[ rdf:type owl:Restriction ;
                           owl:onProperty :createdOn ;
