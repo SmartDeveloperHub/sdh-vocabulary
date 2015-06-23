@@ -44,6 +44,7 @@ import org.joda.time.Period;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.smartdeveloperhub.vocabulary.ci.DataSet;
 
@@ -274,6 +275,11 @@ public class VocabularyTest {
 
 	private String shorten(String resource) {
 		return "<"+resource.replace("http://www.smartdeveloperhub.org/vocabulary/sdh/v1/", "")+">";
+	}
+
+	@BeforeClass
+	public static void setUpBefore() {
+		SesameRDFUtil.install();
 	}
 
 	@Before

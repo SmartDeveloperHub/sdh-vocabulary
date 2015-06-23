@@ -59,7 +59,7 @@
 
 	<properties>
 		<sesame.version>2.7.9</sesame.version>
-		<jena.version>2.11.1</jena.version>
+		<jena.version>2.13.0</jena.version>
 		<buildDirectoryURI>NULL</buildDirectoryURI>
 	</properties>
 
@@ -100,31 +100,30 @@
 
 	<dependencies>
 		<dependency>
-				<groupId>com.google.guava</groupId>
-				<artifactId>guava</artifactId>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.jena</groupId>
 			<artifactId>jena-arq</artifactId>
+			<scope>test</scope>
 			<exclusions>
 				<exclusion>
 					<groupId>log4j</groupId>
 					<artifactId>log4j</artifactId>
-				</exclusion>
-				<exclusion>
-					<artifactId>httpclient</artifactId>
-					<groupId>org.apache.httpcomponents</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -132,30 +131,29 @@
 		<dependency>
 			<groupId>org.openrdf.sesame</groupId>
 			<artifactId>sesame-repository-sail</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.openrdf.sesame</groupId>
 			<artifactId>sesame-sail-memory</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.openrdf.sesame</groupId>
 			<artifactId>sesame-rio-rdfxml</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.openrdf.sesame</groupId>
 			<artifactId>sesame-rio-turtle</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.github.jsonld-java</groupId>
-			<artifactId>jsonld-java-sesame</artifactId>
-			<version>0.5.0</version>
+			<scope>test</scope>
 		</dependency>
 
 		<!-- Default logger -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
+			<scope>test</scope>
 		</dependency>
 
 		<!-- Default unit testing frameworks-->

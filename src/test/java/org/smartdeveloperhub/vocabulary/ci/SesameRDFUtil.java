@@ -26,66 +26,36 @@
  */
 package org.smartdeveloperhub.vocabulary.ci;
 
+
+import org.openrdf.model.util.URIUtil;
+import org.openrdf.rio.turtle.TurtleUtil;
 import org.smartdeveloperhub.vocabulary.ci.spi.RDFUtil;
 
-final class URI {
+public class SesameRDFUtil extends RDFUtil {
 
-	private String uriString;
-
-	private String namespace;
-
-	private String localName;
-
-	/**
-	 * Creates a new URI from the supplied string.
-	 *
-	 * @param uriString
-	 *        A String representing a valid, absolute URI.
-	 * @throws IllegalArgumentException
-	 *         If the supplied URI is not a valid (absolute) URI.
-	 */
-	public URI(String uriString) {
-		if(uriString.indexOf(':') < 0) {
-			throw new IllegalArgumentException("Not a valid (absolute) URI: " + uriString);
-		}
-		int localNameIdx = RDFUtil.getLocalNameIndex(uriString);
-		this.uriString = uriString;
-		this.localName=uriString.substring(localNameIdx);
-		this.namespace=uriString.substring(0, localNameIdx);
-	}
-
-	public String stringValue() {
-		return this.uriString;
-	}
-
-	public String getNamespace() {
-		return this.namespace;
-	}
-
-	public String getLocalName() {
-		return this.localName;
+	public static void install() {
+		RDFUtil.setDelegate(new SesameRDFUtil());
 	}
 
 	@Override
-	public int hashCode() {
-		return this.uriString.hashCode();
+	public int localNameIndex(String uri) {
+		return URIUtil.getLocalNameIndex(uri);
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if(this==o) {
-			return true;
+	protected String encodeString(String label, boolean isLong) {
+		String result=null;
+		if(isLong) {
+			result=TurtleUtil.encodeLongString(label);
+		} else {
+			result=TurtleUtil.encodeString(label);
 		}
-
-		if(o instanceof URI) {
-			return toString().equals(o.toString());
-		}
-
-		return false;
+		return result;
 	}
 
 	@Override
-	public String toString() {
-		return this.uriString;
+	protected String encodeURI(String uri) {
+		return TurtleUtil.encodeURIString(uri);
 	}
+
 }

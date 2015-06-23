@@ -29,7 +29,7 @@ package org.smartdeveloperhub.vocabulary.ci;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.openrdf.rio.turtle.TurtleUtil;
+import org.smartdeveloperhub.vocabulary.ci.spi.RDFUtil;
 
 import com.google.common.collect.Maps;
 
@@ -91,12 +91,12 @@ final class ValueUtils {
 		if(isMultiLineString(label)) {
 			// Write label as long string
 			builder.append(ESCAPED_MULTI_LINE_QUOTES);
-			builder.append(TurtleUtil.encodeLongString(label));
+			builder.append(RDFUtil.encodeLongString(label));
 			builder.append(ESCAPED_MULTI_LINE_QUOTES);
 		} else {
 			// Write label as normal string
 			builder.append(ESCAPED_DOUBLE_QUOTES);
-			builder.append(TurtleUtil.encodeString(label));
+			builder.append(RDFUtil.encodeString(label));
 			builder.append(ESCAPED_DOUBLE_QUOTES);
 		}
 
@@ -119,7 +119,7 @@ final class ValueUtils {
 	}
 
 	String writeURI(URI uri) {
-		return String.format("<%s>",TurtleUtil.encodeURIString(uri.toString()));
+		return String.format("<%s>",RDFUtil.encodeURIString(uri.toString()));
 	}
 
 	String writeURIRef(URI uri) {
@@ -130,7 +130,7 @@ final class ValueUtils {
 			result=String.format("%s:%s",prefix,uri.getLocalName());
 		} else {
 			// Namespace is not mapped to a prefix; write the resolved URI
-			result=String.format("<%s>",TurtleUtil.encodeURIString(resolve(uri).toString()));
+			result=String.format("<%s>",RDFUtil.encodeURIString(resolve(uri).toString()));
 		}
 		return result;
 	}
