@@ -11,8 +11,10 @@
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix oslc: <http://open-services.net/ns/core#> .
+@prefix orgw3: <http://www.w3.org/ns/org#> . 
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix rddl: <http://www.rddl.org/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -26,96 +28,17 @@
 
 <http://www.smartdeveloperhub.org/vocabulary/organization> rdf:type owl:Ontology ;
                                                            
-                                                           owl:imports <http://www.smartdeveloperhub.org/vocabulary/external/doap/doap.rdf> ,
+                                                           	owl:imports <http://www.smartdeveloperhub.org/vocabulary/external/doap/doap.rdf> ,
                                                                        <http://www.smartdeveloperhub.org/vocabulary/external/org/org.ttl> ,
-                                                                       <http://www.smartdeveloperhub.org/vocabulary/external/swo/swo_core.ttl> ;
+                                                                       <http://www.smartdeveloperhub.org/vocabulary/external/swo/swo_core.ttl>,
+                                                                       <http://www.smartdeveloperhub.org/vocabulary/v1/platform>;
                                                            
-                                                           owl:versionIRI <http://www.smartdeveloperhub.org/vocabulary/v1/organization> ;
-                                                           
-                                                           owl:imports <http://www.smartdeveloperhub.org/vocabulary/v1/platform> .
-
-
-#################################################################
-#
-#    Data properties
-#
-#################################################################
-
-
-###  http://www.semanticweb.org/owl/owlapi/turtle#date
-
-org:date rdf:type owl:DatatypeProperty .
-
-doap:name rdf:type owl:DatatypeProperty .
-
-doap:location rdf:type owl:ObjectProperty .
-
-###  http://www.semanticweb.org/owl/owlapi/turtle#id
-
-org:id rdf:type owl:DatatypeProperty .
-
-
-
-###  http://www.semanticweb.org/owl/owlapi/turtle#userId
-
-org:userId rdf:type owl:DatatypeProperty ;
-        
-        rdfs:subPropertyOf org:id .
-
-org:projectId rdf:type owl:DatatypeProperty ;
-           
-           rdfs:subPropertyOf org:id .        
-
-
-
-###  http://www.smartdeveloperhub.org/vocabulary/organization#createdOn
-
-org:createdOn rdf:type owl:DatatypeProperty ;
-              
-              rdfs:subPropertyOf org:date .
-
-
-
-###  http://www.smartdeveloperhub.org/vocabulary/organization#date
-
-org:date rdf:type owl:DatatypeProperty ;
-         
-         rdfs:range xsd:dateTime .
-
-
-
-###  http://www.smartdeveloperhub.org/vocabulary/organization#firstCommit
-
-org:firstCommit rdf:type owl:DatatypeProperty ;
-                
-                rdfs:subPropertyOf org:date .
-
-
-
-###  http://www.smartdeveloperhub.org/vocabulary/organization#lastCommit
-
-org:lastCommit rdf:type owl:DatatypeProperty ;
-               
-               rdfs:subPropertyOf org:date .
-
-
-
-###  http://www.smartdeveloperhub.org/vocabulary/organization#signUpDate
-
-org:signUpDate rdf:type owl:DatatypeProperty ;
-               
-               rdfs:subPropertyOf org:date .
-
-
-doap:repository rdf:type owl:ObjectProperty ;
-                rdfs:domain org:Project ; 
-                rdfs:range  scm:Repository . 
-
-org:owner rdf:type owl:ObjectProperty ;
-             
-             rdfs:domain org:Project ;
-             
-             rdfs:range org:Person .                  
+                                                           	owl:versionIRI <http://www.smartdeveloperhub.org/vocabulary/v1/organization> ;
+                                                                                                                      	
+                                                           	rdfs:label "Core organization ontology for the smart developer hub project"@en;
+															rdfs:label "Ontología de organizacion para el proyecto smart developer hub"@es;
+															dcterms:created "2015-06-18"^^xsd:date;
+															dcterms:contributor [foaf:name "Andrés García-Silva"] .
 
 
 
@@ -131,23 +54,56 @@ org:owner rdf:type owl:ObjectProperty ;
 
 org:FormalOrganization rdf:type owl:Class ;
                        
-                       rdfs:subClassOf <http://www.w3.org/ns/org#FormalOrganization> .
+                       rdfs:subClassOf orgw3:FormalOrganization .
 
 
 
 ###  http://www.smartdeveloperhub.org/vocabulary/organization#Organization
 
-org:Organization rdf:type owl:Class ;
-                 
-                 rdfs:subClassOf <http://www.w3.org/ns/org#Organization> .
-
+org:Organization rdf:type owl:Class ;                 
+                 rdfs:subClassOf orgw3:Organization ,
+                 				[ rdf:type owl:Restriction ;
+	                              owl:onProperty org:id ;
+	                              owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	                              owl:onDataRange xsd:string
+	                           	],
+	                           	[ rdf:type owl:Restriction ;
+	                              owl:onProperty skos:prefLabel ;
+	                              owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	                              owl:onDataRange xsd:string
+	                           	],
+	                           	[ rdf:type owl:Restriction ;
+	                              owl:onProperty skos:altLabel ;
+	                              owl:someValuesFrom xsd:string
+	                           	],
+	                           	[ rdf:type owl:Restriction ;
+	                              owl:onProperty orgw3:purpose ;
+	                              owl:someValuesFrom xsd:string
+	                           	] , 
+	                           	[ rdf:type owl:Restriction ;
+	                              owl:onProperty orgw3:classification ;
+	                              owl:someValuesFrom skos:Concept
+	                           	] ,
+	                           	[ rdf:type owl:Restriction ;
+								  owl:onProperty foaf:depiction ;
+								  owl:onClass foaf:Image ;
+								  owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger
+								],
+								[ rdf:type owl:Restriction ;
+								  owl:onProperty org:hasMember ;
+								  owl:allValuesFrom org:Person; 
+								],
+								[ rdf:type owl:Restriction ;
+								  owl:onProperty org:hasProject ;
+								  owl:allValuesFrom org:Project; 
+								] .
 
 
 ###  http://www.smartdeveloperhub.org/vocabulary/organization#OrganizationalUnit
 
 org:OrganizationalUnit rdf:type owl:Class ;
                        
-                       rdfs:subClassOf <http://www.w3.org/ns/org#OrganizationalUnit> .
+                       rdfs:subClassOf orgw3:OrganizationalUnit .
 
 
 
@@ -157,7 +113,7 @@ org:Person rdf:type owl:Class ;
            
            rdfs:subClassOf foaf:Person ,
                            [ rdf:type owl:Restriction ;
-                             owl:onProperty org:userId ;
+                             owl:onProperty org:id ;
                              owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                              owl:onDataRange xsd:string
                            ] ,
@@ -181,7 +137,15 @@ org:Person rdf:type owl:Class ;
                            [ rdf:type owl:Restriction ;
                              owl:onProperty foaf:img ;
                              owl:allValuesFrom foaf:Image
-                           ] .
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                              owl:onProperty :memberOf ;
+                              owl:someValuesFrom [ rdf:type owl:Class ;
+                                                   owl:unionOf ( :Project
+                                                                 :Organization
+                                                                )
+                                                 ]
+                            ] .
 
 
 
@@ -191,7 +155,7 @@ org:Project rdf:type owl:Class ;
             
             rdfs:subClassOf doap:Project,
 							[ rdf:type owl:Restriction ;
-							owl:onProperty org:projectId ;
+							owl:onProperty org:id ;
 							owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
 							owl:onDataRange xsd:string
 							] ,
@@ -221,32 +185,170 @@ org:Project rdf:type owl:Class ;
 							  owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
 							] ,
 							[ rdf:type owl:Restriction ;
-							owl:onProperty doap:repository ;
-							owl:allValuesFrom scm:Repository; 
-							] , 
-							[ rdf:type owl:Restriction ;
-							  owl:onProperty doap:tester ;
-							  owl:someValuesFrom org:Person
-							] ,                                                            
-							[ rdf:type owl:Restriction ;
-							  owl:onProperty org:owner ;
-							  owl:onClass org:Person ;
-							  owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
-							] ,                                
-							[ rdf:type owl:Restriction ;
-							  owl:onProperty doap:maintainer ;
-							  owl:someValuesFrom org:Person
+							  owl:onProperty doap:repository ;
+							  owl:allValuesFrom scm:Repository
 							] ,
 							[ rdf:type owl:Restriction ;
-							  owl:onProperty doap:developer ;
+							  owl:onProperty org:hasMember ;
 							  owl:someValuesFrom org:Person
-							] ,
-							[ rdf:type owl:Restriction ;
-							  owl:onProperty doap:documenter ;
-							  owl:someValuesFrom org:Person
-							] . 
+							]. 
+
+org:Role a owl:Class ;
+		rdfs:subClassOf [ rdf:type owl:Restriction ;
+                          owl:onProperty org:roleType ;
+                          owl:someValuesFrom skos:Concept
+                       	] .
+
+org:Membership a owl:Class;
+	    rdfs:subClassOf [ rdf:type owl:Restriction ;
+                              owl:onProperty :memberOn ;
+                              owl:someValuesFrom [ rdf:type owl:Class ;
+                                                   owl:unionOf ( :Project
+                                                                 :Organization
+                                                                )
+                                                 ]
+                            ] .
+
+
+org:member a owl:ObjectProperty, rdf:Property, owl:FunctionalProperty;
+	rdfs:domain org:Membership;
+    rdfs:range  foaf:Agent.
+
+org:hasMembership a owl:ObjectProperty, rdf:Property;
+    rdfs:domain foaf:Agent;
+    rdfs:range  org:Membership.
+
+org:member owl:inverseOf org:member.     
+
+org:memberOn a owl:ObjectProperty, rdf:Property, owl:FunctionalProperty .
+      
+org:role a owl:ObjectProperty, rdf:Property;
+	rdfs:domain org:Membership;
+    rdfs:range  org:Role.
+
+org:memberOf a owl:ObjectProperty, rdf:Property;
+    rdfs:domain foaf:Agent .
+   
+org:hasMember a owl:ObjectProperty, rdf:Property; 
+    rdfs:range  foaf:Agent .
+ 
+
+org:memberOf  owl:inverseOf org:hasMember .
+
+org:memberOn  owl:inverseOf org:isMemberOn .
 
 
 
-###  Generated by the OWL API (version 3.5.1) http://owlapi.sourceforge.net
+#################################################################
+#
+#    Data properties
+#
+#################################################################
+
+
+###  http://www.semanticweb.org/owl/owlapi/turtle#date
+
+org:date rdf:type owl:DatatypeProperty .
+
+doap:name rdf:type owl:DatatypeProperty .
+
+doap:location rdf:type owl:ObjectProperty .
+
+###  http://www.semanticweb.org/owl/owlapi/turtle#id
+
+org:id rdf:type owl:DatatypeProperty ;
+ 	 rdfs:subPropertyOf skos:notation .
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/organization#createdOn
+
+org:createdOn rdf:type owl:DatatypeProperty ;
+              
+              rdfs:subPropertyOf org:date .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/organization#date
+
+org:date rdf:type owl:DatatypeProperty ;
+         
+         rdfs:range xsd:dateTime .
+
+
+
+#################################################################
+#
+#    Object properties
+#
+#################################################################
+
+doap:repository rdf:type owl:ObjectProperty ;
+                rdfs:domain org:Project ; 
+                rdfs:range  scm:Repository . 
+
+#org:owner rdf:type owl:ObjectProperty ;             
+#             rdfs:domain org:Project ;             
+#             rdfs:range org:Person .   
+
+
+# -- Role Types ---------------------------------
+
+org:organizationRoleType a skos:Concept;
+ 	 skos:prefLabel "Employee Role in Organization"@en .
+
+org:projectRoleType a skos:Concept;
+ 	 skos:prefLabel "Employee Role in Project"@en .
+
+
+ # -- Organization Roles
+
+org:ctoRole a org:Role;
+    rdfs:label "Chief Technology Officer"@en;    
+    org:roleType org:organizationRoleType. 
+   
+
+org:headOfDevelopmentRole a org:Role;
+    rdfs:label "Head of Development"@en;
+    org:roleType org:organizationRoleType .
+
+
+org:softwareEngineerRole a org:Role;
+    rdfs:label "Developer"@en;
+    org:roleType org:organizationRoleType .
+    
+ # -- Project Roles
+org:productOwnerRole a org:Role;
+    rdfs:label "Product Owner"@en;
+    org:roleType org:projectRoleType .
+
+org:scrumMasterRole a org:Role;
+    rdfs:label "Scrum Master"@en;
+      org:roleType org:projectRoleType.
+
+org:devTeamRole a org:Role;
+    rdfs:label "Developer Team"@en;
+    org:roleType org:projectRoleType.
+
+
+ #-- Organization classification
+ org:CorporationType a skos:Concept;
+ 	skos:prefLabel "Corporation"@en.
+
+org:DepartmentType a skos:Concept;
+ 	skos:prefLabel "Department"@en. 	
+
+ #-- Organization chart
+org:ISBAN a org:FormalOrganization ;
+    skos:prefLabel "ISBAN" ;
+    orgw3:identifier "ISBAN"^^xsd:string;
+    org:classification org:CorporationType;
+    org:hasUnit org:softDevelopment.
+
+org:softDevelopment a org:OrganizationalUnit ;
+    skos:prefLabel "Software Development" ;
+    orgw3:identifier "SofDevEs"^^xsd:string;
+    orgw3:classification org:DepartmentType;
+    orgw3:purpose "develop software for ISBAN products"@en     .
+
+#  Generated by the OWL API (version 3.5.1) http://owlapi.sourceforge.net
 
