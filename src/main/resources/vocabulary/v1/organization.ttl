@@ -31,6 +31,7 @@
                                                            	owl:imports <http://www.smartdeveloperhub.org/vocabulary/external/doap/doap.rdf> ,
                                                                        <http://www.smartdeveloperhub.org/vocabulary/external/org/org.ttl> ,
                                                                        <http://www.smartdeveloperhub.org/vocabulary/external/swo/swo_core.ttl>,
+                                                                       <http://www.smartdeveloperhub.org/vocabulary/external/skos/skos.rdf> ,
                                                                        <http://www.smartdeveloperhub.org/vocabulary/v1/platform>;
                                                            
                                                            	owl:versionIRI <http://www.smartdeveloperhub.org/vocabulary/v1/organization> ;
@@ -54,7 +55,7 @@
 
 org:FormalOrganization rdf:type owl:Class ;
                        
-                       rdfs:subClassOf orgw3:FormalOrganization .
+                       rdfs:subClassOf org:Organization, orgw3:FormalOrganization .
 
 
 
@@ -66,16 +67,17 @@ org:Organization rdf:type owl:Class ;
 	                              owl:onProperty org:id ;
 	                              owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
 	                              owl:onDataRange xsd:string
-	                           	],
+	                           	],	
 	                           	[ rdf:type owl:Restriction ;
-	                              owl:onProperty skos:prefLabel ;
+	                              owl:onProperty org:title ;
 	                              owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
 	                              owl:onDataRange xsd:string
-	                           	],
+	                           	],	  
 	                           	[ rdf:type owl:Restriction ;
-	                              owl:onProperty skos:altLabel ;
-	                              owl:someValuesFrom xsd:string
-	                           	],
+	                              owl:onProperty org:description ;
+	                              owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	                              owl:onDataRange xsd:string
+	                           	],                         	                           
 	                           	[ rdf:type owl:Restriction ;
 	                              owl:onProperty orgw3:purpose ;
 	                              owl:someValuesFrom xsd:string
@@ -103,7 +105,7 @@ org:Organization rdf:type owl:Class ;
 
 org:OrganizationalUnit rdf:type owl:Class ;
                        
-                       rdfs:subClassOf orgw3:OrganizationalUnit .
+                       rdfs:subClassOf org:Organization, orgw3:OrganizationalUnit .
 
 
 
@@ -155,9 +157,9 @@ org:Project rdf:type owl:Class ;
             
             rdfs:subClassOf doap:Project,
 							[ rdf:type owl:Restriction ;
-							owl:onProperty org:id ;
-							owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-							owl:onDataRange xsd:string
+							  owl:onProperty org:id ;
+							  owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+							  owl:onDataRange xsd:string
 							] ,
 							[ rdf:type owl:Restriction ;
 							  owl:onProperty doap:name ;
@@ -201,7 +203,7 @@ org:Role a owl:Class ;
 
 org:Membership a owl:Class;
 	    rdfs:subClassOf [ rdf:type owl:Restriction ;
-                              owl:onProperty :memberOn ;
+                              owl:onProperty :membershipOn ;
                               owl:someValuesFrom [ rdf:type owl:Class ;
                                                    owl:unionOf ( :Project
                                                                  :Organization
@@ -212,25 +214,25 @@ org:Membership a owl:Class;
 
 org:member a owl:ObjectProperty, rdf:Property, owl:FunctionalProperty;
 	rdfs:domain org:Membership;
-    rdfs:range  foaf:Agent.
+    rdfs:range  org:Person.
 
 org:hasMembership a owl:ObjectProperty, rdf:Property;
-    rdfs:domain foaf:Agent;
+    rdfs:domain org:Person;
     rdfs:range  org:Membership.
 
 org:member owl:inverseOf org:member.     
 
-org:memberOn a owl:ObjectProperty, rdf:Property, owl:FunctionalProperty .
+org:membershipOn a owl:ObjectProperty, rdf:Property, owl:FunctionalProperty .
       
 org:role a owl:ObjectProperty, rdf:Property;
 	rdfs:domain org:Membership;
     rdfs:range  org:Role.
 
 org:memberOf a owl:ObjectProperty, rdf:Property;
-    rdfs:domain foaf:Agent .
+    rdfs:domain org:Person .
    
 org:hasMember a owl:ObjectProperty, rdf:Property; 
-    rdfs:range  foaf:Agent .
+    rdfs:range  org:Person .
  
 
 org:memberOf  owl:inverseOf org:hasMember .
@@ -273,6 +275,15 @@ org:createdOn rdf:type owl:DatatypeProperty ;
 org:date rdf:type owl:DatatypeProperty ;
          
          rdfs:range xsd:dateTime .
+
+
+org:title a owl:DatatypeProperty ;
+  rdfs:subPropertyOf dcterms:title ;
+  rdfs:range xsd:string .
+
+org:description a owl:DatatypeProperty ;
+  rdfs:subPropertyOf dcterms:description;
+  rdfs:range xsd:string .
 
 
 
