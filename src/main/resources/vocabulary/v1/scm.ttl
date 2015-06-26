@@ -339,8 +339,8 @@
                               owl:onDataRange xsd:dateTime
                             ] ,
                             [ rdf:type owl:Restriction ;
-                              owl:onProperty foaf:mbox ;
-                              owl:someValuesFrom rdfs:Resource
+                              owl:onProperty :mbox ;
+                              owl:someValuesFrom xsd:string
                             ] ,
                             [ rdf:type owl:Restriction ;
                               owl:onProperty foaf:img ;
@@ -466,7 +466,9 @@ doap:name rdf:type owl:DatatypeProperty .
     
     rdfs:range xsd:string .
 
-
+:mbox rdf:type owl:DatatypeProperty ;
+    
+    rdfs:range xsd:string .
 
 ###  http://www.smartdeveloperhub.org/vocabulary/sdh/v1/scm#isArchived
 
