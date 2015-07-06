@@ -331,6 +331,11 @@
 
 
 ###  http://xmlns.com/foaf/0.1/Person
+foaf:Image rdfs:subClassOf [ rdf:type owl:Restriction ;
+                             owl:onProperty foaf:depicts ;
+			     owl:allValuesFrom owl:Thing
+                           ].
+
 
 :Person rdfs:subClassOf foaf:Person, 
                             [ rdf:type owl:Restriction ;
