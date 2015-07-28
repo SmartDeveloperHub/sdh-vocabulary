@@ -270,10 +270,10 @@ platform:name a owl:ObjectProperty ;
 platform:targetType a owl:ObjectProperty ;
   rdfs:range rdfs:Class .
 
-platform:isSequence a owl:ObjectProperty ;
+platform:isSequence a owl:DatatypeProperty ;
   rdfs:range xsd:boolean .
 
-platform:isOptional a owl:ObjectProperty ;
+platform:isOptional a owl:DatatypeProperty ;
   rdfs:range xsd:boolean .
 
 ##-- REFINEMENTS -------------------------------------------------------------##
