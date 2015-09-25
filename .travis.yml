@@ -3,6 +3,8 @@ cache:
   directories:
   - $HOME/.m2/repository
   - $HOME/.sonar
+notifications:
+  slack: sdhub:ti8lMh7ERZIqLzWF4dHkcgwt
 language: java
 jdk:
 - oraclejdk7
