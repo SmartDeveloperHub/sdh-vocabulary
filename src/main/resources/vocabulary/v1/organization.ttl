@@ -25,11 +25,11 @@
 # #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
 #
 
-@prefix : <http://www.smartdeveloperhub.org/vocabulary/organization#> .
+@prefix : <http://www.smartdeveloperhub.org/vocabulary/org#> .
 @prefix ci: <http://www.smartdeveloperhub.org/vocabulary/ci#> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
-@prefix org: <http://www.smartdeveloperhub.org/vocabulary/organization#> .
+@prefix org: <http://www.smartdeveloperhub.org/vocabulary/org#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix scm: <http://www.smartdeveloperhub.org/vocabulary/scm#> .
@@ -51,9 +51,9 @@
 @prefix oslc_auto: <http://open-services.net/ns/auto#> .
 @prefix oslc_asset: <http://open-services.net/ns/asset#> .
 @prefix oslc_config: <http://open-services.net/ns/config#> .
-@base <http://www.smartdeveloperhub.org/vocabulary/organization> .
+@base <http://www.smartdeveloperhub.org/vocabulary/org> .
 
-<http://www.smartdeveloperhub.org/vocabulary/organization> rdf:type owl:Ontology ;
+<http://www.smartdeveloperhub.org/vocabulary/org> rdf:type owl:Ontology ;
                                                            
                                                            	owl:imports <http://www.smartdeveloperhub.org/vocabulary/external/doap/doap.rdf> ,
                                                                        <http://www.smartdeveloperhub.org/vocabulary/external/org/org.ttl> ,
@@ -61,7 +61,7 @@
                                                                        <http://www.smartdeveloperhub.org/vocabulary/external/skos/skos.rdf> ,
                                                                        <http://www.smartdeveloperhub.org/vocabulary/v1/platform>;
                                                            
-                                                           	owl:versionIRI <http://www.smartdeveloperhub.org/vocabulary/v1/organization> ;
+                                                           	owl:versionIRI <http://www.smartdeveloperhub.org/vocabulary/v1/org> ;
                                                                                                                       	
                                                            	rdfs:label "Core organization ontology for the smart developer hub project"@en;
 															rdfs:label "Ontología de organizacion para el proyecto smart developer hub"@es;
@@ -92,6 +92,10 @@ org:Organization rdf:type owl:Class ;
 	                              owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
 	                              owl:onDataRange xsd:string
 	                           	],	  
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty skos:prefLabel ;
+                                owl:someValuesFrom xsd:string
+                              ],
 	                           	[ rdf:type owl:Restriction ;
 	                              owl:onProperty org:description ;
 	                              owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
@@ -121,7 +125,15 @@ org:Organization rdf:type owl:Class ;
               								[ rdf:type owl:Restriction ;
               								  owl:onProperty org:hasProject ;
               								  owl:allValuesFrom org:Project; 
-              								] .
+              								],                              
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty org:organizationPosition ;
+                                owl:allValuesFrom org:Position; 
+                              ],
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty org:organizationRole ;
+                                owl:allValuesFrom org:Role; 
+                              ].
 
 ###  http://www.smartdeveloperhub.org/vocabulary/organization#FormalOrganization
 
@@ -152,12 +164,7 @@ org:OrganizationalCollaboration a owl:Class, rdfs:Class;
 ###  http://www.smartdeveloperhub.org/vocabulary/organization#Person
 
 org:Person rdf:type owl:Class ;           
-           rdfs:subClassOf foaf:Person ,
-           [ rdf:type owl:Restriction ;
-             owl:onProperty org:id ;
-             owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-             owl:onDataRange xsd:string
-           ] ,
+           rdfs:subClassOf foaf:Person ,         
            [ rdf:type owl:Restriction ;
              owl:onProperty foaf:name ;
              owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
@@ -216,7 +223,6 @@ org:Person rdf:type owl:Class ;
 ###  http://www.smartdeveloperhub.org/vocabulary/organization#Project
 
 org:Project rdf:type owl:Class ;
-            
             rdfs:subClassOf doap:Project,
 							[ rdf:type owl:Restriction ;
 							  owl:onProperty org:id ;
@@ -244,11 +250,6 @@ org:Project rdf:type owl:Class ;
 							owl:onDataRange xsd:dateTime
 							] ,
 							[ rdf:type owl:Restriction ;
-							  owl:onProperty doap:location ;
-							  owl:onClass rdfs:Resource ;
-							  owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
-							] ,
-							[ rdf:type owl:Restriction ;
 							  owl:onProperty doap:repository ;
 							  owl:allValuesFrom scm:Repository
 							] ,
@@ -257,12 +258,26 @@ org:Project rdf:type owl:Class ;
 							  owl:allValuesFrom org:Affiliation
 							]. 
 
+skos:Concept a owl:Class ;
+    rdfs:subClassOf [rdf:type owl:Restriction ;
+                      owl:onProperty skos:prefLabel ;
+                      owl:someValuesFrom xsd:string    
+                     ].
+
 org:Role a owl:Class ;
 		  rdfs:subClassOf orgw3:Role ,
                     [ rdf:type owl:Restriction ;
                       owl:onProperty org:roleType ;
                       owl:someValuesFrom skos:Concept
-                   	] .
+                   	],
+                    [ rdf:type owl:Restriction ;
+                      owl:onProperty rdfs:label ;
+                      owl:someValuesFrom xsd:string
+                    ],
+                    [ rdf:type owl:Restriction ;
+                      owl:onProperty rdfs:comment ;
+                      owl:someValuesFrom xsd:string
+                    ] .
 
 
 org:Position a owl:Class ;
@@ -270,7 +285,15 @@ org:Position a owl:Class ;
                     [ rdf:type owl:Restriction ;
                       owl:onProperty org:positionType ;
                       owl:someValuesFrom skos:Concept
-                    ] .                    
+                    ] ,
+                    [ rdf:type owl:Restriction ;
+                      owl:onProperty rdfs:label ;
+                      owl:someValuesFrom xsd:string
+                    ],
+                    [ rdf:type owl:Restriction ;
+                      owl:onProperty rdfs:comment ;
+                      owl:someValuesFrom xsd:string
+                    ].                    
 
 org:Membership a owl:Class;
 	    rdfs:subClassOf orgw3:Membership, 
@@ -290,7 +313,7 @@ org:Membership a owl:Class;
 org:Affiliation a owl:Class;
       rdfs:subClassOf
                       [ rdf:type owl:Restriction ;
-                        owl:onProperty :affiliationWith ;
+                        owl:onProperty  org:affiliationWith ;
                         owl:someValuesFrom org:Project
                       ],
                       [ rdf:type owl:Restriction ;
@@ -302,6 +325,34 @@ org:Affiliation a owl:Class;
                         owl:someValuesFrom org:Role
                       ] .  
 
+
+:ORGHarvester a owl:Class ;
+  rdfs:subClassOf platform:Harvester ;
+  rdfs:subClassOf [
+    rdf:type owl:Restriction ;
+    owl:onProperty platform:vocabulary ;
+    owl:someValuesFrom :ORGVocabulary 
+  ] , [ 
+    rdf:type owl:Restriction ;
+    owl:onProperty platform:hasResourceType ;
+    owl:hasValue :Organization
+  ] , [ 
+    rdf:type owl:Restriction ;
+    owl:onProperty :hasOrganization ;
+    owl:allValuesFrom :Organization
+  ] , [ 
+    rdf:type owl:Restriction ;
+    owl:onProperty platform:providesDomain ;
+    owl:hasValue :ORGDomain ;
+  ] .  
+
+:ORGVocabulary a owl:Class ;
+  rdfs:subClassOf platform:Vocabulary ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty platform:implements ;
+    owl:hasValue :ORGDomain
+  ] .  
 
 
 #################################################################
