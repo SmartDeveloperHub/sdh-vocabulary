@@ -125,11 +125,11 @@ amqp:Path a rdfs:Datatype ;
 amqp:Name a rdfs:Datatype ;
   rdfs:subClassOf amqp:ShortString ;
   xsd:maxLength "127"^^xsd:nonNegativeInteger ;
-  xsd:pattern "[a-zA-Z0-9\-_\.:]*" .
+  xsd:pattern "[a-zA-Z0-9\\-_\\.:]*" .
 
-amqp:RountingKey a rdfs:Datatype ;
+amqp:RoutingKey a rdfs:Datatype ;
   rdfs:subClassOf amqp:ShortString ;
-  xsd:pattern "[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*" .
+  xsd:pattern "[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)*" .
 
 ##-- PROPERTIES --------------------------------------------------------------##
 

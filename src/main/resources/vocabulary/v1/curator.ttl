@@ -160,12 +160,40 @@ curator:DeliveryChannel a owl:Class ;
     owl:maxCardinality "1"^^xsd:nonNegativeInteger
   ] .
 
+curator:Response a owl:Class ;
+  rdfs:subClassOf curator:Message ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty curator:responseTo ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty curator:responseNumber ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger
+  ] .
+
 curator:EnrichmentRequest a owl:Class ;
   rdfs:subClassOf curator:Message ;
   rdfs:subClassOf [
     a owl:Restriction ;
     owl:onProperty curator:targetResource ;
     owl:cardinality "1"^^xsd:nonNegativeInteger
+  ] .
+
+curator:Disconnect a owl:Class ;
+  rdfs:subClassOf curator:Message ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty curator:replyTo ;
+    owl:maxCardinality "0"^^xsd:nonNegativeInteger
+  ] .
+
+curator:Accepted a owl:Class ;
+  rdfs:subClassOf curator:Response ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty curator:replyTo ;
+    owl:maxCardinality "0"^^xsd:nonNegativeInteger
   ] .
 
 #
@@ -177,17 +205,12 @@ curator:EnrichmentRequest a owl:Class ;
 # specified by the 'additionTarget' property, and the triples to be removed will have as
 # subject of object the individual specified by the 'removalTarget' property.
 #
+# If both the additionTarget and removalTarget properties are defined, they should have
+# different values.
+#
 curator:EnrichmentResponse a owl:Class ;
-  rdfs:subClassOf curator:Message ;
+  rdfs:subClassOf curator:Response ;
   rdfs:subClassOf [
-    a owl:Restriction ;
-    owl:onProperty curator:responseTo ;
-    owl:cardinality "1"^^xsd:nonNegativeInteger
-  ] , [
-    a owl:Restriction ;
-    owl:onProperty curator:responseNumber ;
-    owl:cardinality "1"^^xsd:nonNegativeInteger
-  ] , [
     a owl:Restriction ;
     owl:onProperty curator:targetResource ;
     owl:cardinality "1"^^xsd:nonNegativeInteger
@@ -198,6 +221,26 @@ curator:EnrichmentResponse a owl:Class ;
   ] , [
     a owl:Restriction ;
     owl:onProperty curator:removalTarget ;
+    owl:maxCardinality "1"^^xsd:nonNegativeInteger
+  ] .
+
+curator:Failure a owl:Class ;
+  rdfs:subClassOf curator:Response ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty curator:code ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty curator:subcode ;
+    owl:maxCardinality "1"^^xsd:nonNegativeInteger
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty curator:reason ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty curator:detail ;
     owl:maxCardinality "1"^^xsd:nonNegativeInteger
   ] .
 
@@ -248,6 +291,23 @@ curator:agentId a owl:DatatypeProperty ;
   rdfs:subPropertyOf dcterms:identifier ;
   rdfs:domain foaf:Agent ;
   rdfs:range types:UUID .
+
+curator:code a owl:DatatypeProperty ;
+  rdfs:domain curator:Failure ;
+  rdfs:range xsd:unsignedLong .
+
+curator:subcode a owl:DatatypeProperty ;
+  rdfs:domain curator:Failure ;
+  rdfs:range xsd:unsignedLong .
+
+curator:reason a owl:DatatypeProperty ;
+  rdfs:domain curator:Failure ;
+  rdfs:range xsd:string .
+
+curator:detail a owl:DatatypeProperty ;
+  rdfs:domain curator:Failure ;
+  rdfs:range xsd:string .
+
 
 ##-- REFINEMENTS -------------------------------------------------------------##
 

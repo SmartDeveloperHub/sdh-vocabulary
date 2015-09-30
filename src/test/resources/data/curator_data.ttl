@@ -27,8 +27,10 @@
 
 ##-- DECLARATION -------------------------------------------------------------##
 
-@prefix owl:     <http://www.w3.org/2002/07/owl#> .
-@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
 @prefix curator: <http://www.smartdeveloperhub.org/vocabulary/curator#> .
 @prefix amqp:    <http://www.smartdeveloperhub.org/vocabulary/amqp#> .
@@ -44,26 +46,26 @@
 
 <vocabulary> owl:imports <http://www.smartdeveloperhub.org/vocabulary/v1/curator> .
 
-##-- EXAMPLE ENRICHMENT REQUEST --------------------------------------------------------------##
+##-- EXAMPLE ENRICHMENT REQUEST ----------------------------------------------##
 
-_:request a curator:EnrichmentRequest ;
+<#request> a curator:EnrichmentRequest ;
   curator:messageId "00000000-0000-0000-0000-000000000001"^^types:UUID ;
-  curator:submittedBy _:connector ;
+  curator:submittedBy <#connector> ;
   curator:submittedOn "2015-09-29T09:30:10+01:00"^^xsd:dateTimeStamp ;
-  curator:replyTo _:deliveryChannel ;
+  curator:replyTo <#deliveryChannel> ;
   curator:targetResource <http://localhost:8080/harvester/service/builds/1/> .
   
-_:connector a foaf:Agent ;
+<#connector> a foaf:Agent ;
   curator:agentId "00000000-0000-0000-0001-000000000001"^^types:UUID .
   
-_:deliveryChannel a curator:DeliveryChannel ;
-  amqp:broker _:broker ;
+<#deliveryChannel> a curator:DeliveryChannel ;
+  amqp:broker <#broker> ;
   amqp:virtualHost "/sdh/curator/"^^types:Path ;
   amqp:exchangeName "ci.responses"^^types:Name ;
   amqp:queueName "builds"^^types:Name ;
   amqp:routingKey "enrichment.responses"^^types:Name .
   
-_:broker a amqp:Broker ;
+<#broker> a amqp:Broker ;
   amqp:host "127.0.0.1"^^types:Hostname ;
   amqp:port "41980"^^types:Port .
   
@@ -72,21 +74,66 @@ _:broker a amqp:Broker ;
   doap:location "git://github.com/ldp4j/ldp4j.git"^^xsd:anyURI
 ] .
 
-##-- EXAMPLE ENRICHMENT RESPONSE --------------------------------------------------------------##
-  
-_:response a curator:EnrichmentResponse ;
+##-- EXAMPLE ACCEPTED --------------------------------------------------------##
+
+<#accepted> a curator:Accepted ;
   curator:messageId "00000000-0000-0001-0000-000000000001"^^types:UUID ;
-  curator:submittedBy _:curator ;
+  curator:submittedBy <#curator> ;
+  curator:submittedOn "2015-09-29T09:30:05+01:00"^^xsd:dateTimeStamp ;
+  curator:responseTo "00000000-0000-0000-0000-000000000001"^^types:UUID ;
+  curator:responseNumber "1"^^xsd:unsignedLong .
+
+<#curator> a foaf:Agent ;
+  curator:agentId "00000000-0000-0000-0001-000000000002"^^types:UUID .
+
+##-- EXAMPLE ENRICHMENT RESPONSE ---------------------------------------------##
+  
+<#response> a curator:EnrichmentResponse ;
+  curator:messageId "00000000-0000-0001-0000-000000000002"^^types:UUID ;
+  curator:submittedBy <#curator> ;
   curator:submittedOn "2015-09-29T09:30:15+01:00"^^xsd:dateTimeStamp ;
   curator:responseTo "00000000-0000-0000-0000-000000000001"^^types:UUID ;
   curator:responseNumber "1"^^xsd:unsignedLong ;
   curator:targetResource <http://localhost:8080/harvester/service/builds/1/> ;
-  curator:additionTarget _:add ;
-  curator:removalTarget _:remove .
+  curator:additionTarget <#add> ;
+  curator:removalTarget <#remove> .
 
-_:curator a foaf:Agent ;
+<#curator> a foaf:Agent ;
   curator:agentId "00000000-0000-0000-0001-000000000002"^^types:UUID .
 
-_:add ci:usesRepository <http://localhost:8080/scm/service/repository/1/> .
+<#add> ci:usesRepository <http://localhost:8080/scm/service/repository/1/> .
 
-_:remove ci:usesRepository <http://localhost:8088/harvester/service/repository/237/> .
+<#remove> ci:usesRepository <http://localhost:8088/harvester/service/repository/237/> .
+
+
+##-- EXAMPLE DISCONNECT-------------------------------------------------------##
+
+<#disconnect> a curator:Disconnect ;
+  curator:messageId "00000000-0000-0000-0000-000000000002"^^types:UUID ;
+  curator:submittedBy <#connector> ;
+  curator:submittedOn "2015-09-29T09:30:40+01:00"^^xsd:dateTimeStamp .
+
+<#connector> a foaf:Agent ;
+  curator:agentId "00000000-0000-0000-0001-000000000001"^^types:UUID .
+
+##-- EXAMPLE ACCEPTED --------------------------------------------------------##
+
+<#goodbye> a curator:Accepted ;
+  curator:messageId "00000000-0000-0001-0000-000000000002"^^types:UUID ;
+  curator:submittedBy <#curator> ;
+  curator:submittedOn "2015-09-29T09:30:45+01:00"^^xsd:dateTimeStamp ;
+  curator:responseTo "00000000-0000-0000-0000-000000000002"^^types:UUID ;
+  curator:responseNumber "1"^^xsd:unsignedLong .
+
+<#curator> a foaf:Agent ;
+  curator:agentId "00000000-0000-0000-0001-000000000002"^^types:UUID .
+
+##-- EXAMPLE VOCABULARY ------------------------------------------------------##
+
+ci:usesRepository a owl:ObjectProperty .
+
+scm:Repository a owl:Class .
+
+doap:location a owl:DatatypeProperty ;
+  rdfs:domain scm:Repository ;
+  rdfs:range xsd:anyURI .

@@ -61,7 +61,6 @@ public class VocabularyTest {
 						"TURTLE");
 	}
 
-
 	@Test
 	public void validateExampleData() {
 		Model dataSet = loadData("data/curator_data.ttl");
