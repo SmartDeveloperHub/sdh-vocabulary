@@ -52,8 +52,13 @@
 		<xs:union memberTypes="types:DomainName types:IPv4Address types:IPv6Address"/>
 	</xs:simpleType>
 	<xs:simpleType name="DomainName">
+		<xs:annotation>
+			<xs:documentation>
+				A valid domain name according to Section 3.5 of RFC 1034.
+			</xs:documentation>
+		</xs:annotation>
 		<xs:restriction base="xs:token">
-			<xs:pattern value="[a-zA-Z0-9]+(\.[a-zA-Z0-9\-_]+)*"/>
+			<xs:pattern value="[a-zA-Z][a-zA-Z0-9]*(\-?[a-zA-Z0-9]+)*(\.[a-zA-Z][a-zA-Z0-9]*(\-?[a-zA-Z0-9]+)*)*"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="IPv4Address">
