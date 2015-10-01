@@ -101,6 +101,7 @@
 # A broker may specify a host and port. 
 # If no host is specified, "localhost" (127.0.0.1) will be used as default value.
 # If no port is specified, AMQP's default port will be used as default (i.e., 5672).
+# If no virtual host is specified, "/" will be used as default value.
 amqp:Broker a owl:Class ;
   rdfs:subClassOf [
     a owl:Restriction ;
@@ -109,6 +110,10 @@ amqp:Broker a owl:Class ;
   ] , [
     a owl:Restriction ;
     owl:onProperty amqp:port ;
+    owl:maxCardinality "1"^^xsd:nonNegativeInteger
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty amqp:virtualHost ;
     owl:maxCardinality "1"^^xsd:nonNegativeInteger
   ] .
 

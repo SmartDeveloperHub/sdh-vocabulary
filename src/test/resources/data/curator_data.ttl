@@ -60,14 +60,14 @@
   
 <#deliveryChannel> a curator:DeliveryChannel ;
   amqp:broker <#broker> ;
-  amqp:virtualHost "/sdh/curator/"^^types:Path ;
   amqp:exchangeName "ci.responses"^^types:Name ;
   amqp:queueName "builds"^^types:Name ;
   amqp:routingKey "enrichment.responses"^^types:Name .
   
 <#broker> a amqp:Broker ;
   amqp:host "127.0.0.1"^^types:Hostname ;
-  amqp:port "41980"^^types:Port .
+  amqp:port "41980"^^types:Port ;
+  amqp:virtualHost "/sdh/curator/"^^types:Path .
   
 <http://localhost:8080/harvester/service/builds/1/> ci:usesRepository [
   a scm:Repository ;

@@ -128,23 +128,17 @@ curator:Message a owl:Class ;
 # following exceptions apply:
 # 1. If no broker is defined, the consumer should use the configuration of the broker 
 #    used by the publisher.
-# 2. If no virtual host is defined, the consumer should use the same virtual host used 
-#    by the publisher.
-# 3. If no exchange name is defined, the consumer should use the same exchange used by 
+# 2. If no exchange name is defined, the consumer should use the same exchange used by 
 #    the publisher.
-# 4. If no queue name is defined, the consumer should use the same queue used by the 
+# 3. If no queue name is defined, the consumer should use the same queue used by the 
 #    publisher.
-# 5. If no routing key is defined, the consumer should use the same routing key used 
+# 4. If no routing key is defined, the consumer should use the same routing key used 
 #    by the publisher.
 #
 curator:DeliveryChannel a owl:Class ;
   rdfs:subClassOf [
     a owl:Restriction ;
     owl:onProperty amqp:broker ;
-    owl:maxCardinality "1"^^xsd:nonNegativeInteger
-  ] , [
-    a owl:Restriction ;
-    owl:onProperty amqp:virtualHost ;
     owl:maxCardinality "1"^^xsd:nonNegativeInteger
   ] , [
     a owl:Restriction ;
