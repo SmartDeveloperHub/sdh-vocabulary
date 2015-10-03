@@ -51,7 +51,7 @@
 <#request> a curator:EnrichmentRequest ;
   curator:messageId "00000000-0000-0000-0000-000000000001"^^types:UUID ;
   curator:submittedBy <#connector> ;
-  curator:submittedOn "2015-09-29T09:30:10+01:00"^^xsd:dateTimeStamp ;
+  curator:submittedOn "2015-09-29T09:30:10+01:00"^^xsd:dateTime ;
   curator:replyTo <#deliveryChannel> ;
   curator:targetResource <http://localhost:8080/harvester/service/builds/1/> .
   
@@ -79,7 +79,7 @@
 <#accepted> a curator:Accepted ;
   curator:messageId "00000000-0000-0001-0000-000000000001"^^types:UUID ;
   curator:submittedBy <#curator> ;
-  curator:submittedOn "2015-09-29T09:30:05+01:00"^^xsd:dateTimeStamp ;
+  curator:submittedOn "2015-09-29T09:30:05+01:00"^^xsd:dateTime ;
   curator:responseTo "00000000-0000-0000-0000-000000000001"^^types:UUID ;
   curator:responseNumber "1"^^xsd:unsignedLong .
 
@@ -91,7 +91,7 @@
 <#response> a curator:EnrichmentResponse ;
   curator:messageId "00000000-0000-0001-0000-000000000002"^^types:UUID ;
   curator:submittedBy <#curator> ;
-  curator:submittedOn "2015-09-29T09:30:15+01:00"^^xsd:dateTimeStamp ;
+  curator:submittedOn "2015-09-29T09:30:15+01:00"^^xsd:dateTime ;
   curator:responseTo "00000000-0000-0000-0000-000000000001"^^types:UUID ;
   curator:responseNumber "1"^^xsd:unsignedLong ;
   curator:targetResource <http://localhost:8080/harvester/service/builds/1/> ;
@@ -111,7 +111,7 @@
 <#disconnect> a curator:Disconnect ;
   curator:messageId "00000000-0000-0000-0000-000000000002"^^types:UUID ;
   curator:submittedBy <#connector> ;
-  curator:submittedOn "2015-09-29T09:30:40+01:00"^^xsd:dateTimeStamp .
+  curator:submittedOn "2015-09-29T09:30:40+01:00"^^xsd:dateTime .
 
 <#connector> a foaf:Agent ;
   curator:agentId "00000000-0000-0000-0001-000000000001"^^types:UUID .
@@ -121,7 +121,7 @@
 <#goodbye> a curator:Accepted ;
   curator:messageId "00000000-0000-0001-0000-000000000002"^^types:UUID ;
   curator:submittedBy <#curator> ;
-  curator:submittedOn "2015-09-29T09:30:45+01:00"^^xsd:dateTimeStamp ;
+  curator:submittedOn "2015-09-29T09:30:45+01:00"^^xsd:dateTime ;
   curator:responseTo "00000000-0000-0000-0000-000000000002"^^types:UUID ;
   curator:responseNumber "1"^^xsd:unsignedLong .
 

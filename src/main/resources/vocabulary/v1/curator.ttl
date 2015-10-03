@@ -250,7 +250,7 @@ curator:messageId a owl:DatatypeProperty ;
 curator:submittedOn a owl:DatatypeProperty ;
   rdfs:subPropertyOf dcterms:dateSubmitted ;
   rdfs:domain curator:Message ;
-  rdfs:range xsd:dateTimeStamp .
+  rdfs:range xsd:dateTime .
 
 curator:submittedBy a owl:ObjectProperty ;
   rdfs:domain curator:Message ;
