@@ -113,11 +113,24 @@ curator:Message a owl:Class ;
     a owl:Restriction ;
     owl:onProperty curator:submittedBy ;
     owl:cardinality "1"^^xsd:nonNegativeInteger
-  ] , [
+  ] ;
+  owl:disjointUnionOf (
+    curator:Request
+    curator:Response
+  ) .
+
+curator:Request a owl:Class ;
+  rdfs:subClassOf curator:Message ;
+  rdfs:subClassOf [
     a owl:Restriction ;
     owl:onProperty curator:replyTo ;
     owl:maxCardinality "1"^^xsd:nonNegativeInteger
-  ] .
+  ] ;
+  owl:disjointUnionOf (
+    curator:EnrichmentRequest
+    curator:Disconnect
+  ) .
+
 
 #
 # A delivery channel defines the means that a consumer of a message should use for 
@@ -164,18 +177,28 @@ curator:Response a owl:Class ;
     a owl:Restriction ;
     owl:onProperty curator:responseNumber ;
     owl:cardinality "1"^^xsd:nonNegativeInteger
-  ] .
+  ] ;
+  owl:disjointUnionOf (
+    curator:EnrichmentResponse
+    curator:Accepted
+    curator:Failure
+  ) .
+  
 
 curator:EnrichmentRequest a owl:Class ;
-  rdfs:subClassOf curator:Message ;
+  rdfs:subClassOf curator:Request ;
   rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty curator:replyTo ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger
+  ] , [
     a owl:Restriction ;
     owl:onProperty curator:targetResource ;
     owl:cardinality "1"^^xsd:nonNegativeInteger
   ] .
 
 curator:Disconnect a owl:Class ;
-  rdfs:subClassOf curator:Message ;
+  rdfs:subClassOf curator:Request ;
   rdfs:subClassOf [
     a owl:Restriction ;
     owl:onProperty curator:replyTo ;
@@ -257,6 +280,7 @@ curator:submittedBy a owl:ObjectProperty ;
   rdfs:range foaf:Agent .
 
 curator:replyTo a owl:ObjectProperty ;
+	rdfs:domain curator:Request ;
   rdfs:range curator:DeliveryChannel .
 
 curator:apply a owl:ObjectProperty ;
