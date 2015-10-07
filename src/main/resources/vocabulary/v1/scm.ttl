@@ -101,7 +101,8 @@
 <scm> rdf:type owl:Ontology ;
   owl:versionIRI <v1/scm> ;
   owl:imports <external/doap/doap.rdf> ,
-              <v1/platform> ;
+              <v1/platform> ,
+              <v1/organization> ;
   rdfs:comment """This ontology models a part of the concepts involved in a SCM system. 
                   We have resctricted the ontology to the concepts and the relations needed by
                   the system to calculate the following set of metrics:
@@ -116,19 +117,6 @@
 
 ##-- CLASSES -----------------------------------------------------------------##
 
-###  http://usefulinc.com/ns/doap#Project
-
-:Project rdfs:subClassOf doap:Project,
-                            [ rdf:type owl:Restriction ;
-                               owl:onProperty :projectId ;
-                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                               owl:onDataRange xsd:string
-                             ] ,
-                             [ rdf:type owl:Restriction ;
-                               owl:onProperty :createdOn ;
-                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                               owl:onDataRange xsd:dateTime
-                             ] .
 
 ###  http://usefulinc.com/ns/doap#Repository
 
@@ -149,9 +137,9 @@
                                   owl:onDataRange xsd:string
                                 ] ,
                                 [ rdf:type owl:Restriction ;
-                                  owl:onProperty doap:location ;
-                                  owl:onClass rdfs:Resource ;
-                                  owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                  owl:onProperty :location ;                                 
+                                  owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger;
+                                  owl:onDataRange xsd:anyURI
                                 ] ,
 				                        [ rdf:type owl:Restriction ;
                                   owl:onProperty :owner ;
@@ -288,8 +276,12 @@
 ###  http://www.smartdeveloperhub.org/vocabulary/sdh/v1/scm#Commit
 
 :Commit rdf:type owl:Class ;
-        
-        rdfs:subClassOf :Action ;
+        rdfs:subClassOf :Action ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :commitId ;
+                          owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                          owl:onDataRange xsd:string
+                        ];
         
         owl:disjointWith :Merge .
 
@@ -337,7 +329,12 @@ foaf:Image rdfs:subClassOf [ rdf:type owl:Restriction ;
                            ].
 
 
-:Person rdfs:subClassOf foaf:Person, 
+:Commiter rdfs:subClassOf foaf:Person, 
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty platform:correspondsTo ;
+                              owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                              owl:onClass org:Person
+                            ] ,
                             [ rdf:type owl:Restriction ;
                               owl:onProperty :lastCommit ;
                               owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
@@ -357,25 +354,12 @@ foaf:Image rdfs:subClassOf [ rdf:type owl:Restriction ;
                               owl:onDataRange xsd:dateTime
                             ] ,
                             [ rdf:type owl:Restriction ;
-                              owl:onProperty foaf:homepage ;
-                              owl:allValuesFrom foaf:Document
-                            ] ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty foaf:account ;
-                              owl:allValuesFrom foaf:OnlineAccount
-                            ] ,
-                            [ rdf:type owl:Restriction ;
-                              owl:onProperty :signUpDate ;
-                              owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                              owl:onDataRange xsd:dateTime
-                            ] ,
-                            [ rdf:type owl:Restriction ;
                               owl:onProperty foaf:name ;
                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                               owl:onDataRange xsd:string
                             ] ,
                             [ rdf:type owl:Restriction ;
-                              owl:onProperty :userId ;
+                              owl:onProperty :committerId ;
                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                               owl:onDataRange xsd:string
                             ] .
@@ -540,9 +524,14 @@ doap:name rdf:type owl:DatatypeProperty .
 
 ###  http://www.smartdeveloperhub.org/vocabulary/sdh/v1/scm#userId
 
-:userId rdf:type owl:DatatypeProperty ;
+:commiterId rdf:type owl:DatatypeProperty ;
         
         rdfs:subPropertyOf :id .
+
+:commitId rdf:type owl:DatatypeProperty .     
+
+:location rdf:type owl:DatatypeProperty ;
+          rdfs:range xsd:anyURI .   
         
 #################################################################
 #
@@ -552,10 +541,6 @@ doap:name rdf:type owl:DatatypeProperty .
 
 
 ###  http://usefulinc.com/ns/doap#location
-
-doap:location rdf:type owl:ObjectProperty .
-
-
 
 ###  http://www.smartdeveloperhub.org/vocabulary/sdh/v1/scm#hasRepository
 :hasRepository a owl:InverseFunctionalProperty ;

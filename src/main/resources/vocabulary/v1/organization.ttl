@@ -56,11 +56,10 @@
 <http://www.smartdeveloperhub.org/vocabulary/org> rdf:type owl:Ontology ;
                                                            
                                                            	owl:imports <http://www.smartdeveloperhub.org/vocabulary/external/doap/doap.rdf> ,
-                                                                       <http://www.smartdeveloperhub.org/vocabulary/external/org/org.ttl> ,
-                                                                       <http://www.smartdeveloperhub.org/vocabulary/external/swo/swo_core.ttl>,
+                                                                       <http://www.smartdeveloperhub.org/vocabulary/external/org/org.ttl> ,                                                                       
                                                                        <http://www.smartdeveloperhub.org/vocabulary/external/skos/skos.rdf> ,
-                                                                       <http://www.smartdeveloperhub.org/vocabulary/v1/platform>;
-                                                           
+                                                                       <http://www.smartdeveloperhub.org/vocabulary/v1/platform> ,
+                                                                       <http://www.smartdeveloperhub.org/vocabulary/v1/scm>;                                                           
                                                            	owl:versionIRI <http://www.smartdeveloperhub.org/vocabulary/v1/org> ;
                                                                                                                       	
                                                            	rdfs:label "Core organization ontology for the smart developer hub project"@en;
@@ -124,7 +123,7 @@ org:Organization rdf:type owl:Class ;
                               ],
               								[ rdf:type owl:Restriction ;
               								  owl:onProperty org:hasProject ;
-              								  owl:allValuesFrom org:Project; 
+              								  owl:allValuesFrom scm:repository; 
               								],                              
                               [ rdf:type owl:Restriction ;
                                 owl:onProperty org:organizationPosition ;
@@ -249,9 +248,15 @@ org:Project rdf:type owl:Class ;
 							owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
 							owl:onDataRange xsd:dateTime
 							] ,
+              [ rdf:type owl:Restriction ;
+                owl:onProperty scm:location ;
+                owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                owl:onDataRange xsd:anyURI; 
+              ],
 							[ rdf:type owl:Restriction ;
 							  owl:onProperty doap:repository ;
-							  owl:allValuesFrom scm:Repository
+                owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+							  owl:onClass scm:Repository
 							] ,
 							[ rdf:type owl:Restriction ;
 							  owl:onProperty org:affiliation ;

@@ -276,6 +276,8 @@ platform:isSequence a owl:ObjectProperty ;
 platform:isOptional a owl:ObjectProperty ;
   rdfs:range xsd:boolean .
 
+platform:correspondsTo a owl:ObjectProperty .
+
 ##-- REFINEMENTS -------------------------------------------------------------##
 
 platform:source a owl:DatatypeProperty ;

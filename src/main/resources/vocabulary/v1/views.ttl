@@ -1,0 +1,183 @@
+##-- PREFIXES ----------------------------------------------------------------##
+
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+@prefix sdh:      <http://www.smartdeveloperhub.org/vocabulary/sdh#> .
+@prefix platform: <http://www.smartdeveloperhub.org/vocabulary/platform#> .
+@prefix ci:       <http://www.smartdeveloperhub.org/vocabulary/ci#> .
+@prefix scm:      <http://www.smartdeveloperhub.org/vocabulary/scm#> .
+@prefix org:      <http://www.smartdeveloperhub.org/vocabulary/organization#> .
+@prefix metrics:  <http://www.smartdeveloperhub.org/vocabulary/metrics#> .
+@prefix views:  <http://www.smartdeveloperhub.org/vocabulary/views#> .
+
+@prefix oslc:        <http://open-services.net/ns/core#> .
+@prefix oslc_auto:   <http://open-services.net/ns/auto#> .
+@prefix oslc_asset:  <http://open-services.net/ns/asset#> .
+@prefix oslc_config: <http://open-services.net/ns/config#> .
+
+@prefix doap:    <http://usefulinc.com/ns/doap#> .
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix dcterms: <http://purl.org/dc/terms/> . 
+
+# PROV ontology
+@prefix prov: <http://www.w3.org/ns/prov#> .
+# Dublin Core Metadata Element Set, Version 1.1
+@prefix dc:   <http://purl.org/dc/elements/1.1/> .
+# Web of Trust Ontology
+@prefix wot:  <http://xmlns.com/wot/0.1/> . 
+# SemWeb Vocab Status Ontology
+@prefix vs:   <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+# Resource Directory Description Language (RDDL)
+@prefix rddl: <http://www.rddl.org/> .
+
+##-- MODULE DECLARATION ------------------------------------------------------##
+
+@base <http://www.smartdeveloperhub.org/vocabulary/> .
+
+<views> rdf:type owl:Ontology ;
+  owl:versionIRI <v1/views> ;
+  owl:imports 
+    <v1/platform> .
+
+
+##-- CLASSES -----------------------------------------------------------------##
+
+views:ViewService a owl:Class ;
+  rdfs:subClassOf platform:LinkedDataMicroService ;
+  rdfs:subClassOf [
+				    a owl:Restriction ;
+				    owl:onProperty platform:vocabulary ;
+				    owl:someValuesFrom views:ViewsVocabulary 
+				  ] , [ 
+				    a owl:Restriction ;
+				    owl:onProperty platform:hasResourceType ;
+				    owl:hasValue views:ViewsEndpoint
+				  ] , [ 
+				    a owl:Restriction ;
+				    owl:onProperty platform:providesDomain ;
+				    owl:hasValue views:ViewsDomain 
+				  ] , [
+				    a owl:Restriction ;
+				    owl:onProperty views:producesView ;
+				    owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+				    owl:onClass views:ViewDefinition 
+				  ] , [
+				    a owl:Restriction ;
+				    owl:onProperty views:hasEndpoint ;
+				    owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+				    owl:onClass views:ViewEndPoint 
+				  ].  
+
+views:ViewEndpoint a owl:Class ;
+  rdfs:subClassOf platform:Endpoint ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty views:supports;
+    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+    owl:onClass views:ViewDefinition
+  ] .
+  
+views:ViewDefinition a owl:Class ;
+  rdfs:subClassOf platform:Operation ;
+  rdfs:subClassOf [
+				    a owl:Restriction ;
+				    owl:onProperty views:target;
+				    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+				    owl:onClass rdfs:Class
+				  ], [
+				    a owl:Restriction ;
+				    owl:onProperty views:field;
+				    owl:allValuesFrom views:Parameter 
+				  ], [
+				    a owl:Restriction ;
+				    owl:onProperty views:hasResult;
+				    owl:allValuesFrom views:SeqResult 
+				  ], [
+				    a owl:Restriction ;
+				    owl:onProperty views:hasSignature;
+				    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+				    owl:onClass views:Parameter
+				  ].
+
+views:ViewVocabulary a owl:Class ;
+  rdfs:subClassOf platform:Vocabulary ;
+  rdfs:subClassOf [
+				    a owl:Restriction ;
+				    owl:onProperty platform:implements ;
+				    owl:hasValue views:ViewDomain
+				  ] .  
+
+ views:Parameter a owl:Class;
+ 		rdfs:subClassOf  platform:Parameter, platform:ValueType;
+ 		rdfs:subClassOf [
+						    a owl:Restriction ;
+						    owl:onProperty views:propertyPath;
+						    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+						    owl:onDataRange xsd:string
+						 ] .
+
+views:SeqResult a owl:Class;
+		rdfs:subClassOf platform:Result, platform:ValueType;
+		rdfs:subClassOf [ 
+							a owl:Restriction ;
+							owl:onProperty platform:isSequence ; 
+							owl:hasValue true 
+		                ],[
+							a owl:Restriction ;
+							owl:onProperty platform:targetType ;
+							owl:allValuesFrom views:Map 
+		                ] .
+
+views:Map a owl:Class;
+  		  rdfs:subClassOf [ 
+							a owl:Restriction ;
+							owl:onProperty views:hasEntry ; 
+							owl:allValuesFrom views:Entry 
+		                  ] , [ 
+							a owl:Restriction ;
+							owl:onProperty owl:equivalentClass ; 
+							owl:onClass <http://dbpedia.org/class/yago/AssociativeArrays>
+		                  ].
+
+views:Entry a owl:Class;
+  		  rdfs:subClassOf [ 
+							a owl:Restriction ;
+							owl:onProperty views:hasKey; 
+							owl:allValuesFrom owl:Class;
+		                  ],
+		                  [ 
+							a owl:Restriction ;
+							owl:onProperty views:hasValue; 
+							owl:allValuesFrom owl:Class;
+		                  ] .
+
+
+##-- PROPERTIES --------------------------------------------------------------##
+
+views:producesView a owl:ObjectProperty .
+  
+views:hasEndpoint a owl:ObjectProperty ;
+  rdfs:subPropertyOf platform:hasResource .
+
+views:supports a owl:ObjectProperty ;
+  rdfs:subPropertyOf platform:providesOperation .
+
+views:propertyPath a owl:DatatypeProperty .
+
+views:hasEntry a owl:ObjectProperty.
+
+views:hasKey a owl:ObjectProperty.
+
+views:hasValue a owl:ObjectProperty.
+
+
+
+##-- INDIVIDUALS--------------------------------------------------------------##
+
+views:ViewsDomain a platform:Domain ;
+  platform:identifier "Views" ;
+  platform:title "Views" ;
+  platform:description "Views Domain" .
