@@ -93,11 +93,11 @@ views:ViewDefinition a owl:Class ;
 				    owl:allValuesFrom views:Parameter 
 				  ], [
 				    a owl:Restriction ;
-				    owl:onProperty views:hasResult;
+				    owl:onProperty platform:hasResult;
 				    owl:allValuesFrom views:SeqResult 
 				  ], [
 				    a owl:Restriction ;
-				    owl:onProperty views:hasSignature;
+				    owl:onProperty platform:hasSignature;
 				    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
 				    owl:onClass views:Parameter
 				  ].
@@ -136,11 +136,9 @@ views:Map a owl:Class;
 							a owl:Restriction ;
 							owl:onProperty views:hasEntry ; 
 							owl:allValuesFrom views:Entry 
-		                  ] , [ 
-							a owl:Restriction ;
-							owl:onProperty owl:equivalentClass ; 
-							owl:onClass <http://dbpedia.org/class/yago/AssociativeArrays>
-		                  ].
+		                  ] ;
+		  owl:equivalentClass <http://dbpedia.org/class/yago/AssociativeArrays> .
+		  
 
 views:Entry a owl:Class;
   		  rdfs:subClassOf [ 
@@ -161,6 +159,12 @@ views:producesView a owl:ObjectProperty .
   
 views:hasEndpoint a owl:ObjectProperty ;
   rdfs:subPropertyOf platform:hasResource .
+
+views:target a owl:ObjectProperty .
+
+views:field a owl:ObjectProperty .
+
+
 
 views:supports a owl:ObjectProperty ;
   rdfs:subPropertyOf platform:providesOperation .
