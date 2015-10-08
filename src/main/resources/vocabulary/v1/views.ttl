@@ -90,17 +90,16 @@ views:ViewDefinition a owl:Class ;
 				  ], [
 				    a owl:Restriction ;
 				    owl:onProperty views:field;
-				    owl:allValuesFrom views:Parameter 
+				    owl:allValuesFrom views:Field 
 				  ], [
 				    a owl:Restriction ;
 				    owl:onProperty platform:hasResult;
-				    owl:allValuesFrom views:SeqResult 
+				    owl:allValuesFrom views:Result 
 				  ], [
 				    a owl:Restriction ;
 				    owl:onProperty platform:hasSignature;
-				    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-				    owl:onClass views:Parameter
-				  ].
+				    owl:cardinality "1"^^xsd:nonNegativeInteger ;
+				  ] .
 
 views:ViewVocabulary a owl:Class ;
   rdfs:subClassOf platform:Vocabulary ;
@@ -110,16 +109,15 @@ views:ViewVocabulary a owl:Class ;
 				    owl:hasValue views:ViewDomain
 				  ] .  
 
- views:Parameter a owl:Class;
- 		rdfs:subClassOf  platform:Parameter, platform:ValueType;
+views:Field a owl:Class;
  		rdfs:subClassOf [
 						    a owl:Restriction ;
-						    owl:onProperty views:propertyPath;
+						    owl:onProperty platform:propertyPath;
 						    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
 						    owl:onDataRange xsd:string
-						 ] .
-
-views:SeqResult a owl:Class;
+						 ] .		  
+ 		
+views:Result a owl:Class;
 		rdfs:subClassOf platform:Result, platform:ValueType;
 		rdfs:subClassOf [ 
 							a owl:Restriction ;
@@ -128,29 +126,8 @@ views:SeqResult a owl:Class;
 		                ],[
 							a owl:Restriction ;
 							owl:onProperty platform:targetType ;
-							owl:allValuesFrom views:Map 
+							owl:allValuesFrom platform:Map 
 		                ] .
-
-views:Map a owl:Class;
-  		  rdfs:subClassOf [ 
-							a owl:Restriction ;
-							owl:onProperty views:hasEntry ; 
-							owl:allValuesFrom views:Entry 
-		                  ] ;
-		  owl:equivalentClass <http://dbpedia.org/class/yago/AssociativeArrays> .
-		  
-
-views:Entry a owl:Class;
-  		  rdfs:subClassOf [ 
-							a owl:Restriction ;
-							owl:onProperty views:hasKey; 
-							owl:allValuesFrom owl:Class;
-		                  ],
-		                  [ 
-							a owl:Restriction ;
-							owl:onProperty views:hasValue; 
-							owl:allValuesFrom owl:Class;
-		                  ] .
 
 
 ##-- PROPERTIES --------------------------------------------------------------##
@@ -164,18 +141,11 @@ views:target a owl:ObjectProperty .
 
 views:field a owl:ObjectProperty .
 
-
-
 views:supports a owl:ObjectProperty ;
   rdfs:subPropertyOf platform:providesOperation .
 
-views:propertyPath a owl:DatatypeProperty .
 
-views:hasEntry a owl:ObjectProperty.
 
-views:hasKey a owl:ObjectProperty.
-
-views:hasValue a owl:ObjectProperty.
 
 
 
