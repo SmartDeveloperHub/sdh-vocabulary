@@ -115,7 +115,12 @@ views:Field a owl:Class;
 						    owl:onProperty platform:propertyPath;
 						    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
 						    owl:onDataRange xsd:string
-						 ] .		  
+						 ] , [
+						    a owl:Restriction ;
+						    owl:onProperty views:name;
+						    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+						    owl:onDataRange xsd:string
+						 ]  .		  
  		
 views:Result a owl:Class;
 		rdfs:subClassOf platform:Result, platform:ValueType;
@@ -144,7 +149,7 @@ views:field a owl:ObjectProperty .
 views:supports a owl:ObjectProperty ;
   rdfs:subPropertyOf platform:providesOperation .
 
-
+views:name a owl:DatatypeProperty . 
 
 
 
