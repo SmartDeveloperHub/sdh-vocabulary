@@ -263,6 +263,8 @@ curator:Failure a owl:Class ;
 
 curator:Policy a owl:Class .
 
+curator:Variable a owl:Class .
+
 ##-- PROPERTIES --------------------------------------------------------------##
 
 curator:messageId a owl:DatatypeProperty ;
@@ -299,11 +301,11 @@ curator:responseNumber a owl:DatatypeProperty ;
 
 curator:additionTarget a owl:ObjectProperty ;
   rdfs:domain curator:EnrichmentResponse ;
-  rdfs:range rdfs:Resource .
+  rdfs:range curator:Variable .
 
 curator:removalTarget a owl:ObjectProperty ;
   rdfs:domain curator:EnrichmentResponse ;
-  rdfs:range rdfs:Resource .
+  rdfs:range curator:Variable .
 
 curator:agentId a owl:DatatypeProperty ;
   rdfs:subPropertyOf dcterms:identifier ;

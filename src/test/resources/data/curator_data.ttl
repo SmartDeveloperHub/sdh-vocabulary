@@ -69,10 +69,23 @@
   amqp:port "41980"^^types:Port ;
   amqp:virtualHost "/sdh/curator/"^^types:Path .
   
-<http://localhost:8080/harvester/service/builds/1/> ci:usesRepository [
-  a scm:Repository ;
-  doap:location "git://github.com/ldp4j/ldp4j.git"^^xsd:anyURI
-] .
+<http://localhost:8080/harvester/service/builds/1/>
+  ci:forBranch  _:branch ;
+  ci:forCommit  _:commit .
+
+_:repository a curator:Variable ; 
+  rdf:type       scm:Repository ;
+  scm:hasBranch  _:branch ;
+  scm:location   "git://github.com/ldp4j/ldp4j.git"^^xsd:anyURI .
+
+_:branch a curator:Variable ;
+  rdf:type       scm:Branch ;
+  doap:name      "develop"^^xsd:string ;
+  scm:hasCommit  _:commit .
+
+_:commit a curator:Variable ;
+  rdf:type scm:Commit ;
+  scm:commitId  "f1efd1d8d8ceebef1d85eb66c69a44b0d713ed44"^^xsd:string .
 
 ##-- EXAMPLE ACCEPTED --------------------------------------------------------##
 
@@ -95,16 +108,19 @@
   curator:responseTo "00000000-0000-0000-0000-000000000001"^^types:UUID ;
   curator:responseNumber "1"^^xsd:unsignedLong ;
   curator:targetResource <http://localhost:8080/harvester/service/builds/1/> ;
-  curator:additionTarget <#add> ;
-  curator:removalTarget <#remove> .
+  curator:additionTarget _:addition ;
+  curator:removalTarget _:removal .
 
 <#curator> a foaf:Agent ;
   curator:agentId "00000000-0000-0000-0001-000000000002"^^types:UUID .
 
-<#add> ci:usesRepository <http://localhost:8080/scm/service/repository/1/> .
+_:addition a curator:Variable ;
+   ci:forBranch <http://localhost:8080/scm/service/repository/1/branches/1/> ;
+   ci:forCommit <http://localhost:8080/scm/service/repository/1/commits/1/> .
 
-<#remove> ci:usesRepository <http://localhost:8088/harvester/service/repository/237/> .
-
+_:removal a curator:Variable ;
+   ci:forBranch <http://localhost:8088/harvester/service/repository/237/branches/1/> ;
+   ci:forCommit <http://localhost:8088/harvester/service/repository/237/branches/23/> .
 
 ##-- EXAMPLE DISCONNECT-------------------------------------------------------##
 
@@ -130,10 +146,17 @@
 
 ##-- EXAMPLE VOCABULARY ------------------------------------------------------##
 
-ci:usesRepository a owl:ObjectProperty .
-
 scm:Repository a owl:Class .
+scm:location a owl:DatatypeProperty .
+scm:hasBranch a owl:ObjectProperty .
 
-doap:location a owl:DatatypeProperty ;
-  rdfs:domain scm:Repository ;
-  rdfs:range xsd:anyURI .
+scm:Branch a owl:Class .
+doap:name a owl:DatatypeProperty .
+scm:hasCommit a owl:ObjectProperty .
+
+scm:Commit a owl:Class .
+scm:commitId a owl:DatatypeProperty .
+
+ci:forBranch a owl:ObjectProperty .
+ci:forCommit a owl:ObjectProperty .
+
