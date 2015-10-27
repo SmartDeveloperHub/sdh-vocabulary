@@ -102,7 +102,8 @@
   owl:versionIRI <v1/ci> ;
   owl:imports 
     <v1/platform> , 
-    <v1/oslc_auto_plus> .
+    <v1/oslc_auto_plus> ,
+    <v1/scm> .
 
 ##-- ENUMERATIONS-------------------------------------------------------------##
 
@@ -139,11 +140,7 @@ ci:Build a owl:Class ;
     owl:onClass ci:Execution
   ] , [ 
     a owl:Restriction ;
-    owl:onProperty ci:location ;
-    owl:cardinality "1"^^xsd:nonNegativeInteger ;
-  ] , [ 
-    a owl:Restriction ;
-    owl:onProperty ci:codebase ;
+    owl:onProperty scm:location ;
     owl:cardinality "1"^^xsd:nonNegativeInteger ;
   ] ;
   owl:disjointUnionOf (
@@ -178,7 +175,32 @@ ci:Execution a owl:Class ;
     a owl:Restriction ;
     owl:onProperty ci:location ;
     owl:cardinality "1"^^xsd:nonNegativeInteger ;
-  ] ;
+  ] , [ 
+    a owl:Restriction ;
+    owl:onProperty scm:location ;
+    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;    
+    owl:onDataRange xsd:anyURI
+  ] , [ 
+    a owl:Restriction ;
+    owl:onProperty ci:commitId ;
+    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;    
+    owl:onDataRange xsd:string
+  ] , [ 
+    a owl:Restriction ;
+    owl:onProperty ci:branchId ;
+    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;    
+    owl:onDataRange xsd:string
+  ] , [ 
+    a owl:Restriction ;
+    owl:onProperty ci:forBranch ;
+    owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+    owl:onClass scm:Branch
+  ], [ 
+    a owl:Restriction ;
+    owl:onProperty ci:forCommit ;
+    owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+    owl:onClass scm:Commit
+  ];
   owl:disjointUnionOf (
     ci:RunningExecution
     ci:AbortedExecution
@@ -348,10 +370,19 @@ ci:location a owl:DatatypeProperty ;
   a owl:FunctionalProperty ;
   rdfs:range xsd:anyURI .
 
-ci:codebase a owl:DatatypeProperty ;
-  a owl:FunctionalProperty ;
-  rdfs:domain ci:Build ;
-  rdfs:range xsd:anyURI .
+#ci:codebase a owl:DatatypeProperty ;
+#  a owl:FunctionalProperty ;
+#  rdfs:domain ci:Build ;
+# rdfs:range xsd:anyURI .
+
+scm:location a owl:DatatypeProperty .
+
+ci:forBranch a owl:ObjectProperty .
+ci:forCommit a owl:ObjectProperty .
+
+ci:commitId a owl:DatatypeProperty .
+ci:branchId a owl:DatatypeProperty .
+
 
 ##-- INDIVIDUALS -------------------------------------------------------------##
 

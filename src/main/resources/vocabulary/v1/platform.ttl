@@ -219,7 +219,32 @@ platform:Parameter a owl:Class ;
     a owl:Restriction ;
     owl:onProperty platform:isOptional;
     owl:cardinality "1"^^xsd:nonNegativeInteger
-  ] .
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty platform:propertyPath;
+    owl:allValuesFrom xsd:string
+ ] .
+
+platform:Map a owl:Class;
+        rdfs:subClassOf [ 
+              a owl:Restriction ;
+              owl:onProperty platform:hasEntry ; 
+              owl:allValuesFrom platform:Entry 
+                      ] .
+      
+
+platform:Entry a owl:Class;
+  rdfs:subClassOf [ 
+    a owl:Restriction ;
+    owl:onProperty platform:hasKey; 
+    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+    owl:onDataRange xsd:string 
+  ],[ 
+    a owl:Restriction ;
+    owl:onProperty platform:hasValue; 
+    owl:allValuesFrom rdfs:Resource;
+  ]
+   .
 
 ##-- PROPERTIES --------------------------------------------------------------##
 
@@ -275,6 +300,17 @@ platform:isSequence a owl:DatatypeProperty ;
 
 platform:isOptional a owl:DatatypeProperty ;
   rdfs:range xsd:boolean .
+
+platform:correspondsTo a owl:ObjectProperty .
+
+platform:propertyPath a owl:DatatypeProperty ;
+  rdfs:range xsd:string .
+
+platform:hasEntry a owl:ObjectProperty.
+
+platform:hasKey a owl:DatatypeProperty.
+
+platform:hasValue a owl:ObjectProperty.  
 
 ##-- REFINEMENTS -------------------------------------------------------------##
 
