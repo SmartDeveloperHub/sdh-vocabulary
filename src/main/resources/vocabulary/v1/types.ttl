@@ -1,0 +1,120 @@
+#
+# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+#   This file is part of the Smart Developer Hub Project:
+#     http://www.smartdeveloperhub.org/
+#
+#   Center for Open Middleware
+#     http://www.centeropenmiddleware.com/
+# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+#   Copyright (C) 2015 Center for Open Middleware.
+# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#             http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+#   Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:0.2.0-SNAPSHOT
+#   Bundle      : sdh-vocabulary-0.2.0-SNAPSHOT.jar
+# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+#
+
+##----------------------------------------------------------------------------##
+#     __    __    __    __    __    __    __    __    __    __    __    __     #
+#  __/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__  #
+# /  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \ #
+# \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/ #
+# /  \__/                                                                 /  \ #
+# \__/                     _____                      __                  \__/ #
+# /  \                    / ___/____ ___  ____ ______/ /_                 /  \ #
+# \__/                    \__ \/ __ `__ \/ __ `/ ___/ __/                 \__/ #
+# /  \                   ___/ / / / / / / /_/ / /  / /_                   /  \ #
+# \__/    ____          /____/_/_/_/ /_/\__,_/_/   \__/   __  __      __  \__/ #
+# /  \   / __ \___ _   _____  / /___  ____  ___  _____   / / / /_  __/ /_ /  \ #
+# \__/  / / / / _ \ | / / _ \/ / __ \/ __ \/ _ \/ ___/  / /_/ / / / / __ \\__/ #
+# /  \ / /_/ /  __/ |/ /  __/ / /_/ / /_/ /  __/ /     / __  / /_/ / /_/ //  \ #
+# \__//_____/\___/|___/\___/_/\____/ .___/\___/_/     /_/ /_/\__,_/_.___/ \__/ #
+# /  \                            /_/                                     /  \ #
+# \__/                __   __        __                  __               \__/ #
+# /  \          \  / /  \ /  `  /\  |__) |  | |     /\  |__) \ /          /  \ #
+# \__/           \/  \__/ \__, /~~\ |__) \__/ |___ /~~\ |  \  |           \__/ #
+# /  \__                                                                  /  \ #
+# \__/  \__    __    __    __    __    __    __    __    __    __    __   \__/ #
+# /  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \ #
+# \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/ #
+#    \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/    #
+#                                                                              #
+##----------------------------------------------------------------------------##
+#  ___      __   ___  __            __   __             ___                    # 
+#   |  \ / |__) |__  /__`     |\/| /  \ |  \ |  | |    |__                     # 
+#   |   |  |    |___ .__/     |  | \__/ |__/ \__/ |___ |___                    # 
+#                                                                              #
+##----------------------------------------------------------------------------##
+
+##-- PREFIXES ----------------------------------------------------------------##
+
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+@prefix types:  <http://www.smartdeveloperhub.org/vocabulary/types#> .
+
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix dcterms: <http://purl.org/dc/terms/> . 
+
+# PROV ontology
+@prefix prov:   <http://www.w3.org/ns/prov#> .
+# Dublin Core Metadata Element Set, Version 1.1
+@prefix dc:     <http://purl.org/dc/elements/1.1/> .
+# Dublin Core Metadata Initiative Type Vocabulary
+@prefix dctype: <http://purl.org/dc/dcmitype/> .
+# Web of Trust Ontology
+@prefix wot:    <http://xmlns.com/wot/0.1/> . 
+# SemWeb Vocab Status Ontology
+@prefix vs:     <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+# Resource Directory Description Language (RDDL)
+@prefix rddl:   <http://www.rddl.org/> .
+
+##-- MODULE DECLARATION ------------------------------------------------------##
+
+@base <http://www.smartdeveloperhub.org/vocabulary/> .
+
+<types> rdf:type owl:Ontology ;
+  owl:versionIRI <v1/types> .
+
+##-- ENUMERATIONS-------------------------------------------------------------##
+
+##-- CLASSES -----------------------------------------------------------------##
+
+types:UUID a rdfs:Datatype ;
+  rdfs:subClassOf xsd:token ;
+  xsd:pattern "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}" .
+
+# A network port can be an integer number between 0 and 65535, both incluse.
+types:Port a rdfs:Datatype ;
+  rdfs:subClassOf xsd:nonNegativeNumber ;
+  xsd:maxInclusive "65535"^^xsd:nonNegativeInteger .
+
+# The host might be:
+# a) A domain name (e.g., node1.smartdeveloperhub.org)
+# b) An IP4 address (e.g., 212.32.198.75)
+# c) An IP6 address (e.g., 0:0:0:0:0:ffff:d420:c64b)
+types:Hostname a rdfs:Datatype ;
+  rdfs:subClassOf xsd:token .
+
+##-- PROPERTIES --------------------------------------------------------------##
+
+##-- REFINEMENTS -------------------------------------------------------------##
+
+##-- INDIVIDUALS--------------------------------------------------------------##
+
+##----------------------------------------------------------------------------##
+#  MODULE END                                                                  #
+##----------------------------------------------------------------------------##

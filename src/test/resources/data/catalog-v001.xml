@@ -34,6 +34,9 @@
     <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/scm" uri="${buildDirectoryURI}vocabulary/v1/scm.ttl"/>
     <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/metrics" uri="${buildDirectoryURI}vocabulary/v1/metrics.ttl"/>
     <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/organization" uri="${buildDirectoryURI}vocabulary/v1/organization.ttl"/>
+    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/curator" uri="${buildDirectoryURI}vocabulary/v1/curator.ttl"/>
+    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/amqp" uri="${buildDirectoryURI}vocabulary/v1/amqp.ttl"/>
+    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/types" uri="${buildDirectoryURI}vocabulary/v1/types.ttl"/>
     <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/oslc_core_plus" uri="${buildDirectoryURI}vocabulary/v1/oslc_core_plus.ttl"/>
     <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/oslc_auto_plus" uri="${buildDirectoryURI}vocabulary/v1/oslc_auto_plus.ttl"/>
     <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/oslc_scm_plus" uri="${buildDirectoryURI}vocabulary/v1/oslc_scm_plus.ttl"/>
