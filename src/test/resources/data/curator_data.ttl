@@ -61,7 +61,6 @@
 <#deliveryChannel> a curator:DeliveryChannel ;
   amqp:broker <#broker> ;
   amqp:exchangeName "ci.responses"^^amqp:Name ;
-  amqp:queueName "builds"^^amqp:Name ;
   amqp:routingKey "enrichment.responses"^^amqp:RoutingKey .
   
 <#broker> a amqp:Broker ;

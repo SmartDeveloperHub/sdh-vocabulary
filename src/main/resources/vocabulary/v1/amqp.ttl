@@ -147,9 +147,6 @@ amqp:virtualHost a owl:DatatypeProperty ;
 amqp:exchangeName a owl:DatatypeProperty ;
   rdfs:range amqp:Name .
   
-amqp:queueName a owl:DatatypeProperty ;
-  rdfs:range amqp:Name .
-
 amqp:routingKey a owl:DatatypeProperty ;
   rdfs:range amqp:RoutingKey .
 
