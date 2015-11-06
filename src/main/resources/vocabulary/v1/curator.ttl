@@ -156,7 +156,7 @@ curator:DeliveryChannel a owl:Class ;
   ] , [
     a owl:Restriction ;
     owl:onProperty amqp:routingKey ;
-    owl:maxCardinality "1"^^xsd:nonNegativeInteger
+    owl:cardinality "1"^^xsd:nonNegativeInteger
   ] .
 
 curator:Response a owl:Class ;
