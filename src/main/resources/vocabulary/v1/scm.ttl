@@ -464,6 +464,7 @@ doap:name rdf:type owl:DatatypeProperty .
     
     rdfs:range xsd:string .
 
+###  http://www.smartdeveloperhub.org/vocabulary/sdh/v1/scm#mbox
 :mbox rdf:type owl:DatatypeProperty ;
     
     rdfs:range xsd:string .
@@ -471,6 +472,12 @@ doap:name rdf:type owl:DatatypeProperty .
 ###  http://www.smartdeveloperhub.org/vocabulary/sdh/v1/scm#isArchived
 
 :isArchived rdf:type owl:DatatypeProperty ;
+            
+            rdfs:range xsd:boolean .
+			
+
+###  http://www.smartdeveloperhub.org/vocabulary/sdh/v1/scm#external
+:external rdf:type owl:DatatypeProperty ;
             
             rdfs:range xsd:boolean .
 
@@ -533,7 +540,7 @@ doap:name rdf:type owl:DatatypeProperty .
 
 ###  http://www.smartdeveloperhub.org/vocabulary/sdh/v1/scm#userId
 
-:commiterId rdf:type owl:DatatypeProperty ;
+:committerId rdf:type owl:DatatypeProperty ;
         
         rdfs:subPropertyOf :id .
 
