@@ -329,7 +329,7 @@ foaf:Image rdfs:subClassOf [ rdf:type owl:Restriction ;
                            ].
 
 
-:Commiter rdfs:subClassOf foaf:Person, 
+:Committer rdfs:subClassOf foaf:Person, 
                             [ rdf:type owl:Restriction ;
                               owl:onProperty platform:correspondsTo ;
                               owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
