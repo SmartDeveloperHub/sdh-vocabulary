@@ -141,7 +141,7 @@
                                   owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger;
                                   owl:onDataRange xsd:anyURI
                                 ] ,
-				                        [ rdf:type owl:Restriction ;
+                                [ rdf:type owl:Restriction ;
                                   owl:onProperty :owner ;
                                   owl:onClass :Person ;
                                   owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
@@ -257,7 +257,7 @@
                           owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                           owl:onDataRange xsd:string
                         ] ,
-			[ rdf:type owl:Restriction ;
+                        [ rdf:type owl:Restriction ;
                           owl:onProperty :createdOn ;
                           owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                           owl:onDataRange xsd:dateTime
@@ -359,9 +359,18 @@ foaf:Image rdfs:subClassOf [ rdf:type owl:Restriction ;
                               owl:onDataRange xsd:string
                             ] ,
                             [ rdf:type owl:Restriction ;
+                              owl:onProperty foaf:nick ;
+                              owl:someValuesFrom xsd:string 
+                            ] ,
+                            [ rdf:type owl:Restriction ;
                               owl:onProperty :committerId ;
                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                               owl:onDataRange xsd:string
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :external ;
+                              owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                              owl:onDataRange xsd:boolean
                             ] .
 
 :SCMHarvester a owl:Class ;
