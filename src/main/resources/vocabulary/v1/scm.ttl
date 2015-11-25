@@ -129,7 +129,7 @@
                                 ] ,
                                 [ rdf:type owl:Restriction ;
                                   owl:onProperty doap:tester ;
-                                  owl:someValuesFrom :Person
+                                  owl:someValuesFrom :Committer
                                 ] ,
                                 [ rdf:type owl:Restriction ;
                                   owl:onProperty doap:description ;
@@ -143,7 +143,7 @@
                                 ] ,
                                 [ rdf:type owl:Restriction ;
                                   owl:onProperty :owner ;
-                                  owl:onClass :Person ;
+                                  owl:onClass :Committer ;
                                   owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                 ] ,
                                 [ rdf:type owl:Restriction ;
@@ -153,7 +153,7 @@
                                 ] ,
                                 [ rdf:type owl:Restriction ;
                                   owl:onProperty doap:maintainer ;
-                                  owl:someValuesFrom :Person
+                                  owl:someValuesFrom :Committer
                                 ] ,
                                 [ rdf:type owl:Restriction ;
                                   owl:onProperty :isPublic ;
@@ -167,7 +167,7 @@
                                 ] ,
                                 [ rdf:type owl:Restriction ;
                                   owl:onProperty doap:developer ;
-                                  owl:someValuesFrom :Person
+                                  owl:someValuesFrom :Committer
                                 ] ,
                                 [ rdf:type owl:Restriction ;
                                   owl:onProperty :lastBuildDate ;
@@ -226,7 +226,7 @@
                                 ] ,
                                 [ rdf:type owl:Restriction ;
                                   owl:onProperty doap:documenter ;
-                                  owl:someValuesFrom :Person
+                                  owl:someValuesFrom :Committer
                                 ] .
 
 
@@ -237,7 +237,7 @@
         
         rdfs:subClassOf [ rdf:type owl:Restriction ;
                           owl:onProperty :performedBy ;
-                          owl:onClass :Person ;
+                          owl:onClass :Committer ;
                           owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                         ] ,
                         [ rdf:type owl:Restriction ;
@@ -322,7 +322,7 @@
 
 
 
-###  http://xmlns.com/foaf/0.1/Person
+###  http://www.smartdeveloperhub.org/vocabulary/sdh/v1/scm#Committer
 foaf:Image rdfs:subClassOf [ rdf:type owl:Restriction ;
                              owl:onProperty foaf:depicts ;
 			     owl:allValuesFrom owl:Thing
@@ -652,7 +652,7 @@ doap:name rdf:type owl:DatatypeProperty .
              
              rdfs:domain :Action ;
              
-             rdfs:range :Person .   
+             rdfs:range :Committer .   
 
 ###  http://www.smartdeveloperhub.org/vocabulary/sdh/v1/scm#owner
 
@@ -660,7 +660,7 @@ doap:name rdf:type owl:DatatypeProperty .
              
              rdfs:domain :Repository ;
              
-             rdfs:range :Person .   
+             rdfs:range :Committer .   
      
 
 ##-- INDIVIDUALS--------------------------------------------------------------##

@@ -118,7 +118,7 @@ org:Organization rdf:type owl:Class ;
 			  ],
 			[ rdf:type owl:Restriction ;
 			owl:onProperty org:membership ;
-			owl:allValuesFrom org:Person; 
+			owl:allValuesFrom org:Membership; 
 			],
 			[ rdf:type owl:Restriction ;
 			  owl:onProperty org:hasProject ;
