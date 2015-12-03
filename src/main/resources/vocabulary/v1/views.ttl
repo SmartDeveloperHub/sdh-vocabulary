@@ -95,7 +95,7 @@ views:ViewService a owl:Class ;
 				    a owl:Restriction ;
 				    owl:onProperty views:hasEndpoint ;
 				    owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-				    owl:onClass views:ViewEndPoint 
+				    owl:onClass views:ViewEndpoint 
 				  ].  
 
 views:ViewEndpoint a owl:Class ;
