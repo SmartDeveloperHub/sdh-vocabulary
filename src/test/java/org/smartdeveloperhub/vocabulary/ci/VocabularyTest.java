@@ -20,8 +20,8 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
- *   Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:0.2.0-SNAPSHOT
- *   Bundle      : sdh-vocabulary-0.2.0-SNAPSHOT.jar
+ *   Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:0.2.0
+ *   Bundle      : sdh-vocabulary-0.2.0.jar
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  */
 package org.smartdeveloperhub.vocabulary.ci;
