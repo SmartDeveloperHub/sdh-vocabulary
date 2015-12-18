@@ -51,13 +51,9 @@
 #    \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/    #
 #                                                                              #
 ##----------------------------------------------------------------------------##
-#   __   __        __      __   __   __   ___                                  #
-#  /  \ /__` |    /  `    /  ` /  \ |__) |__                                   #
-#  \__/ .__/ |___ \__,    \__, \__/ |  \ |___                                  #
-#                                                                              #
-#        __   __             ___                                               #
-#  |\/| /  \ |  \ |  | |    |__                                                #
-#  |  | \__/ |__/ \__/ |___ |___                                               #
+#              __   __            __   __             ___                      # 
+#   /\   |\/| /  \ |__)     |\/| /  \ |  \ |  | |    |__                       # 
+#  /~~\  |  | \__X |        |  | \__/ |__/ \__/ |___ |___                      # 
 #                                                                              #
 ##----------------------------------------------------------------------------##
 
@@ -70,47 +66,97 @@
 
 @prefix sdh:      <http://www.smartdeveloperhub.org/vocabulary/sdh#> .
 @prefix platform: <http://www.smartdeveloperhub.org/vocabulary/platform#> .
-@prefix ci:       <http://www.smartdeveloperhub.org/vocabulary/ci#> .
-@prefix scm:      <http://www.smartdeveloperhub.org/vocabulary/scm#> .
-@prefix org:      <http://www.smartdeveloperhub.org/vocabulary/organization#> .
-@prefix metrics:  <http://www.smartdeveloperhub.org/vocabulary/metrics#> .
+@prefix amqp:     <http://www.smartdeveloperhub.org/vocabulary/amqp#> .
+@prefix types:     <http://www.smartdeveloperhub.org/vocabulary/types#> .
 
-@prefix oslc:        <http://open-services.net/ns/core#> .
-@prefix oslc_auto:   <http://open-services.net/ns/auto#> .
-@prefix oslc_asset:  <http://open-services.net/ns/asset#> .
-@prefix oslc_config: <http://open-services.net/ns/config#> .
-
-@prefix doap:    <http://usefulinc.com/ns/doap#> .
 @prefix foaf:    <http://xmlns.com/foaf/0.1/> .
 @prefix dcterms: <http://purl.org/dc/terms/> . 
 
 # PROV ontology
-@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix prov:   <http://www.w3.org/ns/prov#> .
 # Dublin Core Metadata Element Set, Version 1.1
-@prefix dc:   <http://purl.org/dc/elements/1.1/> .
+@prefix dc:     <http://purl.org/dc/elements/1.1/> .
+# Dublin Core Metadata Initiative Type Vocabulary
+@prefix dctype: <http://purl.org/dc/dcmitype/> .
 # Web of Trust Ontology
-@prefix wot:  <http://xmlns.com/wot/0.1/> . 
+@prefix wot:    <http://xmlns.com/wot/0.1/> . 
 # SemWeb Vocab Status Ontology
-@prefix vs:   <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix vs:     <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
 # Resource Directory Description Language (RDDL)
-@prefix rddl: <http://www.rddl.org/> .
+@prefix rddl:   <http://www.rddl.org/> .
 
 ##-- MODULE DECLARATION ------------------------------------------------------##
 
 @base <http://www.smartdeveloperhub.org/vocabulary/> .
 
-<oslc_core_plus> rdf:type owl:Ontology ;
-  owl:versionIRI <v1/oslc_core_plus> . 
-# We should import and refine, but as the implementation is flawed we need to
-# provide the implementation in here
-#  owl:imports 
-#    <external/oslc/core.rdf> .
+<amqp> rdf:type owl:Ontology ;
+  owl:versionIRI <v1/amqp> ;
+  owl:imports 
+    <v1/types> .
 
 ##-- ENUMERATIONS-------------------------------------------------------------##
 
 ##-- CLASSES -----------------------------------------------------------------##
 
+# A broker may specify a host and port. 
+# If no host is specified, "localhost" (127.0.0.1) will be used as default value.
+# If no port is specified, AMQP's default port will be used as default (i.e., 5672).
+# If no virtual host is specified, "/" will be used as default value.
+amqp:Broker a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty amqp:host ;
+    owl:maxCardinality "1"^^xsd:nonNegativeInteger
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty amqp:port ;
+    owl:maxCardinality "1"^^xsd:nonNegativeInteger
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty amqp:virtualHost ;
+    owl:maxCardinality "1"^^xsd:nonNegativeInteger
+  ] .
+
+amqp:ShortString a rdfs:Datatype ;
+  rdfs:subClassOf xsd:token ;
+  xsd:minLength "0"^^xsd:nonNegativeInteger ;
+  xsd:maxLength "255"^^xsd:nonNegativeInteger .
+
+amqp:Path a rdfs:Datatype ;
+  rdfs:subClassOf amqp:ShortString ;
+  xsd:minLength "1"^^xsd:nonNegativeInteger ;
+  xsd:maxLength "127"^^xsd:nonNegativeInteger .
+
+amqp:Name a rdfs:Datatype ;
+  rdfs:subClassOf amqp:ShortString ;
+  xsd:maxLength "127"^^xsd:nonNegativeInteger ;
+  xsd:pattern "[a-zA-Z0-9\\-_\\.:]*" .
+
+amqp:RoutingKey a rdfs:Datatype ;
+  rdfs:subClassOf amqp:ShortString ;
+  xsd:pattern "[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)*" .
+
 ##-- PROPERTIES --------------------------------------------------------------##
+
+amqp:broker a owl:ObjectProperty ;
+  rdfs:range amqp:Broker .
+
+amqp:virtualHost a owl:DatatypeProperty ;
+  rdfs:range amqp:Path .
+
+amqp:exchangeName a owl:DatatypeProperty ;
+  rdfs:range amqp:Name .
+  
+amqp:routingKey a owl:DatatypeProperty ;
+  rdfs:range amqp:RoutingKey .
+
+amqp:host a owl:DatatypeProperty ;
+  rdfs:range types:Hostname .
+
+amqp:port a owl:DatatypeProperty ;
+  rdfs:range types:Port .
+
+##-- REFINEMENTS -------------------------------------------------------------##
 
 ##-- INDIVIDUALS--------------------------------------------------------------##
 

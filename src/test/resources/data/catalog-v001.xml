@@ -22,8 +22,8 @@
       See the License for the specific language governing permissions and
       limitations under the License.
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
-      Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:0.1.0
-      Bundle      : sdh-vocabulary-0.1.0.jar
+      Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:0.2.0
+      Bundle      : sdh-vocabulary-0.2.0.jar
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
 
 -->
@@ -34,6 +34,9 @@
     <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/scm" uri="${buildDirectoryURI}vocabulary/v1/scm.ttl"/>
     <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/metrics" uri="${buildDirectoryURI}vocabulary/v1/metrics.ttl"/>
     <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/organization" uri="${buildDirectoryURI}vocabulary/v1/organization.ttl"/>
+    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/curator" uri="${buildDirectoryURI}vocabulary/v1/curator.ttl"/>
+    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/amqp" uri="${buildDirectoryURI}vocabulary/v1/amqp.ttl"/>
+    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/types" uri="${buildDirectoryURI}vocabulary/v1/types.ttl"/>
     <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/oslc_core_plus" uri="${buildDirectoryURI}vocabulary/v1/oslc_core_plus.ttl"/>
     <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/oslc_auto_plus" uri="${buildDirectoryURI}vocabulary/v1/oslc_auto_plus.ttl"/>
     <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/oslc_scm_plus" uri="${buildDirectoryURI}vocabulary/v1/oslc_scm_plus.ttl"/>

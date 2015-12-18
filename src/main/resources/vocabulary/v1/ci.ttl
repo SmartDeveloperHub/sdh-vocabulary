@@ -20,8 +20,8 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 # #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
-#   Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:0.1.0
-#   Bundle      : sdh-vocabulary-0.1.0.jar
+#   Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:0.2.0
+#   Bundle      : sdh-vocabulary-0.2.0.jar
 # #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
 #
 
@@ -102,7 +102,8 @@
   owl:versionIRI <v1/ci> ;
   owl:imports 
     <v1/platform> , 
-    <v1/oslc_auto_plus> .
+    <v1/oslc_auto_plus> ,
+    <v1/scm> .
 
 ##-- ENUMERATIONS-------------------------------------------------------------##
 
@@ -137,14 +138,14 @@ ci:Build a owl:Class ;
     owl:onProperty ci:hasExecution ;
     owl:minQualifiedCardinality "0"^^xsd:nonNegativeInteger ;
     owl:onClass ci:Execution
-  ] , [ 
+  ] , [
     a owl:Restriction ;
-    owl:onProperty ci:location ;
-    owl:cardinality "1"^^xsd:nonNegativeInteger ;
-  ] , [ 
+    owl:onProperty scm:location ;
+    owl:maxCardinality "1"^^xsd:nonNegativeInteger ;
+  ] , [
     a owl:Restriction ;
-    owl:onProperty ci:codebase ;
-    owl:cardinality "1"^^xsd:nonNegativeInteger ;
+    owl:onProperty ci:branchSpecifier ;
+    owl:maxCardinality "1"^^xsd:nonNegativeInteger ;
   ] ;
   owl:disjointUnionOf (
     ci:SimpleBuild
@@ -169,7 +170,7 @@ ci:Execution a owl:Class ;
     owl:onProperty oslc_auto:state ;
     owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
     owl:onClass ci:ExecutionState
-  ] , [ 
+  ] , [
     a owl:Restriction ;
     owl:onProperty ci:hasResult ;
     owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
@@ -178,7 +179,27 @@ ci:Execution a owl:Class ;
     a owl:Restriction ;
     owl:onProperty ci:location ;
     owl:cardinality "1"^^xsd:nonNegativeInteger ;
-  ] ;
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty scm:location ;
+    owl:maxCardinality "1"^^xsd:nonNegativeInteger ;
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty ci:branchId ;
+    owl:maxCardinality "1"^^xsd:nonNegativeInteger ;
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty ci:commitId ;
+    owl:maxCardinality "1"^^xsd:nonNegativeInteger ;
+  ] , [
+    a owl:Restriction ;
+    owl:onProperty ci:forBranch ;
+    owl:maxCardinality "1"^^xsd:nonNegativeInteger ;
+  ], [
+    a owl:Restriction ;
+    owl:onProperty ci:forCommit ;
+    owl:maxCardinality "1"^^xsd:nonNegativeInteger ;
+  ];
   owl:disjointUnionOf (
     ci:RunningExecution
     ci:AbortedExecution
@@ -348,10 +369,27 @@ ci:location a owl:DatatypeProperty ;
   a owl:FunctionalProperty ;
   rdfs:range xsd:anyURI .
 
-ci:codebase a owl:DatatypeProperty ;
-  a owl:FunctionalProperty ;
+ci:forBranch a owl:ObjectProperty ;
+  rdfs:domain ci:Execution ;
+  rdfs:range scm:Branch .
+
+ci:forCommit a owl:ObjectProperty ;
+  rdfs:domain ci:Execution ;
+  rdfs:range scm:Commit .
+
+ci:branchSpecifier a owl:DatatypeProperty ;
   rdfs:domain ci:Build ;
-  rdfs:range xsd:anyURI .
+  rdfs:range xsd:string .
+
+ci:branchId a owl:DatatypeProperty ;
+  rdfs:domain ci:Execution ;
+  rdfs:range xsd:string .
+
+ci:commitId a owl:DatatypeProperty ;
+  rdfs:domain ci:Execution ;
+  rdfs:range xsd:string .
+
+
 
 ##-- INDIVIDUALS -------------------------------------------------------------##
 

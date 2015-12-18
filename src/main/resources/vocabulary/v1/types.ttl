@@ -51,13 +51,9 @@
 #    \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/  \__/    #
 #                                                                              #
 ##----------------------------------------------------------------------------##
-#   __   __        __      __   __   __   ___                                  #
-#  /  \ /__` |    /  `    /  ` /  \ |__) |__                                   #
-#  \__/ .__/ |___ \__,    \__, \__/ |  \ |___                                  #
-#                                                                              #
-#        __   __             ___                                               #
-#  |\/| /  \ |  \ |  | |    |__                                                #
-#  |  | \__/ |__/ \__/ |___ |___                                               #
+#  ___      __   ___  __            __   __             ___                    # 
+#   |  \ / |__) |__  /__`     |\/| /  \ |  \ |  | |    |__                     # 
+#   |   |  |    |___ .__/     |  | \__/ |__/ \__/ |___ |___                    # 
 #                                                                              #
 ##----------------------------------------------------------------------------##
 
@@ -68,49 +64,54 @@
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
-@prefix sdh:      <http://www.smartdeveloperhub.org/vocabulary/sdh#> .
-@prefix platform: <http://www.smartdeveloperhub.org/vocabulary/platform#> .
-@prefix ci:       <http://www.smartdeveloperhub.org/vocabulary/ci#> .
-@prefix scm:      <http://www.smartdeveloperhub.org/vocabulary/scm#> .
-@prefix org:      <http://www.smartdeveloperhub.org/vocabulary/organization#> .
-@prefix metrics:  <http://www.smartdeveloperhub.org/vocabulary/metrics#> .
+@prefix types:  <http://www.smartdeveloperhub.org/vocabulary/types#> .
 
-@prefix oslc:        <http://open-services.net/ns/core#> .
-@prefix oslc_auto:   <http://open-services.net/ns/auto#> .
-@prefix oslc_asset:  <http://open-services.net/ns/asset#> .
-@prefix oslc_config: <http://open-services.net/ns/config#> .
-
-@prefix doap:    <http://usefulinc.com/ns/doap#> .
 @prefix foaf:    <http://xmlns.com/foaf/0.1/> .
 @prefix dcterms: <http://purl.org/dc/terms/> . 
 
 # PROV ontology
-@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix prov:   <http://www.w3.org/ns/prov#> .
 # Dublin Core Metadata Element Set, Version 1.1
-@prefix dc:   <http://purl.org/dc/elements/1.1/> .
+@prefix dc:     <http://purl.org/dc/elements/1.1/> .
+# Dublin Core Metadata Initiative Type Vocabulary
+@prefix dctype: <http://purl.org/dc/dcmitype/> .
 # Web of Trust Ontology
-@prefix wot:  <http://xmlns.com/wot/0.1/> . 
+@prefix wot:    <http://xmlns.com/wot/0.1/> . 
 # SemWeb Vocab Status Ontology
-@prefix vs:   <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix vs:     <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
 # Resource Directory Description Language (RDDL)
-@prefix rddl: <http://www.rddl.org/> .
+@prefix rddl:   <http://www.rddl.org/> .
 
 ##-- MODULE DECLARATION ------------------------------------------------------##
 
 @base <http://www.smartdeveloperhub.org/vocabulary/> .
 
-<oslc_core_plus> rdf:type owl:Ontology ;
-  owl:versionIRI <v1/oslc_core_plus> . 
-# We should import and refine, but as the implementation is flawed we need to
-# provide the implementation in here
-#  owl:imports 
-#    <external/oslc/core.rdf> .
+<types> rdf:type owl:Ontology ;
+  owl:versionIRI <v1/types> .
 
 ##-- ENUMERATIONS-------------------------------------------------------------##
 
 ##-- CLASSES -----------------------------------------------------------------##
 
+types:UUID a rdfs:Datatype ;
+  rdfs:subClassOf xsd:token ;
+  xsd:pattern "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}" .
+
+# A network port can be an integer number between 0 and 65535, both incluse.
+types:Port a rdfs:Datatype ;
+  rdfs:subClassOf xsd:nonNegativeNumber ;
+  xsd:maxInclusive "65535"^^xsd:nonNegativeInteger .
+
+# The host might be:
+# a) A domain name (e.g., node1.smartdeveloperhub.org)
+# b) An IP4 address (e.g., 212.32.198.75)
+# c) An IP6 address (e.g., 0:0:0:0:0:ffff:d420:c64b)
+types:Hostname a rdfs:Datatype ;
+  rdfs:subClassOf xsd:token .
+
 ##-- PROPERTIES --------------------------------------------------------------##
+
+##-- REFINEMENTS -------------------------------------------------------------##
 
 ##-- INDIVIDUALS--------------------------------------------------------------##
 
