@@ -70,7 +70,7 @@ fi
 case "$action" in
   backup-maven-repo ) backupMavenRepo "$mode";;
   restore-maven-repo) restoreMavenRepo "$mode";;
-  prepare-keys      ) prepareBuild "$mode" "$@";;
+  prepare-keys      ) decryptKeys "$mode" "$@";;
   prepare-repo      ) unshallowRepo "$mode";;
   *                 ) fail "$action";;
 esac
