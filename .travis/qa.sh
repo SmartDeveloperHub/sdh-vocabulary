@@ -10,7 +10,7 @@ function analyzeBranch() {
     then
       echo "Executing SonarQube analysis (${TRAVIS_BRANCH})..."
       # If SSL network failures happen, execute the analysis with -Djavax.net.debug=all
-      mvn sonar:sonar -B -Dsonar.branch=$TRAVIS_BRANCH -Dcoverage.reports.dir=$(pwd)/target/all --settings config/src/main/resources/ci/settings.xml
+      mvn sonar:sonar -B -Dsonar.branch=$TRAVIS_BRANCH -Dcoverage.reports.dir=$(pwd)/target/all --settings target/config/ci/settings.xml
     else
       echo "Skipped SonarQube analysis (${TRAVIS_BRANCH}): Cannot connect to SonarQube Server ($1)"
     fi
