@@ -30,9 +30,9 @@ function decryptKeys() {
   if [ "$1" != "porcelain" ];
   then
     echo "Decrypting private key..."
-    openssl aes-256-cbc -pass pass:"$2" -in config/src/main/resources/ci/secring.gpg.enc -out local.secring.gpg -d
+    openssl aes-256-cbc -pass pass:"$2" -in target/config/ci/secring.gpg.enc -out local.secring.gpg -d
     echo "Decrypting public key..."
-    openssl aes-256-cbc -pass pass:"$2" -in config/src/main/resources/ci/pubring.gpg.enc -out local.pubring.gpg -d
+    openssl aes-256-cbc -pass pass:"$2" -in target/config/ci/pubring.gpg.enc -out local.pubring.gpg -d
   else
     echo "Skipped key decription"
   fi
