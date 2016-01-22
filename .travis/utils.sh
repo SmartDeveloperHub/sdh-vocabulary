@@ -71,6 +71,6 @@ case "$action" in
   backup-maven-repo ) backupMavenRepo "$mode";;
   restore-maven-repo) restoreMavenRepo "$mode";;
   prepare-keys      ) prepareBuild "$mode" "$@";;
-  prepare-repo      ) unshallowRepo "$mode"";;
+  prepare-repo      ) unshallowRepo "$mode";;
   *                 ) fail "$action";;
 esac
