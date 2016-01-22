@@ -1,41 +1,32 @@
 sudo: false
+language: java
+jdk:
+- oraclejdk7
+
+notifications:
+  slack: sdhub:ti8lMh7ERZIqLzWF4dHkcgwt
+
 cache:
   directories:
   - $HOME/.m2/repository
   - $HOME/.sonar
-notifications:
-  slack: sdhub:ti8lMh7ERZIqLzWF4dHkcgwt
-language: java
-jdk:
-- oraclejdk7
+
+before_cache:
+  - source ./.travis/utils.sh backup-maven-repo
+
 before_install:
-- if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
+  - source ./.travis/utils.sh prepare-repo
+
 before_script:
-- openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in target/config/ci/secring.gpg.enc
-  -out local.secring.gpg -d
-- openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in target/config/ci/pubring.gpg.enc
-  -out local.pubring.gpg -d
+  - source ./.travis/utils.sh prepare-keys $ENCRYPTION_PASSWORD
+
 script:
-- if [ "${TRAVIS_PULL_REQUEST}" = "false" ];
-  then
-    if [ "${TRAVIS_BRANCH}" = "master" ] || [ "${TRAVIS_BRANCH}" = "develop" ];
-    then mvn clean deploy -B -Dcodebase.directory=`pwd` -Dcoverage.reports.dir=`pwd`/target/all --settings target/config/ci/settings.xml;
-    else mvn clean install -B -Dcoverage.reports.dir=`pwd`/target/all --settings target/config/ci/settings.xml;
-    fi
-  else
-    echo mvn clean install -B -Dcoverage.reports.dir=`pwd`/target/all --settings target/config/ci/settings.xml;
-  fi
-- if [ "${TRAVIS_PULL_REQUEST}" = "false" ];
-  then
-    case "${TRAVIS_BRANCH}" in
-      master)   mvn sonar:sonar -B -Dsonar.branch=$TRAVIS_BRANCH -Dcoverage.reports.dir=`pwd`/target/all --settings target/config/ci/settings.xml;;
-      develop)  mvn sonar:sonar -B -Dsonar.branch=$TRAVIS_BRANCH -Dcoverage.reports.dir=`pwd`/target/all --settings target/config/ci/settings.xml;;
-      feature*) mvn sonar:sonar -B -Dsonar.branch=$TRAVIS_BRANCH -Dcoverage.reports.dir=`pwd`/target/all --settings target/config/ci/settings.xml;;
-      *)        echo "Skip SonarQube analysis (${TRAVIS_BRANCH})";;
-    esac
-  fi
-- mkdir /tmp/cache-trick
-- mv $HOME/.m2/repository/org/smartdeveloperhub /tmp/cache-trick/
+  - source ./.travis/build.sh
+
+after_success:
+  - source ./.travis/utils.sh restore-maven-repo
+  - source ./.travis/qa.sh
+
 env:
   global:
   - secure: 4w7MxqSdUK/JF2NubFuvsTXpkTR2wKGLVtEqvp/ETJKBAeB33PLg6Lk+463bcAbAtb8HHHiXL4igmAN/MgW6/qFZi9O+/DCl7C/Y53eBPHH1BAmvGywbL/gJABllNSK49Jvo5W+MkH6KmVzilQO11/IKWeBB8F3wMe98umL4FGiQQTPgYwNrhJGXKVwtJP7P4hH8ZC+Lo2LpXGF6JVcw9m+7rfDvPHoeX2aaq9ygeRdE5iwH/D/jfeSy4/gZMztgnwk/5ODzQipC6Jb5QIuUH3bj0HkFIz/RAu9QNRPbr+OWtExK7si1ECZgJC+pr/2KqqmfJ/5jLLVd1/g5zyTZYGSyU8ASnoo5u3Gk2mWpnfDbo8UrVSuKiPLmiax+a4C/DA6j0n4IMdbh1+R51SqUFQxEf1uVIt6ebN3TZkIOyo0ZAoW48YLFe3WUZOIoe6PXwWv4xNovN+DqGz+Fv3J30tdUTZonfs1S4UBuaMcnVIdz7cv9ZL0zCASTfK5Kc/mNPwF3vrBUYYFi0J2f2uYHSU4Qg18cWNG+UoIfeN3mI/FQTcw+mjDe0hHzqulD6sOFWQZHPIDFudO4uQ/5gD0YcKmFaVtEBTyM+dN4dzYt0D1/GW8UHkHUrCUVvT3Q/uTU5pkWLN5pyh2YqDuLTMSztq0XH0V/xUXh2RiBFE7hHaM=
