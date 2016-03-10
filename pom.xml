@@ -61,31 +61,10 @@
 	<properties>
 		<sesame.version>2.7.9</sesame.version>
 		<jena.version>2.13.0</jena.version>
-		<buildDirectoryURI>NULL</buildDirectoryURI>
 	</properties>
 
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>org.ldp4j.commons.rmf</groupId>
-				<artifactId>rmf-api</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openrdf.sesame</groupId>
-				<artifactId>sesame-repository-sail</artifactId>
-				<version>${sesame.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openrdf.sesame</groupId>
-				<artifactId>sesame-sail-memory</artifactId>
-				<version>${sesame.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openrdf.sesame</groupId>
-				<artifactId>sesame-rio-rdfxml</artifactId>
-				<version>${sesame.version}</version>
-			</dependency>
 			<dependency>
 				<groupId>org.openrdf.sesame</groupId>
 				<artifactId>sesame-rio-turtle</artifactId>
@@ -112,12 +91,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
 			<groupId>org.apache.jena</groupId>
 			<artifactId>jena-arq</artifactId>
 			<scope>test</scope>
@@ -129,21 +102,6 @@
 			</exclusions>
 		</dependency>
 
-		<dependency>
-			<groupId>org.openrdf.sesame</groupId>
-			<artifactId>sesame-repository-sail</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.openrdf.sesame</groupId>
-			<artifactId>sesame-sail-memory</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.openrdf.sesame</groupId>
-			<artifactId>sesame-rio-rdfxml</artifactId>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>org.openrdf.sesame</groupId>
 			<artifactId>sesame-rio-turtle</artifactId>
@@ -171,11 +129,6 @@
 
 		<!-- Default mocking frameworks -->
 		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.jmockit</groupId>
 			<artifactId>jmockit</artifactId>
 			<scope>test</scope>
@@ -183,39 +136,7 @@
 	</dependencies>
 
 	<build>
-		<testResources>
-			<testResource>
-				<directory>src${file.separator}test${file.separator}resources</directory>
-				<filtering>true</filtering>
-				<includes>
-					<include>**/*.*</include>
-				</includes>
-			</testResource>
-		</testResources>
 		<plugins>
-			<plugin>
-				<groupId>org.codehaus.gmaven</groupId>
-				<artifactId>groovy-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>buildDirectoryURI</id>
-						<phase>validate</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<color>true</color>
-							<source>
-								prop='buildDirectoryURI'
-								outputDirectory=project.build.properties.get('outputDirectory')
-								buildDirectoryURI=new File(outputDirectory).toURI().toString()+"/"
-								project.properties.setProperty(prop,buildDirectoryURI)
-								println "Project build directory URI ["+prop +"]: " + project.properties.getProperty(prop)
-							</source>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 			<!-- Skip external ontologies from license maintenance -->
 			<plugin>
 				<groupId>com.mycila</groupId>

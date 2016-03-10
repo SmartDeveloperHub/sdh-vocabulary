@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+
+    #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+      This file is part of the Smart Developer Hub Project:
+        http://www.smartdeveloperhub.org/
+
+      Center for Open Middleware
+        http://www.centeropenmiddleware.com/
+    #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+      Copyright (C) 2015-2016 Center for Open Middleware.
+    #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+      Licensed under the Apache License, Version 2.0 (the "License");
+      you may not use this file except in compliance with the License.
+      You may obtain a copy of the License at
+
+                http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing, software
+      distributed under the License is distributed on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+      See the License for the specific language governing permissions and
+      limitations under the License.
+    #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+      Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:0.3.0-SNAPSHOT
+      Bundle      : sdh-vocabulary-0.3.0-SNAPSHOT.jar
+    #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+
+-->
+<catalog
+	prefer="public"
+	xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:oasis:names:tc:entity:xmlns:xml:catalog Catalog.xsd">
+
+	<!--                                  -->
+	<!-- Smart Developer Hub vocabularies -->
+	<!--                                  -->
+
+	<uri name="http://www.smartdeveloperhub.org/vocabulary/v1/sdh"          uri="v1/sdh.ttl"/>
+	<uri name="http://www.smartdeveloperhub.org/vocabulary/v1/platform"     uri="v1/platform.ttl"/>
+	<uri name="http://www.smartdeveloperhub.org/vocabulary/v1/ci"           uri="v1/ci.ttl"/>
+	<uri name="http://www.smartdeveloperhub.org/vocabulary/v1/scm"          uri="v1/scm.ttl"/>
+	<uri name="http://www.smartdeveloperhub.org/vocabulary/v1/organization" uri="v1/organization.ttl"/>
+	<uri name="http://www.smartdeveloperhub.org/vocabulary/v1/metrics"      uri="v1/metrics.ttl"/>
+	<uri name="http://www.smartdeveloperhub.org/vocabulary/v1/views"        uri="v1/views.ttl"/>
+	<uri name="http://www.smartdeveloperhub.org/vocabulary/v1/curator"      uri="v1/curator.ttl"/>
+	<uri name="http://www.smartdeveloperhub.org/vocabulary/v1/amqp"         uri="v1/amqp.ttl"/>
+	<uri name="http://www.smartdeveloperhub.org/vocabulary/v1/types"        uri="v1/types.ttl"/>
+
+	<!--                                                   -->
+	<!-- Implementatons of third party vocabularies reused -->
+	<!--                                                   -->
+
+	<uri name="http://www.smartdeveloperhub.org/vocabulary/v1/oslc_core_plus" uri="v1/oslc_core_plus.ttl"/>
+	<uri name="http://www.smartdeveloperhub.org/vocabulary/v1/oslc_auto_plus" uri="v1/oslc_auto_plus.ttl"/>
+	<uri name="http://www.smartdeveloperhub.org/vocabulary/v1/oslc_scm_plus"  uri="v1/oslc_scm_plus.ttl"/>
+
+	<!--                                 -->
+	<!-- Third party vocabularies reused -->
+	<!--                                 -->
+
+	<uri name="http://www.smartdeveloperhub.org/vocabulary/external/dcmi/dctype.rdf"  uri="external/dcmi/dctype.rdf"/>
+	<uri name="http://www.smartdeveloperhub.org/vocabulary/external/dcmi/dcterms.rdf" uri="external/dcmi/dcterms.rdf"/>
+	<uri name="http://www.smartdeveloperhub.org/vocabulary/external/doap/doap.rdf"    uri="external/doap/doap.rdf"/>
+	<uri name="http://www.smartdeveloperhub.org/vocabulary/external/foaf/foaf.rdf"    uri="external/foaf/foaf.rdf"/>
+	<uri name="http://www.smartdeveloperhub.org/vocabulary/external/skos/skos.rdf"    uri="external/skos/skos.rdf"/>
+	<uri name="http://www.smartdeveloperhub.org/vocabulary/external/org/org.ttl"      uri="external/org/org.ttl"/>
+</catalog>
