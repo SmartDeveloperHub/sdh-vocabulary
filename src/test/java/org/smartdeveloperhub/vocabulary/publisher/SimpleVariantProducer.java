@@ -48,11 +48,11 @@ final class SimpleVariantProducer implements VariantProducer {
 
 	private static Format fromMime(final String value) {
 		Format tmp=null;
-		if(value.equals("application/rdf+xml")) {
+		if(value.equalsIgnoreCase("application/rdf+xml")) {
 			tmp=Format.RDF_XML;
-		} else if(value.equals("text/turtle")) {
+		} else if(value.equalsIgnoreCase("text/turtle")) {
 			tmp=Format.TURTLE;
-		} else if(value.equals("application/ld+json")) {
+		} else if(value.equalsIgnoreCase("application/ld+json")) {
 			tmp=Format.JSON_LD;
 		}
 		return tmp;

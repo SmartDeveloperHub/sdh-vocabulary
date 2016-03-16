@@ -75,6 +75,10 @@ public class VocabularyPublisher {
 					System.out.printf("- %s%n", module);
 				}
 				publish(catalog);
+				System.out.println("Publisher terminated.");
+			} else {
+				System.err.println("Could not prepare catalog:\n"+result);
+				System.exit(-5);
 			}
 		} catch (final InvalidPathException e) {
 			System.err.printf("%s is not a valid root path (%s)%n", args[0],e.getMessage());
