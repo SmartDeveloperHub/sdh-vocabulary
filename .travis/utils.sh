@@ -1,4 +1,5 @@
 #!/bin/bash
+# Abort script on first failure
 set -e
 
 function backupMavenRepo() {
@@ -16,25 +17,28 @@ function restoreMavenRepo() {
   then
     mv /tmp/cache-trick/smartdeveloperhub "$HOME/.m2/repository/org/"
   else
-	  echo "Skipped Maven Repo restoration"
+    echo "Skipped Maven Repo restoration"
   fi
 }
 
-function decryptKeys() {
-  if [ "$#" != "2" ];
-  then
-    echo "ERROR: No encryption password specified."
-    exit 2
-  fi
+function fail() {
+  echo "ERROR: Unknown command '${1}'."
+  return 1
+}
 
-  if [ "$1" != "porcelain" ];
+function beginSensibleBlock() {
+  set +x
+  if [ "${DEBUG}" = "trace" ];
   then
-    echo "Decrypting private key..."
-    openssl aes-256-cbc -pass pass:"$2" -in target/config/ci/secring.gpg.enc -out local.secring.gpg -d
-    echo "Decrypting public key..."
-    openssl aes-256-cbc -pass pass:"$2" -in target/config/ci/pubring.gpg.enc -out local.pubring.gpg -d
-  else
-    echo "Skipped key decription"
+    set -v
+  fi
+}
+
+function endSensibleBlock() {
+  set +v
+  if [ "${DEBUG}" = "trace" ];
+  then
+    set -x
   fi
 }
 
@@ -43,34 +47,94 @@ function unshallowRepo() {
   then
     if [[ -a .git/shallow ]];
     then
-      echo "- Unshallowing Git repository..."
-      git fetch --unshallow
+      echo "Unshallowing Git repository..."
+      set +e
+      git fetch --unshallow --verbose;
+      set -e
+      error=$?
+      if [[ $error -ne 0 ]];
+      then
+        echo "Unshallowing failed with $error status code"
+        git --version
+        return $error
+      fi
     fi
   else
     echo "Skipped Git repository unshallowing"
   fi
 }
 
-function fail() {
-  echo "ERROR: Unknown command '${1}'."
-  exit 1
+function decryptKeys() {
+  endSensibleBlock
+
+  if [ "$#" != "2" ];
+  then
+    echo "ERROR: No encryption password specified."
+    return 2
+  fi
+
+  if [ "$1" != "porcelain" ];
+  then
+    beginSensibleBlock
+    echo "Decrypting private key..."
+    openssl aes-256-cbc -pass pass:"$2" -in target/config/ci/secring.gpg.enc -out local.secring.gpg -d
+    echo "Decrypting public key..."
+    openssl aes-256-cbc -pass pass:"$2" -in target/config/ci/pubring.gpg.enc -out local.pubring.gpg -d
+    endSensibleBlock
+  else
+    echo "Skipped key decription"
+  fi
 }
 
-mode=$1
-shift
-if [ "$mode" = "porcelain" ];
-then
-  action=$1
-  shift
-else
-  action=$mode
-  mode=execute
-fi
+function runUtility() {
+  endSensibleBlock
+  
+  mode=$1
+  if [ "$mode" != "porcelain" ];
+  then
+    mode=${CI}
+  fi
 
-case "$action" in
-  backup-maven-repo ) backupMavenRepo "$mode";;
-  restore-maven-repo) restoreMavenRepo "$mode";;
-  prepare-keys      ) decryptKeys "$mode" "$@";;
-  prepare-repo      ) unshallowRepo "$mode";;
-  *                 ) fail "$action";;
+  check=$1
+  shift
+  if [ "$check" = "porcelain" ];
+  then
+    action=$1
+    shift
+  else
+    action=$check
+  fi
+  
+  case "$action" in
+    backup-maven-repo )
+      backupMavenRepo "$mode"
+      ;;
+    restore-maven-repo)
+      restoreMavenRepo "$mode"
+      ;;
+    prepare-keys      )
+     beginSensibleBlock
+     decryptKeys "$mode" "$@"
+      ;;
+    prepare-repo      )
+      unshallowRepo "$mode"
+      ;;
+    *                 )
+      fail "$action"
+      ;;
+  esac
+}
+
+function skipBuild() {
+  echo "Skipping build..."
+}
+
+case "${CI}" in
+  skip ) 
+    skipBuild 
+    ;;
+  *    )
+    beginSensibleBlock
+    runUtility "$@" 
+    ;;
 esac
