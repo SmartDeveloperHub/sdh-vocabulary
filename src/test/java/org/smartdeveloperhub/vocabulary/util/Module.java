@@ -32,12 +32,14 @@ import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.jena.atlas.web.ContentType;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFLanguages;
 
 import com.google.common.base.MoreObjects;
+import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Lists;
 
 public final class Module {
@@ -128,12 +130,32 @@ public final class Module {
 		return this;
 	}
 
+	boolean isCanonical(final URI base) {
+		return this.ontology!=null && !this.ontology.equals(this.versionIRI) && this.ontology.startsWith(base.toString());
+	}
+
+	public Path location() {
+		return this.location;
+	}
+
 	public String relativePath() {
 		return this.relativePath;
 	}
 
+	public Format format() {
+		return this.format;
+	}
+
 	public String ontology() {
 		return this.ontology;
+	}
+
+	public String versionIRI() {
+		return this.versionIRI;
+	}
+
+	public Set<String> imports() {
+		return ImmutableSortedSet.copyOf(this.imports);
 	}
 
 	public boolean isExternal() {
@@ -144,8 +166,12 @@ public final class Module {
 		return this.ontology!=null;
 	}
 
-	boolean isCanonical(final URI base) {
-		return this.ontology!=null && !this.ontology.equals(this.versionIRI) && this.ontology.startsWith(base.toString());
+	public boolean isVersion() {
+		return this.versionIRI!=null;
+	}
+
+	public boolean hasImports() {
+		return !this.imports.isEmpty();
 	}
 
 	public String transform(final URI base, final Format format) throws IOException {

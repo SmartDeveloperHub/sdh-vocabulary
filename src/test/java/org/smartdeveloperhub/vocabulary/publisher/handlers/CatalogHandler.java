@@ -50,15 +50,20 @@ final class CatalogHandler implements HttpHandler {
 		String moduleName=exchange.getRelativePath().substring(1);
 		final String ext = HandlerUtil.getExtension(moduleName);
 		moduleName=moduleName.substring(0,moduleName.length()-ext.length()-(ext.isEmpty()?0:1));
-		System.out.printf("%s %s --> %s%n",exchange.getRequestMethod(),exchange.getRelativePath(),moduleName);
 		final Module module=this.catalog.resolve(URI.create(moduleName));
 		if(module==null) {
+			System.out.printf("Accessing %s --> NOT FOUND%n",exchange.getRelativePath());
 			exchange.setStatusCode(StatusCodes.NOT_FOUND);
 		} else {
+			System.out.printf("Accessing %s --> %s [%s]%n",exchange.getRelativePath(),resolve(moduleName),resolve(module.relativePath()));
 			Attachments.setModule(exchange, module);
 			Attachments.setBase(exchange, this.catalog.getBase());
 			this.next.handleRequest(exchange);
 		}
+	}
+
+	private URI resolve(final String path) {
+		return this.catalog.getBase().resolve(path);
 	}
 
 }
