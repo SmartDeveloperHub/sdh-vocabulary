@@ -36,7 +36,7 @@ public final class HandlerUtil {
 	private HandlerUtil() {
 	}
 
-	static String getExtension(final String module) {
+	public static String getExtension(final String module) {
 		final String fileName = Paths.get(module).getFileName().toString();
 		final int dotIndex = fileName.lastIndexOf('.');
 		return (dotIndex == -1) ? "" : fileName.substring(dotIndex + 1);

@@ -24,38 +24,36 @@
  *   Bundle      : sdh-vocabulary-0.3.0-SNAPSHOT.jar
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  */
-package org.smartdeveloperhub.vocabulary.publisher;
+package org.smartdeveloperhub.vocabulary.publisher.handlers;
 
-import io.undertow.server.HttpServerExchange;
-import io.undertow.util.HeaderValues;
-import io.undertow.util.Headers;
+import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 
-import org.smartdeveloperhub.vocabulary.publisher.handlers.Variant;
-import org.smartdeveloperhub.vocabulary.publisher.handlers.VariantProducer;
-import org.smartdeveloperhub.vocabulary.util.Module.Format;
+final class Failure {
 
-final class SimpleVariantProducer implements VariantProducer {
+	private final String value;
+	private final ImmutableList<String> messages;
+	private final String header;
+
+	private Failure(final String header, final String value, final ImmutableList<String> messages) {
+		this.header=header;
+		this.value = value;
+		this.messages = messages;
+	}
 
 	@Override
-	public Variant getVariant(final HttpServerExchange exchange) {
-		final Variant variant=new Variant();
-		final HeaderValues values = exchange.getRequestHeaders().get(Headers.ACCEPT);
-		if(values.size()==1) {
-			variant.format(fromMime(values.getFirst()));
-		}
-		return variant;
+	public String toString() {
+		return "'"+this.value+"' is not a valid "+this.header+" header:\n + "+Joiner.on("\n +--> ").join(this.messages);
 	}
 
-	private static Format fromMime(final String value) {
-		Format tmp=null;
-		if(value.equalsIgnoreCase("application/rdf+xml")) {
-			tmp=Format.RDF_XML;
-		} else if(value.equalsIgnoreCase("text/turtle")) {
-			tmp=Format.TURTLE;
-		} else if(value.equalsIgnoreCase("application/ld+json")) {
-			tmp=Format.JSON_LD;
+	public static Failure create(final String header, final String value, final Throwable cause) {
+		final Builder<String> builder=ImmutableList.builder();
+		Throwable failure=cause;
+		while(failure!=null) {
+			builder.add(failure.getClass().getName()+" : "+failure.getMessage());
+			failure=failure.getCause();
 		}
-		return tmp;
+		return new Failure(header,value,builder.build());
 	}
-
 }

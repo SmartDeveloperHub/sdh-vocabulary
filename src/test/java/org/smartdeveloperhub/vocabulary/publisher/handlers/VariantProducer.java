@@ -28,8 +28,10 @@ package org.smartdeveloperhub.vocabulary.publisher.handlers;
 
 import io.undertow.server.HttpServerExchange;
 
+import org.ldp4j.http.NegotiationResult;
+
 public interface VariantProducer {
 
-	Variant getVariant(HttpServerExchange exchange);
+	NegotiationResult negotiate(HttpServerExchange exchange);
 
 }

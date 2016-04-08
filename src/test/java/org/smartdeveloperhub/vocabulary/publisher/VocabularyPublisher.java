@@ -48,12 +48,14 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Scanner;
 
+import org.ldp4j.http.MediaType;
+import org.ldp4j.http.Variant;
 import org.smartdeveloperhub.vocabulary.publisher.handlers.Attachments;
 import org.smartdeveloperhub.vocabulary.publisher.handlers.HandlerUtil;
-import org.smartdeveloperhub.vocabulary.publisher.handlers.Variant;
 import org.smartdeveloperhub.vocabulary.util.Catalog;
 import org.smartdeveloperhub.vocabulary.util.Catalogs;
 import org.smartdeveloperhub.vocabulary.util.Module;
+import org.smartdeveloperhub.vocabulary.util.Module.Format;
 import org.smartdeveloperhub.vocabulary.util.Result;
 
 import com.google.common.base.Strings;
@@ -164,7 +166,7 @@ public class VocabularyPublisher {
 									"/vocabulary/",
 									catalogResolver(catalog,
 										allow(Methods.GET,
-											contentNegotiation(new SimpleVariantProducer(),
+											contentNegotiation(null,
 												new HttpHandler() {
 													@Override
 													public void handleRequest(final HttpServerExchange exchange) throws Exception {
@@ -175,10 +177,22 @@ public class VocabularyPublisher {
 														} else {
 															final Variant variant=Attachments.getVariant(exchange);
 															final Module module=Attachments.getModule(exchange);
+															final Format format = format(variant.type());
 															exchange.setStatusCode(StatusCodes.OK);
-															exchange.getResponseHeaders().put(Headers.CONTENT_TYPE,variant.format().contentType(StandardCharsets.UTF_8));
-															exchange.getResponseSender().send(module.transform(HandlerUtil.canonicalURI(exchange,module.relativePath()),variant.format()));
+															exchange.getResponseHeaders().put(Headers.CONTENT_TYPE,format.contentType(StandardCharsets.UTF_8));
+															exchange.getResponseSender().send(module.transform(HandlerUtil.canonicalURI(exchange,module.relativePath()),format));
 														}
+													}
+													private Format format(final MediaType type) {
+														Format tmp=null;
+														if("application".equals(type.type()) && "rdf".equals(type.subType()) && "xml".equals(type.suffix())) {
+															tmp=Format.RDF_XML;
+														} else if("text".equals(type.type()) && "turtle".equals(type.subType())) {
+															tmp=Format.TURTLE;
+														} else if("application".equals(type.type()) && "ld".equals(type.subType()) && "json".equals(type.suffix())) {
+															tmp=Format.JSON_LD;
+														}
+														return tmp;
 													}
 												}
 											)

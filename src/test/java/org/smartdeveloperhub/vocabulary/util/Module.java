@@ -82,6 +82,11 @@ public final class Module {
 			return null;
 		}
 
+		public String mime() {
+			final ContentType contentType = this.lang.getContentType();
+			return contentType.getType()+"/"+contentType.getSubType();
+		}
+
 		public String contentType(final Charset charset) {
 			final ContentType contentType = this.lang.getContentType();
 			return String.format("%s/%s; charset=\"%s\"",contentType.getType(),contentType.getSubType(),charset.name());

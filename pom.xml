@@ -113,6 +113,13 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.ldp4j.commons</groupId>
+			<artifactId>ldp4j-commons-http</artifactId>
+			<version>${ldp4j.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>org.openrdf.sesame</groupId>
 			<artifactId>sesame-rio-turtle</artifactId>
 			<scope>test</scope>

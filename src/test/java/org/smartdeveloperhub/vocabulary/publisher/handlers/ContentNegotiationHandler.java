@@ -28,51 +28,192 @@ package org.smartdeveloperhub.vocabulary.publisher.handlers;
 
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
+import io.undertow.util.HeaderMap;
+import io.undertow.util.HeaderValues;
 import io.undertow.util.Headers;
+import io.undertow.util.HttpString;
 import io.undertow.util.StatusCodes;
 
 import java.net.URI;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map.Entry;
 
+import org.ldp4j.http.Alternative;
+import org.ldp4j.http.Alternatives;
+import org.ldp4j.http.CharacterEncodings;
+import org.ldp4j.http.ContentNegotiation;
+import org.ldp4j.http.ContentNegotiator;
+import org.ldp4j.http.MediaTypes;
+import org.ldp4j.http.Negotiable;
+import org.ldp4j.http.NegotiationResult;
+import org.ldp4j.http.Variant;
 import org.smartdeveloperhub.vocabulary.util.Module.Format;
+
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 
 final class ContentNegotiationHandler implements HttpHandler {
 
-	private final VariantProducer negotiator;
 	private final HttpHandler next;
 
 	ContentNegotiationHandler(final VariantProducer producer, final HttpHandler next) {
-		this.negotiator = producer;
 		this.next = next;
 	}
 
 	@Override
 	public void handleRequest(final HttpServerExchange exchange) throws Exception {
-		final String ext = HandlerUtil.getExtension(exchange.getRelativePath());
-		final Variant variant = this.negotiator.getVariant(exchange);
-		if(variant.format()==null) {
-			variant.format(Format.fromExtension(ext));
-		}
-		if(isAcceptable(variant)) {
-			exchange.setStatusCode(StatusCodes.NOT_ACCEPTABLE);
-			exchange.getResponseHeaders().put(Headers.VARY,Headers.ACCEPT_STRING);
-			exchange.getResponseHeaders().put(Headers.CONTENT_TYPE,"text/plain; charset=\"UTF-8\"");
-			exchange.getResponseSender().send(acceptableResources(exchange));
+		final ContentNegotiator negotiator = defaultNegotiator();
+		System.out.println("Starting content negotiation...");
+		final List<Failure> failures = addAcceptanceRequirements(exchange, negotiator);
+		if(!failures.isEmpty()) {
+			abortNegotation(exchange, failures);
 		} else {
-			Attachments.setVariant(exchange, variant);
-			this.next.handleRequest(exchange);
+			final NegotiationResult negotiation=negotiator.negotiate();
+			if(!negotiation.isAcceptable()) {
+				failNegotiation(exchange, negotiation);
+			} else {
+				final Variant variant = negotiation.variant();
+				Attachments.setVariant(exchange, variant);
+				logAcceptance(variant);
+				this.next.handleRequest(exchange);
+			}
 		}
 	}
 
-	private boolean isAcceptable(final Variant variant) {
-		return variant.format()==null;
+	private void logAcceptance(final Variant variant) {
+		System.out.println("Accepted:");
+		printAttribute("Media type", variant.type());
+		printAttribute("Character encoding", variant.charset());
+		printAttribute("Language", variant.language());
 	}
 
-	private String acceptableResources(final HttpServerExchange exchange) {
+	private void failNegotiation(final HttpServerExchange exchange, final NegotiationResult negotiation) {
+		exchange.setStatusCode(StatusCodes.NOT_ACCEPTABLE);
+		final HeaderMap headers = exchange.getResponseHeaders();
+		for(final Entry<String, Collection<String>> entry:negotiation.responseHeaders(false).asMap().entrySet()) {
+			headers.add(
+				HttpString.tryFromString(entry.getKey()),
+				Joiner.on(", ").join(entry.getValue()));
+		}
 		final URI canonicalURI = HandlerUtil.canonicalURI(exchange);
+		final String message = acceptableResources(canonicalURI,negotiation.alternatives());
+		exchange.getResponseSender().send(message);
+		System.out.println("Not acceptable: "+message);
+	}
+
+	private void abortNegotation(final HttpServerExchange exchange,
+			final List<Failure> failures) {
+		exchange.setStatusCode(StatusCodes.BAD_REQUEST);
+		exchange.getResponseHeaders().put(Headers.CONTENT_TYPE,"text/plain; charset=\"UTF-8\"");
+		final String message=errorMessage(failures);
+		exchange.getResponseSender().send(ByteBuffer.wrap(message.getBytes(StandardCharsets.UTF_8)));
+		System.out.println(message);
+	}
+
+	private ContentNegotiator defaultNegotiator() {
+		final ContentNegotiator negotiator=
+			ContentNegotiator.
+				newInstance().
+					support(MediaTypes.of("text","turtle")).
+					support(MediaTypes.of("application","rdf","xml")).
+					support(MediaTypes.of("application","ld","json")).
+					support(MediaTypes.of("application","ld","json")).
+					support(CharacterEncodings.of(StandardCharsets.UTF_8)).
+					support(CharacterEncodings.of(StandardCharsets.ISO_8859_1)).
+					support(CharacterEncodings.of(StandardCharsets.US_ASCII));
+		return negotiator;
+	}
+
+	private <T extends Negotiable> void printAttribute(final String name, final T attribute) {
+		if(attribute!=null) {
+			System.out.println("- "+name+": "+attribute.toHeader());
+		}
+	}
+
+	private String errorMessage(final List<Failure> failures) {
+		final StringBuilder builder=new StringBuilder("Could not negotiate content due to the following errors:");
+		for(final Failure failure:failures) {
+			builder.append(System.lineSeparator()).append("- ").append(failure.toString().replaceAll("\n", "\n  "));
+		}
+		return builder.toString();
+	}
+
+	private List<Failure> addAcceptanceRequirements(final HttpServerExchange exchange, final ContentNegotiator negotiator) {
+		final List<Failure> failures=Lists.newLinkedList();
+		final HeaderMap headers = exchange.getRequestHeaders();
+		useExtensionForNegotiation(negotiator,exchange);
+		addAcceptHeaders(negotiator, failures, headers);
+		addAcceptCharsetHeaders(negotiator, failures, headers);
+		addAcceptLanguageHeaders(negotiator, failures, headers);
+		return failures;
+	}
+
+	private void useExtensionForNegotiation(final ContentNegotiator negotiator,final HttpServerExchange exchange) {
+		final HeaderValues accepts = exchange.getRequestHeaders().get(Headers.ACCEPT);
+		if(accepts!=null && !accepts.isEmpty()) {
+			return;
+		}
+		final String extension = HandlerUtil.getExtension(exchange.getRelativePath());
+		final Format format = Format.fromExtension(extension);
+		if(format!=null) {
+			System.out.println("No media types specified: using extension ."+extension+" as hint --> "+format.mime());
+			negotiator.accept(format.mime());
+		}
+	}
+
+	private void addAcceptLanguageHeaders(final ContentNegotiator negotiator, final List<Failure> failures, final HeaderMap headers) {
+		for(final String value:headers(headers,ContentNegotiation.ACCEPT_LANGUAGE)) {
+			try {
+				negotiator.acceptLanguage(value);
+			} catch(final IllegalArgumentException e) {
+				failures.add(Failure.create(ContentNegotiation.ACCEPT_LANGUAGE,value,e));
+			}
+		}
+	}
+
+	private void addAcceptCharsetHeaders(final ContentNegotiator negotiator, final List<Failure> failures, final HeaderMap headers) {
+		for(final String value:headers(headers,ContentNegotiation.ACCEPT_CHARSET)) {
+			try {
+				negotiator.acceptCharset(value);
+			} catch(final IllegalArgumentException e) {
+				failures.add(Failure.create(ContentNegotiation.ACCEPT_CHARSET,value,e));
+			}
+		}
+	}
+
+	private void addAcceptHeaders(final ContentNegotiator negotiator, final List<Failure> failures, final HeaderMap headers) {
+		for(final String value:headers(headers,ContentNegotiation.ACCEPT)) {
+			try {
+				negotiator.accept(value);
+			} catch(final IllegalArgumentException e) {
+				failures.add(Failure.create(ContentNegotiation.ACCEPT,value,e));
+			}
+		}
+	}
+
+	private List<String> headers(final HeaderMap headers, final String accept) {
+		final List<String> values=Lists.newArrayList();
+		final HeaderValues headerValues = headers.get(accept);
+		if(headerValues!=null) {
+			for(final String value:headerValues) {
+				final String[] split = value.split(",");
+				for(final String part:split) {
+					values.add(part);
+				}
+			}
+		}
+		return values;
+	}
+
+	private String acceptableResources(final URI canonicalURI, final Alternatives alternatives ) {
 		final StringBuilder builder=new StringBuilder();
-		builder.append("text/turtle").append(" : ").append(canonicalURI).append(System.lineSeparator());
-		builder.append("application/rdf+xml").append(" : ").append(canonicalURI).append(System.lineSeparator());
-		builder.append("application/ld+json").append(" : ").append(canonicalURI).append(System.lineSeparator());
+		builder.append(canonicalURI);
+		for(final Alternative alternative:alternatives) {
+			builder.append(System.lineSeparator()).append("  - ").append(alternative);
+		}
 		return builder.toString();
 	}
 

@@ -31,6 +31,7 @@ import io.undertow.util.AttachmentKey;
 
 import java.net.URI;
 
+import org.ldp4j.http.Variant;
 import org.smartdeveloperhub.vocabulary.util.Module;
 
 public final class Attachments {
