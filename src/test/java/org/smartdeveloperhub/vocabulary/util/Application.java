@@ -24,7 +24,7 @@
  *   Bundle      : sdh-vocabulary-0.3.0-SNAPSHOT.jar
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  */
-package org.smartdeveloperhub.vocabulary.publisher;
+package org.smartdeveloperhub.vocabulary.util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -43,9 +43,9 @@ import java.util.TreeMap;
 
 import com.google.common.collect.Maps;
 
-final class Application {
+public final class Application {
 
-	static boolean logContext(final String... args) {
+	public static boolean logContext(final String... args) {
 		final Calendar calendar=Calendar.getInstance();
 		final File file=
 			new File(
@@ -70,7 +70,7 @@ final class Application {
 		return written;
 	}
 
-	static void logContext(final PrintStream out, final String... args) {
+	public static void logContext(final PrintStream out, final String... args) {
 		out.printf("PID: %s%n",getSunVMProcessId(getOracleCompatibleVMProcessId("<UNKNOWN>")));
 		out.printf("Program arguments:%n");
 		for(final String argument:args) {

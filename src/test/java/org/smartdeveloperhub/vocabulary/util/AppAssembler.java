@@ -24,16 +24,15 @@
  *   Bundle      : sdh-vocabulary-0.3.0-SNAPSHOT.jar
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  */
-package org.smartdeveloperhub.vocabulary.publisher;
+package org.smartdeveloperhub.vocabulary.util;
 
 
-final class AppAssembler {
-
+public final class AppAssembler {
 
 	private AppAssembler() {
 	}
 
-	static String applicationName(final Class<?> appClass) {
+	public static String applicationName(final Class<?> appClass) {
 		final String name = System.getProperty("app.name");
 		if(name==null) {
 			return appClass.getName();

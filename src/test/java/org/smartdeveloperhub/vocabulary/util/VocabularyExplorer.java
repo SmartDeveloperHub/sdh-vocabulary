@@ -24,53 +24,30 @@
  *   Bundle      : sdh-vocabulary-0.3.0-SNAPSHOT.jar
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  */
-package org.smartdeveloperhub.vocabulary.publisher;
-
-import static io.undertow.Handlers.path;
-import static org.smartdeveloperhub.vocabulary.publisher.handlers.MoreHandlers.allow;
-import static org.smartdeveloperhub.vocabulary.publisher.handlers.MoreHandlers.catalogResolver;
-import static org.smartdeveloperhub.vocabulary.publisher.handlers.MoreHandlers.contentNegotiation;
-import io.undertow.Undertow;
-import io.undertow.server.HttpHandler;
-import io.undertow.server.HttpServerExchange;
-import io.undertow.util.Headers;
-import io.undertow.util.Methods;
-import io.undertow.util.StatusCodes;
+package org.smartdeveloperhub.vocabulary.util;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Scanner;
 
-import org.ldp4j.http.MediaType;
-import org.ldp4j.http.Variant;
-import org.smartdeveloperhub.vocabulary.publisher.handlers.Attachments;
-import org.smartdeveloperhub.vocabulary.publisher.handlers.HandlerUtil;
-import org.smartdeveloperhub.vocabulary.util.AppAssembler;
-import org.smartdeveloperhub.vocabulary.util.Application;
-import org.smartdeveloperhub.vocabulary.util.Catalog;
-import org.smartdeveloperhub.vocabulary.util.Catalogs;
-import org.smartdeveloperhub.vocabulary.util.Module;
-import org.smartdeveloperhub.vocabulary.util.Module.Format;
-import org.smartdeveloperhub.vocabulary.util.Result;
-
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
-public class VocabularyPublisher {
+public final class VocabularyExplorer {
+
+	private VocabularyExplorer() {
+	}
 
 	public static void main(final String... args) throws FileNotFoundException, IOException {
 		if(args.length!=2) {
 			System.err.printf("Invalid argument number: 2 arguments required (%d)%n", args.length);
-			System.err.printf("USAGE: %s <path-to-ontologies> <base-namespace>%n",AppAssembler.applicationName(VocabularyPublisher.class));
-			System.err.printf(" <path-to-ontologies> : Path where the ontologies to publish are available.%n");
-			System.err.printf(" <base-namespace>     : Base namespace of the ontologies to publish.%n");
+			System.err.printf("USAGE: %s <path-to-ontologies> <base-namespace>%n",AppAssembler.applicationName(VocabularyExplorer.class));
+			System.err.printf(" <path-to-ontologies> : Path where the ontologies to scan are available.%n");
+			System.err.printf(" <base-namespace>     : Base namespace of the ontologies to scan.%n");
 			Application.logContext(args);
 			System.exit(-1);
 		}
@@ -81,11 +58,6 @@ public class VocabularyPublisher {
 			if(result.isAvailable()) {
 				final Catalog catalog = result.get();
 				showCatalog(catalog);
-				try {
-					publish(catalog);
-				} finally {
-					System.out.println("Publisher terminated.");
-				}
 			} else {
 				System.err.println("Could not prepare catalog:\n"+result);
 				System.exit(-5);
@@ -157,74 +129,5 @@ public class VocabularyPublisher {
 		}
 	}
 
-	private static void publish(final Catalog catalog) {
-		final Undertow server =
-			Undertow.
-				builder().
-					addHttpListener(8080, "localhost").
-					setHandler(
-							path().
-								addPrefixPath(
-									"/vocabulary/",
-									catalogResolver(catalog,
-										allow(Methods.GET,
-											contentNegotiation(null,
-												new HttpHandler() {
-													@Override
-													public void handleRequest(final HttpServerExchange exchange) throws Exception {
-														if(!Strings.isNullOrEmpty(exchange.getQueryString())) {
-															exchange.setStatusCode(StatusCodes.BAD_REQUEST);
-															exchange.getResponseHeaders().put(Headers.CONTENT_TYPE,"text/plain; charset=\"UTF-8\"");
-															exchange.getResponseSender().send("Queries not allowed");
-														} else {
-															final Variant variant=Attachments.getVariant(exchange);
-															final Module module=Attachments.getModule(exchange);
-															final Format format = format(variant.type());
-															exchange.setStatusCode(StatusCodes.OK);
-															exchange.getResponseHeaders().put(Headers.CONTENT_TYPE,format.contentType(StandardCharsets.UTF_8));
-															exchange.getResponseSender().send(module.transform(HandlerUtil.canonicalURI(exchange,module.relativePath()),format));
-														}
-													}
-													private Format format(final MediaType type) {
-														Format tmp=null;
-														if("application".equals(type.type()) && "rdf".equals(type.subType()) && "xml".equals(type.suffix())) {
-															tmp=Format.RDF_XML;
-														} else if("text".equals(type.type()) && "turtle".equals(type.subType())) {
-															tmp=Format.TURTLE;
-														} else if("application".equals(type.type()) && "ld".equals(type.subType()) && "json".equals(type.suffix())) {
-															tmp=Format.JSON_LD;
-														}
-														return tmp;
-													}
-												}
-											)
-										)
-									)
-								)
-							).
-					build();
-		server.start();
-		awaitTerminationRequest();
-		server.stop();
-	}
-
-
-	private static void awaitTerminationRequest() {
-		System.out.println("Hit <ENTER> to exit...");
-		try(final Scanner scanner = new Scanner(System.in)) {
-			String readString = scanner.nextLine();
-			while(readString != null) {
-				if (readString.isEmpty()) {
-					break;
-				}
-				if (scanner.hasNextLine()) {
-					readString = scanner.nextLine();
-				} else {
-					readString = null;
-				}
-			}
-		}
-		System.out.println("<ENTER> detected.");
-	}
-
 }
+
