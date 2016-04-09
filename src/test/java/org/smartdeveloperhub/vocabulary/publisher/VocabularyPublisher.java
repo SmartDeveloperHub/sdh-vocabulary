@@ -30,38 +30,28 @@ import static io.undertow.Handlers.path;
 import static org.smartdeveloperhub.vocabulary.publisher.handlers.MoreHandlers.allow;
 import static org.smartdeveloperhub.vocabulary.publisher.handlers.MoreHandlers.catalogResolver;
 import static org.smartdeveloperhub.vocabulary.publisher.handlers.MoreHandlers.contentNegotiation;
-import io.undertow.Undertow;
-import io.undertow.server.HttpHandler;
-import io.undertow.server.HttpServerExchange;
-import io.undertow.util.Headers;
-import io.undertow.util.Methods;
-import io.undertow.util.StatusCodes;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Scanner;
 
-import org.ldp4j.http.MediaType;
-import org.ldp4j.http.Variant;
-import org.smartdeveloperhub.vocabulary.publisher.handlers.Attachments;
-import org.smartdeveloperhub.vocabulary.publisher.handlers.HandlerUtil;
 import org.smartdeveloperhub.vocabulary.util.AppAssembler;
 import org.smartdeveloperhub.vocabulary.util.Application;
 import org.smartdeveloperhub.vocabulary.util.Catalog;
 import org.smartdeveloperhub.vocabulary.util.Catalogs;
 import org.smartdeveloperhub.vocabulary.util.Module;
-import org.smartdeveloperhub.vocabulary.util.Module.Format;
 import org.smartdeveloperhub.vocabulary.util.Result;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+
+import io.undertow.Undertow;
+import io.undertow.util.Methods;
 
 public class VocabularyPublisher {
 
@@ -100,7 +90,6 @@ public class VocabularyPublisher {
 			System.err.printf("Could not explore modules (%s)%n", e.getMessage());
 			System.exit(-4);
 		}
-
 	}
 
 	private static void showCatalog(final Catalog catalog) {
@@ -168,35 +157,8 @@ public class VocabularyPublisher {
 									"/vocabulary/",
 									catalogResolver(catalog,
 										allow(Methods.GET,
-											contentNegotiation(null,
-												new HttpHandler() {
-													@Override
-													public void handleRequest(final HttpServerExchange exchange) throws Exception {
-														if(!Strings.isNullOrEmpty(exchange.getQueryString())) {
-															exchange.setStatusCode(StatusCodes.BAD_REQUEST);
-															exchange.getResponseHeaders().put(Headers.CONTENT_TYPE,"text/plain; charset=\"UTF-8\"");
-															exchange.getResponseSender().send("Queries not allowed");
-														} else {
-															final Variant variant=Attachments.getVariant(exchange);
-															final Module module=Attachments.getModule(exchange);
-															final Format format = format(variant.type());
-															exchange.setStatusCode(StatusCodes.OK);
-															exchange.getResponseHeaders().put(Headers.CONTENT_TYPE,format.contentType(StandardCharsets.UTF_8));
-															exchange.getResponseSender().send(module.transform(HandlerUtil.canonicalURI(exchange,module.relativePath()),format));
-														}
-													}
-													private Format format(final MediaType type) {
-														Format tmp=null;
-														if("application".equals(type.type()) && "rdf".equals(type.subType()) && "xml".equals(type.suffix())) {
-															tmp=Format.RDF_XML;
-														} else if("text".equals(type.type()) && "turtle".equals(type.subType())) {
-															tmp=Format.TURTLE;
-														} else if("application".equals(type.type()) && "ld".equals(type.subType()) && "json".equals(type.suffix())) {
-															tmp=Format.JSON_LD;
-														}
-														return tmp;
-													}
-												}
+											contentNegotiation(
+												new RepresentionGenerator()
 											)
 										)
 									)

@@ -26,14 +26,6 @@
  */
 package org.smartdeveloperhub.vocabulary.publisher.handlers;
 
-import io.undertow.server.HttpHandler;
-import io.undertow.server.HttpServerExchange;
-import io.undertow.util.HeaderMap;
-import io.undertow.util.HeaderValues;
-import io.undertow.util.Headers;
-import io.undertow.util.HttpString;
-import io.undertow.util.StatusCodes;
-
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -46,20 +38,28 @@ import org.ldp4j.http.Alternatives;
 import org.ldp4j.http.CharacterEncodings;
 import org.ldp4j.http.ContentNegotiation;
 import org.ldp4j.http.ContentNegotiator;
-import org.ldp4j.http.MediaTypes;
 import org.ldp4j.http.Negotiable;
 import org.ldp4j.http.NegotiationResult;
 import org.ldp4j.http.Variant;
+import org.smartdeveloperhub.vocabulary.publisher.Formats;
 import org.smartdeveloperhub.vocabulary.util.Module.Format;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 
+import io.undertow.server.HttpHandler;
+import io.undertow.server.HttpServerExchange;
+import io.undertow.util.HeaderMap;
+import io.undertow.util.HeaderValues;
+import io.undertow.util.Headers;
+import io.undertow.util.HttpString;
+import io.undertow.util.StatusCodes;
+
 final class ContentNegotiationHandler implements HttpHandler {
 
 	private final HttpHandler next;
 
-	ContentNegotiationHandler(final VariantProducer producer, final HttpHandler next) {
+	ContentNegotiationHandler(final HttpHandler next) {
 		this.next = next;
 	}
 
@@ -75,12 +75,17 @@ final class ContentNegotiationHandler implements HttpHandler {
 			if(!negotiation.isAcceptable()) {
 				failNegotiation(exchange, negotiation);
 			} else {
-				final Variant variant = negotiation.variant();
-				Attachments.setVariant(exchange, variant);
-				logAcceptance(variant);
-				this.next.handleRequest(exchange);
+				forwardRequestHandling(exchange, negotiation);
 			}
 		}
+	}
+
+	private void forwardRequestHandling(final HttpServerExchange exchange, final NegotiationResult negotiation) throws Exception {
+		final Variant variant = negotiation.variant();
+		Attachments.setVariant(exchange, variant);
+		logAcceptance(variant);
+		addContentNegotiationHeaders(exchange,negotiation,true);
+		this.next.handleRequest(exchange);
 	}
 
 	private void logAcceptance(final Variant variant) {
@@ -92,20 +97,23 @@ final class ContentNegotiationHandler implements HttpHandler {
 
 	private void failNegotiation(final HttpServerExchange exchange, final NegotiationResult negotiation) {
 		exchange.setStatusCode(StatusCodes.NOT_ACCEPTABLE);
-		final HeaderMap headers = exchange.getResponseHeaders();
-		for(final Entry<String, Collection<String>> entry:negotiation.responseHeaders(false).asMap().entrySet()) {
-			headers.add(
-				HttpString.tryFromString(entry.getKey()),
-				Joiner.on(", ").join(entry.getValue()));
-		}
+		addContentNegotiationHeaders(exchange, negotiation, false);
 		final URI canonicalURI = HandlerUtil.canonicalURI(exchange);
 		final String message = acceptableResources(canonicalURI,negotiation.alternatives());
 		exchange.getResponseSender().send(message);
 		System.out.println("Not acceptable: "+message);
 	}
 
-	private void abortNegotation(final HttpServerExchange exchange,
-			final List<Failure> failures) {
+	private void addContentNegotiationHeaders(final HttpServerExchange exchange, final NegotiationResult negotiation, final boolean accepted) {
+		final HeaderMap headers = exchange.getResponseHeaders();
+		for(final Entry<String, Collection<String>> entry:negotiation.responseHeaders(accepted).asMap().entrySet()) {
+			headers.add(
+				HttpString.tryFromString(entry.getKey()),
+				Joiner.on(", ").join(entry.getValue()));
+		}
+	}
+
+	private void abortNegotation(final HttpServerExchange exchange, final List<Failure> failures) {
 		exchange.setStatusCode(StatusCodes.BAD_REQUEST);
 		exchange.getResponseHeaders().put(Headers.CONTENT_TYPE,"text/plain; charset=\"UTF-8\"");
 		final String message=errorMessage(failures);
@@ -117,10 +125,9 @@ final class ContentNegotiationHandler implements HttpHandler {
 		final ContentNegotiator negotiator=
 			ContentNegotiator.
 				newInstance().
-					support(MediaTypes.of("text","turtle")).
-					support(MediaTypes.of("application","rdf","xml")).
-					support(MediaTypes.of("application","ld","json")).
-					support(MediaTypes.of("application","ld","json")).
+					support(Formats.toMediaType(Format.TURTLE)).
+					support(Formats.toMediaType(Format.RDF_XML)).
+					support(Formats.toMediaType(Format.JSON_LD)).
 					support(CharacterEncodings.of(StandardCharsets.UTF_8)).
 					support(CharacterEncodings.of(StandardCharsets.ISO_8859_1)).
 					support(CharacterEncodings.of(StandardCharsets.US_ASCII));

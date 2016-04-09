@@ -26,10 +26,10 @@
  */
 package org.smartdeveloperhub.vocabulary.publisher.handlers;
 
+import org.smartdeveloperhub.vocabulary.util.Catalog;
+
 import io.undertow.server.HttpHandler;
 import io.undertow.util.HttpString;
-
-import org.smartdeveloperhub.vocabulary.util.Catalog;
 
 public final class MoreHandlers {
 
@@ -44,8 +44,8 @@ public final class MoreHandlers {
 		return new CatalogHandler(catalog, aHandler);
 	}
 
-	public static HttpHandler contentNegotiation(final VariantProducer producer, final HttpHandler aHandler) {
-		return new ContentNegotiationHandler(producer, aHandler);
+	public static HttpHandler contentNegotiation(final HttpHandler aHandler) {
+		return new ContentNegotiationHandler(aHandler);
 	}
 
 }
