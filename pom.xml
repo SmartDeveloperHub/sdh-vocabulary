@@ -162,6 +162,16 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<includes>
+						<include>**/*Test.java</include>
+						<include>**/URITests.java</include>
+					</includes>
+				</configuration>
+			</plugin>
 			<!-- Skip external ontologies from license maintenance -->
 			<plugin>
 				<groupId>com.mycila</groupId>

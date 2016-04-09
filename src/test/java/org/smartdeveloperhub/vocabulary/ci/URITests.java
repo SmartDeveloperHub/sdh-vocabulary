@@ -24,39 +24,55 @@
  *   Bundle      : sdh-vocabulary-0.3.0-SNAPSHOT.jar
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  */
-package org.smartdeveloperhub.vocabulary;
+package org.smartdeveloperhub.vocabulary.ci;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Properties;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
 
-public final class VocabularyUtil {
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-	private static String vocabularyBase=null;
+public class URITests {
 
-	private VocabularyUtil() {
+	private final URI o1 = new URI("http://www.smartdeveloperhub.org/vocabulary/ontology1#term1");
+	private final URI o2 = new URI("http://www.smartdeveloperhub.org/vocabulary/ontology1#term2");
+	private final URI o3 = new URI("http://www.smartdeveloperhub.org/vocabulary/ontology2#term1");
+	private final String o4 = "data";
+
+	@BeforeClass
+	public static void setUpBefore() {
+		SesameRDFUtil.install();
 	}
 
-	private static synchronized String vocabularyBase() throws AssertionError {
-		if(vocabularyBase==null) {
-			final URL resource = ClassLoader.getSystemResource("org/smartdeveloperhub/vocabulary/vocabulary.properties");
-			if(resource==null) {
-				throw new AssertionError("Could not find vocabulary properties");
-			}
-			final Properties properties=new Properties();
-			try(InputStream is = resource.openStream()) {
-				properties.load(is);
-				vocabularyBase = properties.getProperty("vocabulary.base");
-			} catch(final IOException e) {
-				throw new IllegalStateException("Could not load vocabulary properties",e);
-			}
-		}
-		return vocabularyBase;
+	@Test(expected=IllegalArgumentException.class)
+	public void uriMustHaveColon() {
+		new URI("Non absolute");
 	}
 
-	public static String vocabularyNamespace(final String vocabName) {
-		return vocabularyBase()+vocabName+"#";
+	@Test
+	public void uriIsEqualToSelf() throws Exception {
+		assertThat(this.o1,equalTo(this.o1));
+	}
+
+	@Test
+	public void urisWithDifferentLocalNameAreDifferent() throws Exception {
+		assertThat(this.o1,not(equalTo(this.o2)));
+	}
+
+	@Test
+	public void urisWithDifferentNamespaceAreDifferent() throws Exception {
+		assertThat(this.o1,not(equalTo(this.o3)));
+	}
+
+	@Test
+	public void uriIsNotEqualToNonUris() throws Exception {
+		assertThat((Object)this.o1,not(equalTo((Object)this.o4)));
+	}
+
+	@Test
+	public void uriIsNotEqualToNull() throws Exception {
+		assertThat(this.o1,not(equalTo(null)));
 	}
 
 }

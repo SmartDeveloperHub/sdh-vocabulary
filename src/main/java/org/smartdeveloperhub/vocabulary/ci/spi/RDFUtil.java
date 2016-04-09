@@ -30,19 +30,21 @@ public abstract class RDFUtil {
 
 	private static final class NullRDFUtil extends RDFUtil {
 
+		private static final String NO_DELEGATE_REGISTERED_YET = "No delegate registered yet";
+
 		@Override
 		protected int localNameIndex(String uri) {
-			throw new IllegalStateException("No delegate registered yet");
+			throw new IllegalStateException(NO_DELEGATE_REGISTERED_YET);
 		}
 
 		@Override
 		protected String encodeURI(String label) {
-			throw new IllegalStateException("No delegate registered yet");
+			throw new IllegalStateException(NO_DELEGATE_REGISTERED_YET);
 		}
 
 		@Override
 		protected String encodeString(String label, boolean isLong) {
-			throw new IllegalStateException("No delegate registered yet");
+			throw new IllegalStateException(NO_DELEGATE_REGISTERED_YET);
 		}
 
 	}

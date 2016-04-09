@@ -24,39 +24,16 @@
  *   Bundle      : sdh-vocabulary-0.3.0-SNAPSHOT.jar
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  */
-package org.smartdeveloperhub.vocabulary;
+package org.smartdeveloperhub.vocabulary.ci;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Properties;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
-public final class VocabularyUtil {
-
-	private static String vocabularyBase=null;
-
-	private VocabularyUtil() {
-	}
-
-	private static synchronized String vocabularyBase() throws AssertionError {
-		if(vocabularyBase==null) {
-			final URL resource = ClassLoader.getSystemResource("org/smartdeveloperhub/vocabulary/vocabulary.properties");
-			if(resource==null) {
-				throw new AssertionError("Could not find vocabulary properties");
-			}
-			final Properties properties=new Properties();
-			try(InputStream is = resource.openStream()) {
-				properties.load(is);
-				vocabularyBase = properties.getProperty("vocabulary.base");
-			} catch(final IOException e) {
-				throw new IllegalStateException("Could not load vocabulary properties",e);
-			}
-		}
-		return vocabularyBase;
-	}
-
-	public static String vocabularyNamespace(final String vocabName) {
-		return vocabularyBase()+vocabName+"#";
-	}
-
+@RunWith(Suite.class)
+@SuiteClasses({
+	URITests.class,
+	VocabularyTest.class
+})
+public class UnitTestSuite {
 }
