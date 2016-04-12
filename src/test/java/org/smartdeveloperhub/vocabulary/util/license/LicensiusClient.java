@@ -43,13 +43,18 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.google.common.base.Optional;
+import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
 
 final class LicensiusClient {
+
+	private static final Logger LOGGER=LoggerFactory.getLogger(LicensiusClient.class);
 
 	private static final String APPLICATION_RDF_XML = "application/rdf+xml";
 	private static final String APPLICATION_JSON = "application/json";
@@ -65,22 +70,21 @@ final class LicensiusClient {
 
 	public static final ConcurrentMap<String,Optional<String>> RESOLVED_LICENSES=Maps.newConcurrentMap();
 
-	public static int port=8080;
-	public static String address="localhost";
-
 	private LicensiusClient() {
 	}
 
-	static synchronized void start(final String host, final int port) {
+	static synchronized void start(final String external, final String host, final int port) {
 		if(LicensiusClient.server==null) {
 			LicensiusClient.server=new Server(host,port);
-			LicensiusClient.server.start();
+			LicensiusClient.server.start(external);
+			LOGGER.info("Started local server {}:{}",host,port);
 		}
 	}
 
 	static synchronized void shutdown() {
 		if(LicensiusClient.server!=null) {
 			LicensiusClient.server.stop();
+			LOGGER.info("Stopped local server");
 		}
 	}
 
@@ -94,6 +98,9 @@ final class LicensiusClient {
 			} finally {
 				closeQuietly(response);
 			}
+		} catch(final IOException e) {
+			LOGGER.error("Could not retrieve information for license '{}'. Full stacktrace follows",licenseId,e);
+			throw e;
 		} finally {
 			closeQuietly(client);
 		}
@@ -102,8 +109,10 @@ final class LicensiusClient {
 	static Optional<String> findLicense(final String licenseURI) throws IOException {
 		final Optional<String> cached = RESOLVED_LICENSES.get(licenseURI);
 		if(cached!=null) {
+			LOGGER.trace("Found cached resolution '{}' for license '{}'",cached,licenseURI);
 			return cached;
 		}
+		LOGGER.debug("License '{}' has not been resolved yet. Starting resolution...",licenseURI);
 		final CloseableHttpClient client = HttpClients.createDefault();
 		try {
 			final String publicURI = LicensiusClient.server.publish(licenseURI);
@@ -112,10 +121,14 @@ final class LicensiusClient {
 			try {
 				final Optional<String> result = processFindLicenseInRDFResponse(licenseURI,response);
 				RESOLVED_LICENSES.putIfAbsent(publicURI, result);
+				LOGGER.trace("Resolved '{}' for license '{}'",result,licenseURI);
 				return result;
 			} finally {
 				closeQuietly(response);
 			}
+		} catch(final IOException e) {
+			LOGGER.error("Could not find license for '{}'. Full stacktrace follows",licenseURI,e);
+			throw e;
 		} finally {
 			closeQuietly(client);
 		}
@@ -132,6 +145,7 @@ final class LicensiusClient {
 				closeQuietly(response);
 			}
 		} catch (final IOException e) {
+			LOGGER.trace("Licensius is not available. Root cause follows.",Throwables.getRootCause(e));
 			return false;
 		} finally {
 			closeQuietly(client);
@@ -156,8 +170,11 @@ final class LicensiusClient {
 	private static Optional<LicenseInfo> processGetLicenseInfoResponse(final String licenseId, final CloseableHttpResponse response) throws IOException {
 		final int statusCode = response.getStatusLine().getStatusCode();
 		if(statusCode==200) {
-			return Optional.of(parseEntity(response, LicenseInfo.class));
+			final LicenseInfo info = parseEntity(response, LicenseInfo.class);
+			LOGGER.trace("Information for license '{}' found: {}",licenseId,info);
+			return Optional.of(info);
 		} else if(statusCode==404) {
+			LOGGER.trace("Unknown license '{}'",licenseId);
 			return Optional.absent();
 		} else {
 			final Failure failure=parseEntity(response, Failure.class);
@@ -170,6 +187,11 @@ final class LicensiusClient {
 		if(statusCode==200) {
 			final List<Guess> guesses = parseEntityList(response, Guess.class);
 			final Optional<Guess> bestGuess = findBestAlternative(guesses);
+			if(!guesses.isEmpty()) {
+				LOGGER.trace("Could guess details for license '{}': {}",licenseURI,bestGuess.orNull());
+			} else {
+				LOGGER.trace("Could not guess details for license '{}'",licenseURI);
+			}
 			return getLicense(bestGuess);
 		} else {
 			final Failure failure=parseEntity(response, Failure.class);

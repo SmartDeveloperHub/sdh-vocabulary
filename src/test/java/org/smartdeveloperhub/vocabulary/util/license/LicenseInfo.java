@@ -29,6 +29,7 @@ package org.smartdeveloperhub.vocabulary.util.license;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.google.common.base.MoreObjects;
 
 /**
  * Example
@@ -113,4 +114,20 @@ final class LicenseInfo {
 	public void setSeeAlso(final String seeAlso) {
 		this.seeAlso = seeAlso;
 	}
+
+	@Override
+	public String toString() {
+		return
+			MoreObjects.
+				toStringHelper(getClass()).
+					omitNullValues().
+					add("legalCode",this.legalCode).
+					add("label",this.label).
+					add("title",this.title).
+					add("uri",this.uri).
+					add("version",this.version).
+					add("seeAlso",this.seeAlso).
+					toString();
+	}
+
 }

@@ -42,8 +42,7 @@ public class LicensesTest {
 	@Test
 	public void testResolve() throws Exception {
 		assumeThat("Licensius is not reachable",LicensiusClient.isAvailable(),equalTo(true));
-		final InetAddress localHost = InetAddress.getLocalHost();
-		LicensiusClient.start(localHost.getHostAddress(), 12345);
+		LicensiusClient.start(CheckIp.discover(),InetAddress.getLocalHost().getHostAddress(),12345);
 		try {
 			final License resolve = Licenses.resolve(CREATE);
 			assertThat(resolve.uri(),equalTo(CREATE));

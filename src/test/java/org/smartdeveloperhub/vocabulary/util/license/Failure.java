@@ -29,6 +29,7 @@ package org.smartdeveloperhub.vocabulary.util.license;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.google.common.base.MoreObjects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -65,4 +66,15 @@ final class Failure {
 	public void setMessage(final String message) {
 		this.message = message;
 	}
+	@Override
+	public String toString() {
+		return
+			MoreObjects.
+				toStringHelper(getClass()).
+					omitNullValues().
+					add("message",this.message).
+					add("code",this.code).
+					toString();
+	}
+
 }

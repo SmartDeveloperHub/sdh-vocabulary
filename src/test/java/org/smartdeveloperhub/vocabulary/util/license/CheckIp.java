@@ -26,68 +26,28 @@
  */
 package org.smartdeveloperhub.vocabulary.util.license;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.google.common.base.MoreObjects;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-	Guess.LICENSE,
-	Guess.EVIDENCE,
-	Guess.CONFIDENCE
-})
-final class Guess {
+import com.google.common.collect.Iterables;
+import com.google.common.io.Resources;
 
-	static final String LICENSE    = "license";
-	static final String EVIDENCE   = "evidence";
-	static final String CONFIDENCE = "confidence";
+final class CheckIp {
 
-	@JsonProperty(LICENSE)
-	private String license;
-	@JsonProperty(EVIDENCE)
-	private String evidence;
-	@JsonProperty(CONFIDENCE)
-	private String confidence;
+	// Alternatives:
+	// http://api.ipify.org
+	// http://icanhazip.com/
+	// http://curlmyip.com/
+	// http://ifconfig.me/ <<-- slow
 
-	Guess() {
-		// Package-private
+	private CheckIp(){
 	}
 
-	public String getLicense() {
-		return this.license;
-	}
-
-	public void setLicense(final String license) {
-		this.license = license;
-	}
-
-	public String getEvidence() {
-		return this.evidence;
-	}
-
-	public void setEvidence(final String evidence) {
-		this.evidence = evidence;
-	}
-
-	public String getConfidence() {
-		return this.confidence;
-	}
-
-	public void setConfidence(final String confidence) {
-		this.confidence = confidence;
-	}
-
-	@Override
-	public String toString() {
-		return
-			MoreObjects.
-				toStringHelper(getClass()).
-					omitNullValues().
-					add("license",this.license).
-					add("evidence",this.evidence).
-					add("confidence",this.confidence).
-					toString();
+	public static String discover() throws Exception {
+		final URL whatismyip = new URL("http://checkip.amazonaws.com");
+		final List<String> ips = Resources.readLines(whatismyip, StandardCharsets.US_ASCII);
+		return Iterables.getFirst(ips,null);
 	}
 
 }

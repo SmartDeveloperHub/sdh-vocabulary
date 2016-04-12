@@ -52,7 +52,7 @@ public class ServerTest {
 	public void testServer() throws Exception {
 		final InetAddress localHost = InetAddress.getLocalHost();
 		final Server sut = new Server(localHost.getHostAddress(), 12345);
-		sut.start();
+		sut.start(CheckIp.discover());
 		try {
 			final String location = sut.publish("http://creativecommons.org/licenses/by-nc-sa/3.0/");
 			final String body=
