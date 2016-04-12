@@ -30,7 +30,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assume.assumeThat;
 
-import java.net.InetAddress;
 import java.net.URI;
 
 import org.junit.Test;
@@ -42,7 +41,7 @@ public class LicensesTest {
 	@Test
 	public void testResolve() throws Exception {
 		assumeThat("Licensius is not reachable",LicensiusClient.isAvailable(),equalTo(true));
-		LicensiusClient.start(CheckIp.discover(),InetAddress.getLocalHost().getHostAddress(),12345);
+		LicensiusClient.start(CheckIp.discover(),12345);
 		try {
 			final License resolve = Licenses.resolve(CREATE);
 			assertThat(resolve.uri(),equalTo(CREATE));

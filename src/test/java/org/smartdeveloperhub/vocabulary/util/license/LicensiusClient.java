@@ -73,10 +73,10 @@ final class LicensiusClient {
 	private LicensiusClient() {
 	}
 
-	static synchronized void start(final String external, final String host, final int port) {
+	static synchronized void start(final String host, final int port) {
 		if(LicensiusClient.server==null) {
 			LicensiusClient.server=new Server(host,port);
-			LicensiusClient.server.start(external);
+			LicensiusClient.server.start();
 			LOGGER.info("Started local server {}:{}",host,port);
 		}
 	}

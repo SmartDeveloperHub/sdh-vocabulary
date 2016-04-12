@@ -58,15 +58,13 @@ final class Server {
 	private final ConcurrentMap<String,String> vocabularies=Maps.newConcurrentMap();
 	private final Undertow server;
 
-	private String external;
-
 	Server(final String host, final int port) {
 		this.host = host;
 		this.port = port;
 		this.server =
 			Undertow.
 				builder().
-					addHttpListener(this.port,this.host).
+					addHttpListener(this.port,"0.0.0.0").
 					setHandler(
 							path().
 								addPrefixPath(
@@ -80,11 +78,10 @@ final class Server {
 	String publish(final String licenseURI) {
 		final String key=String.format("%8X",licenseURI.hashCode());
 		this.vocabularies.putIfAbsent(key, licenseURI);
-		return String.format("http://%s:%s/vocabulary/%s",this.external!=null?this.external:this.host,this.port,key);
+		return String.format("http://%s:%s/vocabulary/%s",this.host,this.port,key);
 	}
 
-	void start(final String external) {
-		this.external = external;
+	void start() {
 		this.server.start();
 	}
 
