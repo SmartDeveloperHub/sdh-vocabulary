@@ -24,33 +24,18 @@
  *   Bundle      : sdh-vocabulary-0.3.0-SNAPSHOT.jar
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  */
-package org.smartdeveloperhub.vocabulary.util.license;
+package org.smartdeveloperhub.testing;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assume.assumeThat;
 
-import java.net.URI;
+public final class Utils {
 
-import org.junit.Test;
-import org.smartdeveloperhub.testing.Utils;
-
-public class LicensesTest {
-
-	private static final URI CREATE = URI.create("http://creativecommons.org/licenses/by-nc-sa/2.0/");
-
-	@Test
-	public void testResolve() throws Exception {
-		Utils.assumeNotContinuousIntegration();
-		assumeThat("Licensius is not reachable",LicensiusClient.isAvailable(),equalTo(true));
-		LicensiusClient.start(CheckIp.discover(),12345);
-		try {
-			final License resolve = Licenses.resolve(CREATE);
-			assertThat(resolve.uri(),equalTo(CREATE));
-			assertThat(resolve.name(),equalTo("Creative Commons CC-BY-NC-SA 2.0"));
-		} finally {
-			LicensiusClient.shutdown();
-		}
+	public static void assumeNotContinuousIntegration() {
+		assumeThat(Boolean.parseBoolean(System.getenv("CI")), not(equalTo(true)));
+		assumeThat(Boolean.parseBoolean(System.getenv("TRAVIS")), not(equalTo(true)));
+		assumeThat(Boolean.parseBoolean(System.getenv("CONTINUOUS_INTEGRATION")), not(equalTo(true)));
 	}
 
 }

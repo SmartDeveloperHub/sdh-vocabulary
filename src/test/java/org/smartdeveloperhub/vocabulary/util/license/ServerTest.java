@@ -49,7 +49,7 @@ import com.hp.hpl.jena.rdf.model.StmtIterator;
 public class ServerTest {
 	@Test
 	public void testServer() throws Exception {
-		final Server sut = new Server(CheckIp.discover(), 12345);
+		final Server sut = new Server("localhost",12345);
 		sut.start();
 		try {
 			final String location = sut.publish("http://creativecommons.org/licenses/by-nc-sa/3.0/");
