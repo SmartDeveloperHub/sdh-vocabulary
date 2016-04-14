@@ -1,0 +1,445 @@
+@prefix oslc_asset: <http://open-services.net/ns/asset#> .
+@prefix org: <http://www.smartdeveloperhub.org/vocabulary/organization#> .
+@prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix oslc_config: <http://open-services.net/ns/config#> .
+@prefix oslc: <http://open-services.net/ns/core#> .
+@prefix scm: <http://www.smartdeveloperhub.org/vocabulary/scm#> .
+@prefix ci: <http://www.smartdeveloperhub.org/vocabulary/ci#> .
+@prefix oslc_auto: <http://open-services.net/ns/auto#> .
+@prefix platform: <http://www.smartdeveloperhub.org/vocabulary/platform#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix wot: <http://xmlns.com/wot/0.1/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix sdh: <http://www.smartdeveloperhub.org/vocabulary/sdh#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix metrics: <http://www.smartdeveloperhub.org/vocabulary/metrics#> .
+@prefix : <http://www.semanticweb.org/owl/owlapi/turtle#> .
+@prefix rddl: <http://www.rddl.org/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@base <http://www.smartdeveloperhub.org/vocabulary/it> .
+
+<http://www.smartdeveloperhub.org/vocabulary/it> rdf:type owl:Ontology ;
+                                                 
+                                                 dc:publisher "http://www.centeropenmiddleware.com/"^^xsd:anyURI ;
+                                                 
+                                                 dc:title "Issue Tracker ontology"@en ;
+                                                 
+                                                 dc:rights "Licensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License."@en ;
+                                                 
+                                                 rdfs:comment """This ontology models a part of the concepts involved in a Issue Tracker (IT) system.
+This ontology is part of the Smart Developer Hub ontology network."""@en ;
+                                                 
+                                                 dcterms:license "http://www.apache.org/licenses/LICENSE-2.0" ;
+                                                 
+                                                 owl:versionIRI <http://www.smartdeveloperhub.org/vocabulary/v1/it> .
+
+
+#################################################################
+#
+#    Annotation properties
+#
+#################################################################
+
+
+
+
+#################################################################
+#
+#    Datatypes
+#
+#################################################################
+
+
+
+
+#################################################################
+#
+#    Object Properties
+#
+#################################################################
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#affectsVersion
+
+<http://www.smartdeveloperhub.org/vocabulary/it#affectsVersion> rdf:type owl:ObjectProperty ;
+                                                                
+                                                                rdfs:label "affects version"@en ;
+                                                                
+                                                                rdfs:comment "version affected by a given issue"@en ;
+                                                                
+                                                                rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#Issue> ;
+                                                                
+                                                                rdfs:range <http://www.smartdeveloperhub.org/vocabulary/it#Version> .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#hasComponent
+
+<http://www.smartdeveloperhub.org/vocabulary/it#hasComponent> rdf:type owl:ObjectProperty ;
+                                                              
+                                                              rdfs:label "hasComponent"@en ;
+                                                              
+                                                              rdfs:comment "components that are part of a given project"@en ;
+                                                              
+                                                              rdfs:range <http://www.smartdeveloperhub.org/vocabulary/it#Component> ;
+                                                              
+                                                              rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#Project> .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#hasProjectIssue
+
+<http://www.smartdeveloperhub.org/vocabulary/it#hasProjectIssue> rdf:type owl:ObjectProperty ;
+                                                                 
+                                                                 rdfs:label "has project issue"@en ;
+                                                                 
+                                                                 rdfs:comment "issues that exist in the context of a given project"@en ;
+                                                                 
+                                                                 rdfs:range <http://www.smartdeveloperhub.org/vocabulary/it#Issue> ;
+                                                                 
+                                                                 rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#Project> ;
+                                                                 
+                                                                 owl:inverseOf <http://www.smartdeveloperhub.org/vocabulary/it#isIssueOfProject> .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#hasVersion
+
+<http://www.smartdeveloperhub.org/vocabulary/it#hasVersion> rdf:type owl:ObjectProperty ;
+                                                            
+                                                            rdfs:label "has version"@en ;
+                                                            
+                                                            rdfs:comment "versions generated withing a project"@en ;
+                                                            
+                                                            rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#Project> ;
+                                                            
+                                                            rdfs:range <http://www.smartdeveloperhub.org/vocabulary/it#Version> .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#isAssignedTo
+
+<http://www.smartdeveloperhub.org/vocabulary/it#isAssignedTo> rdf:type owl:FunctionalProperty ,
+                                                                       owl:ObjectProperty ;
+                                                              
+                                                              rdfs:label "is assigned to"@en ;
+                                                              
+                                                              rdfs:comment "person to whom the issue is assigned"@en ;
+                                                              
+                                                              rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#Issue> ;
+                                                              
+                                                              rdfs:range <http://www.smartdeveloperhub.org/vocabulary/it#Person> .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#isComposedOfIssue
+
+<http://www.smartdeveloperhub.org/vocabulary/it#isComposedOfIssue> rdf:type owl:ObjectProperty ,
+                                                                            owl:TransitiveProperty ;
+                                                                   
+                                                                   rdfs:label "is composed of issue"@en ;
+                                                                   
+                                                                   rdfs:comment "issues that compose a composed issue"@en ;
+                                                                   
+                                                                   rdfs:range <http://www.smartdeveloperhub.org/vocabulary/it#Issue> ;
+                                                                   
+                                                                   rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#Issue> .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#isIssueAssociatedToComponent
+
+<http://www.smartdeveloperhub.org/vocabulary/it#isIssueAssociatedToComponent> rdf:type owl:ObjectProperty ;
+                                                                              
+                                                                              rdfs:label "is issue associated to component"@en ;
+                                                                              
+                                                                              rdfs:comment "component the issue is associated to"@en ;
+                                                                              
+                                                                              rdfs:range <http://www.smartdeveloperhub.org/vocabulary/it#Component> ;
+                                                                              
+                                                                              rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#Issue> .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#isIssueOfProject
+
+<http://www.smartdeveloperhub.org/vocabulary/it#isIssueOfProject> rdf:type owl:FunctionalProperty ,
+                                                                           owl:ObjectProperty ;
+                                                                  
+                                                                  rdfs:label "is issue of project"@en ;
+                                                                  
+                                                                  rdfs:comment "project the issue belongs to"@en ;
+                                                                  
+                                                                  rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#Issue> ;
+                                                                  
+                                                                  rdfs:range <http://www.smartdeveloperhub.org/vocabulary/it#Project> .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#isIssueRelatedToCommit
+
+<http://www.smartdeveloperhub.org/vocabulary/it#isIssueRelatedToCommit> rdf:type owl:ObjectProperty ;
+                                                                        
+                                                                        rdfs:label "is issue telated to commit"@en ;
+                                                                        
+                                                                        rdfs:comment "commits the issue is related to"@en ;
+                                                                        
+                                                                        rdfs:range <http://www.smartdeveloperhub.org/vocabulary/it#Commit> ;
+                                                                        
+                                                                        rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#Issue> .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#isReportedBy
+
+<http://www.smartdeveloperhub.org/vocabulary/it#isReportedBy> rdf:type owl:FunctionalProperty ,
+                                                                       owl:ObjectProperty ;
+                                                              
+                                                              rdfs:label "is reported by"@en ;
+                                                              
+                                                              rdfs:comment "person who reported the issue"@en ;
+                                                              
+                                                              rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#Issue> ;
+                                                              
+                                                              rdfs:range <http://www.smartdeveloperhub.org/vocabulary/it#Person> .
+
+
+
+
+
+#################################################################
+#
+#    Data properties
+#
+#################################################################
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#issueCustomTag
+
+<http://www.smartdeveloperhub.org/vocabulary/it#issueCustomTag> rdf:type owl:DatatypeProperty ;
+                                                                
+                                                                rdfs:label "issue custom tag"@en ;
+                                                                
+                                                                rdfs:comment "Free text for custom tag used for issues"@en ;
+                                                                
+                                                                rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#Issue> ;
+                                                                
+                                                                rdfs:range rdfs:Literal .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#storyPoints
+
+<http://www.smartdeveloperhub.org/vocabulary/it#storyPoints> rdf:type owl:DatatypeProperty ;
+                                                             
+                                                             rdfs:label "story points"@en ;
+                                                             
+                                                             rdfs:comment "number of story points assigned to an issue"@en ;
+                                                             
+                                                             rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#Issue> ;
+                                                             
+                                                             rdfs:range xsd:int .
+
+
+
+
+
+#################################################################
+#
+#    Classes
+#
+#################################################################
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#Bug
+
+<http://www.smartdeveloperhub.org/vocabulary/it#Bug> rdf:type owl:Class ;
+                                                     
+                                                     rdfs:label "Bug"@en ,
+                                                                "Defect"@en ;
+                                                     
+                                                     rdfs:subClassOf <http://www.smartdeveloperhub.org/vocabulary/it#Issue> ;
+                                                     
+                                                     rdfs:comment "A software bug is an error, flaw, failure or fault in a computer program or system that causes it to produce an incorrect or unexpected result, or to behave in unintended ways."@en .
+[ rdf:type owl:Axiom ;
+  rdfs:seeAlso "https://en.wikipedia.org/wiki/Software_bug" ;
+  owl:annotatedTarget "A software bug is an error, flaw, failure or fault in a computer program or system that causes it to produce an incorrect or unexpected result, or to behave in unintended ways."@en ;
+  owl:annotatedSource <http://www.smartdeveloperhub.org/vocabulary/it#Bug> ;
+  owl:annotatedProperty rdfs:comment
+] .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#Commit
+
+<http://www.smartdeveloperhub.org/vocabulary/it#Commit> rdf:type owl:Class ;
+                                                        
+                                                        rdfs:label "Commit"@en ;
+                                                        
+                                                        rdfs:comment "An action taht adds the latest changes to the source code to a repository."@en .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#Component
+
+<http://www.smartdeveloperhub.org/vocabulary/it#Component> rdf:type owl:Class ;
+                                                           
+                                                           rdfs:label "Component"@en ;
+                                                           
+                                                           rdfs:comment "An individual software component is a software package, a web service, a web resource, or a module that encapsulates a set of related functions (or data). "@en .
+[ rdf:type owl:Axiom ;
+  rdfs:seeAlso "https://en.wikipedia.org/wiki/Component-based_software_engineering#Definition_and_characteristics_of_components" ;
+  owl:annotatedTarget "An individual software component is a software package, a web service, a web resource, or a module that encapsulates a set of related functions (or data). "@en ;
+  owl:annotatedSource <http://www.smartdeveloperhub.org/vocabulary/it#Component> ;
+  owl:annotatedProperty rdfs:comment
+] .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#CompositeIssue
+
+<http://www.smartdeveloperhub.org/vocabulary/it#CompositeIssue> rdf:type owl:Class ;
+                                                                
+                                                                rdfs:label "Composite issue"@en ;
+                                                                
+                                                                owl:equivalentClass [ rdf:type owl:Restriction ;
+                                                                                      owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/it#isComposedOfIssue> ;
+                                                                                      owl:minCardinality "1"^^xsd:nonNegativeInteger
+                                                                                    ] ;
+                                                                
+                                                                rdfs:subClassOf <http://www.smartdeveloperhub.org/vocabulary/it#Issue> ;
+                                                                
+                                                                rdfs:comment "A issue that is composed by other issues."@en .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#DevelopmentTask
+
+<http://www.smartdeveloperhub.org/vocabulary/it#DevelopmentTask> rdf:type owl:Class ;
+                                                                 
+                                                                 rdfs:label "Development task"@en ;
+                                                                 
+                                                                 rdfs:subClassOf <http://www.smartdeveloperhub.org/vocabulary/it#Task> ;
+                                                                 
+                                                                 rdfs:comment "A development activity that needs to be accomplished within a defined period of time or by a deadline"@en .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#ITHarvester
+
+<http://www.smartdeveloperhub.org/vocabulary/it#ITHarvester> rdf:type owl:Class ;
+                                                             
+                                                             rdfs:label "Application that extracts information from an external issue tracker system and makes it public as Linked Data defined according to a vocabulary by using LDP."@en ,
+                                                                        "Issue Tracker Harvester"@en ;
+                                                             
+                                                             rdfs:subClassOf platform:Harvester .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#Improvement
+
+<http://www.smartdeveloperhub.org/vocabulary/it#Improvement> rdf:type owl:Class ;
+                                                             
+                                                             rdfs:label "Enhacement"@en ,
+                                                                        "Improvement"@en ;
+                                                             
+                                                             rdfs:subClassOf <http://www.smartdeveloperhub.org/vocabulary/it#Issue> ;
+                                                             
+                                                             rdfs:comment "A proposed or newly added software feature"@en .
+[ rdf:type owl:Axiom ;
+  rdfs:seeAlso "https://en.wikipedia.org/wiki/Enhancement" ;
+  owl:annotatedTarget "A proposed or newly added software feature"@en ;
+  owl:annotatedSource <http://www.smartdeveloperhub.org/vocabulary/it#Improvement> ;
+  owl:annotatedProperty rdfs:comment
+] .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#Issue
+
+<http://www.smartdeveloperhub.org/vocabulary/it#Issue> rdf:type owl:Class ;
+                                                       
+                                                       rdfs:label "Issue"@en ;
+                                                       
+                                                       rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                                                         owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/it#isReportedBy> ;
+                                                                         owl:cardinality "1"^^xsd:nonNegativeInteger
+                                                                       ] ;
+                                                       
+                                                       rdfs:comment "In computing, the term issue is a unit of work to accomplish an improvement in a system.[citation needed] An issue could be a bug, a requested feature, task, missing documentation, and so forth."@en .
+[ rdf:type owl:Axiom ;
+  rdfs:seeAlso "https://en.wikipedia.org/wiki/Software_project_management#Issue" ;
+  owl:annotatedTarget "In computing, the term issue is a unit of work to accomplish an improvement in a system.[citation needed] An issue could be a bug, a requested feature, task, missing documentation, and so forth."@en ;
+  owl:annotatedSource <http://www.smartdeveloperhub.org/vocabulary/it#Issue> ;
+  owl:annotatedProperty rdfs:comment
+] .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#Person
+
+<http://www.smartdeveloperhub.org/vocabulary/it#Person> rdf:type owl:Class ;
+                                                        
+                                                        rdfs:label "Person"@en ;
+                                                        
+                                                        rdfs:comment "A human being."@en .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#Project
+
+<http://www.smartdeveloperhub.org/vocabulary/it#Project> rdf:type owl:Class ;
+                                                         
+                                                         rdfs:label "Project"@en ;
+                                                         
+                                                         rdfs:comment "The set of work activities, both technical and managerial, required to satisfy the terms and conditions of a project agreement."@en .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#Task
+
+<http://www.smartdeveloperhub.org/vocabulary/it#Task> rdf:type owl:Class ;
+                                                      
+                                                      rdfs:label "Task"@en ;
+                                                      
+                                                      rdfs:subClassOf <http://www.smartdeveloperhub.org/vocabulary/it#Issue> ;
+                                                      
+                                                      rdfs:comment "An activity that needs to be accomplished within a defined period of time or by a deadline"@en .
+[ rdf:type owl:Axiom ;
+  owl:annotatedTarget "An activity that needs to be accomplished within a defined period of time or by a deadline"@en ;
+  rdfs:seeAlso "https://en.wikipedia.org/wiki/Task_%28project_management%29" ;
+  owl:annotatedSource <http://www.smartdeveloperhub.org/vocabulary/it#Task> ;
+  owl:annotatedProperty rdfs:comment
+] .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#Version
+
+<http://www.smartdeveloperhub.org/vocabulary/it#Version> rdf:type owl:Class ;
+                                                         
+                                                         rdfs:label "Version"@en ;
+                                                         
+                                                         rdfs:comment "A version of a software item is an identified instance of an item. (SWEBOK v3)"@en .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/platform#Harvester
+
+platform:Harvester rdf:type owl:Class ;
+                   
+                   rdfs:label "Harvester"@en ;
+                   
+                   rdfs:comment "Application that extracts information from an external system and makes it public as Linked Data defined according to a vocabulary by using LDP."@en .
+
+
+
+
+###  Generated by the OWL API (version 3.2.3.1824) http://owlapi.sourceforge.net
+
