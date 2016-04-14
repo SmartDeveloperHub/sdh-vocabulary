@@ -98,7 +98,7 @@ final class Server {
 		builder.append("  xmlns:owl=\"http://www.w3.org/2002/07/owl#\"").append(NL);
 		builder.append("  xmlns:terms=\"http://purl.org/dc/terms/\">").append(NL);
 		builder.append("    <owl:Ontology rdf:about=\"").append(base).append("\">").append(NL);
-		builder.append("      <terms:license>").append(licenseURI).append("</terms:license>").append(NL);
+		builder.append("      <terms:license rdf:resource=\"").append(licenseURI).append("\"/>").append(NL);
 		builder.append("    </owl:Ontology>").append(NL);
 		builder.append("</rdf:RDF>").append(NL);
 		return builder.toString();

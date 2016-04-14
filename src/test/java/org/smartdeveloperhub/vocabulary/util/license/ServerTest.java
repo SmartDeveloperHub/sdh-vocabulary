@@ -38,11 +38,11 @@ import java.util.List;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
-import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.RDFReader;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 
@@ -60,16 +60,18 @@ public class ServerTest {
 				contentType("application/rdf+xml;charset=UTF-8").
 				extract().
 					asString();
-			final List<Literal> licenses = getLicenses(location, body);
+			final List<Resource> licenses = getLicenses(location, body);
 			assertThat(licenses,hasSize(1));
-			assertThat(licenses.get(0).getLexicalForm(),equalTo("http://creativecommons.org/licenses/by-nc-sa/3.0/"));
+			final Resource found = licenses.get(0);
+			assertThat(found.isURIResource(),equalTo(true));
+			assertThat(found.getURI(),equalTo("http://creativecommons.org/licenses/by-nc-sa/3.0/"));
 		} finally {
 			sut.stop();
 		}
 	}
 
-	private List<Literal> getLicenses(final String location, final String body) {
-		final List<Literal> licenses=Lists.newArrayList();
+	private List<Resource> getLicenses(final String location, final String body) {
+		final List<Resource> licenses=Lists.newArrayList();
 		final Model model = parse(body, location);
 		final StmtIterator iterator=
 			model.
@@ -80,8 +82,8 @@ public class ServerTest {
 		try {
 			while(iterator.hasNext()) {
 				final Statement next = iterator.next();
-				assertThat(next.getObject(),instanceOf(Literal.class));
-				licenses.add(next.getObject().asLiteral());
+				assertThat(next.getObject(),instanceOf(Resource.class));
+				licenses.add(next.getObject().asResource());
 			}
 		} finally {
 			iterator.close();
