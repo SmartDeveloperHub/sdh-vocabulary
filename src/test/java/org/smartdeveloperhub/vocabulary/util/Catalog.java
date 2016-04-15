@@ -26,7 +26,6 @@
  */
 package org.smartdeveloperhub.vocabulary.util;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Path;
@@ -42,14 +41,15 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 
 public final class Catalog {
 
-	private final class UriFilter implements
-			Function<Statement, Optional<String>> {
+	private final class UriFilter implements Function<Statement, Optional<String>> {
+
 		private final Result<Module> report;
 
 		private UriFilter(final Result<Module> report) {
@@ -65,43 +65,46 @@ public final class Catalog {
 			this.report.warn("Discarding invalid value for property %s: not a URI (%s)",input.getPredicate().getURI(),object);
 			return Optional.absent();
 		}
+
 	}
 
-	private final URI base;
-	private final Path root;
+	private final class StringFilter implements Function<Statement, Optional<String>> {
 
+		private final Result<Module> report;
+
+		private StringFilter(final Result<Module> report) {
+			this.report = report;
+		}
+
+		@Override
+		public Optional<String> apply(final Statement input) {
+			final RDFNode object=input.getObject();
+			if(object.isLiteral()) {
+				final Literal literal=object.asLiteral();
+				if(literal.getDatatypeURI()==null || "http://www.w3.org/2001/XMLSchema#string".equals(literal.getDatatypeURI())) {
+					return Optional.of(literal.getLexicalForm());
+				}
+			}
+			this.report.warn("Discarding invalid value for property %s: not a String Literal (%s)",input.getPredicate().getURI(),object);
+			return Optional.absent();
+		}
+
+	}
+
+	private final Context context;
 	private final List<Module> modules;
 	private final Map<String,Integer> moduleIndex;
 	private final Map<String,Integer> canonicalModuleIndex;
 	private final Map<String,Integer> externalModuleIndex;
 	private final Map<String,Integer> ontologyModuleIndex;
 
-	Catalog(final URI base, final Path root) {
-		this.base = base;
-		this.root = root;
+	Catalog(final Context context) {
+		this.context = context;
 		this.modules=Lists.newArrayList();
 		this.moduleIndex=Maps.newLinkedHashMap();
 		this.canonicalModuleIndex=Maps.newLinkedHashMap();
 		this.externalModuleIndex=Maps.newLinkedHashMap();
 		this.ontologyModuleIndex=Maps.newLinkedHashMap();
-	}
-
-	private String getRelativePath(final Path file) {
-		final Path absoluteBasePath = file.getParent().resolve(getFileName(file));
-		final Path relativeBasePath = this.root.relativize(absoluteBasePath);
-		return relativeBasePath.toString().replace(File.separatorChar, '/');
-	}
-
-	private String getFileName(final Path file) {
-		return com.google.common.io.Files.getNameWithoutExtension(file.getFileName().toString());
-	}
-
-	private String getFileExtension(final Path file) {
-		return com.google.common.io.Files.getFileExtension(file.getFileName().toString());
-	}
-
-	private URI getCanonicalNamespace(final Path file) {
-		return this.base.resolve(getRelativePath(file));
 	}
 
 	private void addModule(final Module module) {
@@ -113,8 +116,8 @@ public final class Catalog {
 		}
 		if(module.isOntology()) {
 			this.ontologyModuleIndex.put(module.relativePath(), size);
-			if(module.isCanonical(this.base)) {
-				this.canonicalModuleIndex.put(this.base.relativize(URI.create(module.ontology())).toString(),size);
+			if(module.isCanonical()) {
+				this.canonicalModuleIndex.put(getBase().relativize(URI.create(module.ontology())).toString(),size);
 			}
 		}
 	}
@@ -133,29 +136,97 @@ public final class Catalog {
 			final Resource resource = ontologies.get(0);
 			if(resource.isURIResource()) {
 				module.withOntology(resource.asResource().getURI());
-			}
-			final Function<Statement, Optional<String>> uriFilter=new UriFilter(report);
-			final List<String> uris = helper.getPropertyValues(resource, owl("versionIRI"),uriFilter);
-			if(uris.isEmpty()) {
-				report.warn("No version IRI defined");
-			} else if(uris.size()>1) {
-				report.warn("Multiple version IRIs defined (%s)",Joiner.on(", ").join(uris));
 			} else {
-				module.withVersionIRI(uris.get(0));
+				report.error("Ontology identifier cannot be a blank node (%s)",resource.getId().getLabelString());
 			}
-			module.withImports(helper.getPropertyValues(resource,owl("imports"),uriFilter));
+			populateVersioningMetadata(helper, report, module, resource);
+			populateImports(helper, report, module, resource);
+		}
+	}
+
+	private void populateImports(final ModuleHelper helper, final Result<Module> report, final Module module, final Resource resource) {
+		module.
+			withImports(
+				helper.getPropertyValues(
+					resource,
+					owl("imports"),
+					new UriFilter(report)));
+	}
+
+	// TODO: Enable tweaking what can be validate (report errors) and not (report warning)
+	private void populateVersioningMetadata(final ModuleHelper helper, final Result<Module> report, final Module module, final Resource resource) {
+		populateVersionIRI(helper, report, module, resource);
+		populateVersionInfo(helper,report,module,resource);
+		populatePriorVersions(helper, report, module, resource);
+		populateBackwardCompatibleVersions(helper, report, module, resource);
+		populateIncompatibleVersions(helper, report, module, resource);
+	}
+
+	private void populateIncompatibleVersions(final ModuleHelper helper, final Result<Module> report, final Module module, final Resource resource) {
+		final List<String> incompatibleWithVersions = helper.getPropertyValues(resource, owl("incompatibleWith"),new UriFilter(report));
+		if(!module.isVersion() && !incompatibleWithVersions.isEmpty()) {
+			report.warn("Only ontology versions can be incompatible with previous versions (%s)", Joiner.on(", ").join(incompatibleWithVersions));
+		} else {
+			module.withPriorVersions(incompatibleWithVersions);
+		}
+	}
+
+	private void populateBackwardCompatibleVersions(final ModuleHelper helper, final Result<Module> report,
+			final Module module, final Resource resource) {
+		final List<String> backwardCompatibleWithVersions = helper.getPropertyValues(resource, owl("backwardCompatibleWith"),new UriFilter(report));
+		if(!module.isVersion() && !backwardCompatibleWithVersions.isEmpty()) {
+			report.warn("Only ontology versions can be compatible with previous versions (%s)", Joiner.on(", ").join(backwardCompatibleWithVersions));
+		} else {
+			module.withPriorVersions(backwardCompatibleWithVersions);
+		}
+	}
+
+	private void populatePriorVersions(final ModuleHelper helper, final Result<Module> report, final Module module, final Resource resource) {
+		final List<String> priorVersions = helper.getPropertyValues(resource, owl("priorVersion"),new UriFilter(report));
+		if(!module.isVersion() && !priorVersions.isEmpty()) {
+			report.warn("Only ontology versions can have previous versions (%s)", Joiner.on(", ").join(priorVersions));
+		} else {
+			module.withPriorVersions(priorVersions);
+		}
+	}
+
+	private void populateVersionIRI(final ModuleHelper helper, final Result<Module> report, final Module module, final Resource resource) {
+		final List<String> versionIRIs = helper.getPropertyValues(resource, owl("versionIRI"),new UriFilter(report));
+		if(versionIRIs.isEmpty()) {
+			report.warn("No version IRI defined");
+		} else if(versionIRIs.size()>1) {
+			report.warn("Multiple version IRIs defined (%s)",Joiner.on(", ").join(versionIRIs));
+		} else {
+			module.withVersionIRI(versionIRIs.get(0));
+		}
+	}
+
+	private void populateVersionInfo(final ModuleHelper helper, final Result<Module> report, final Module module, final Resource resource) {
+		final Function<Statement, Optional<String>> stringFilter=new StringFilter(report);
+		final List<String> versionInfos = helper.getPropertyValues(resource, owl("versionInfo"),stringFilter);
+		if(!module.isVersion()) {
+			if(!versionInfos.isEmpty()) {
+				report.warn("Only ontology versions can have associated version info (%s)",Joiner.on(", ").join(versionInfos));
+			}
+		} else {
+			if(versionInfos.isEmpty()) {
+				report.warn("No version info defined");
+			} else if(versionInfos.size()>1) {
+				report.warn("Multiple version info defined (%s)",Joiner.on(", ").join(versionInfos));
+			} else {
+				module.withVersionInfo(versionInfos.get(0));
+			}
 		}
 	}
 
 	private void processFile(final Path file, final Format format, final Result<Module> report) {
 		final Module module=
-			new Module().
+			new Module(this.context).
 				withLocation(file).
-				withFormat(format).
-				withRelativePath(getRelativePath(file));
+				withFormat(format);
 		try {
 			final ModuleHelper helper=new ModuleHelper(file);
-			if(helper.load(getCanonicalNamespace(file),format).isAvailable()) {
+			if(helper.load(module.canonicalNamespace(),module.format()).isAvailable()) {
 				populateOntologyDetails(helper, report, module);
 				if(report.errors().isEmpty()) {
 					addModule(module);
@@ -169,18 +240,22 @@ public final class Catalog {
 
 	Result<Module> loadModule(final Path file) {
 		final Result<Module> report=Result.newInstance();
-		final Format format=Format.fromExtension(getFileExtension(file));
+		final Format format=Format.fromExtension(MorePaths.getFileExtension(file));
 		if(format!=null) {
 			processFile(file, format, report);
 		} else {
-			report.error("Cannot process '%s' files",getFileExtension(file));
+			report.error("Cannot process '%s' files",MorePaths.getFileExtension(file));
 		}
 		return report;
 	}
 
+	public URI getBase() {
+		return this.context.base();
+	}
+
 	public Module resolve(final URI ontology) {
 		Module result=null;
-		final URI relativeURI = this.base.relativize(ontology);
+		final URI relativeURI = getBase().relativize(ontology);
 		if(!relativeURI.isAbsolute()) {
 			final String relativePath = relativeURI.toString();
 			if(this.moduleIndex.containsKey(relativePath)) {
@@ -204,6 +279,10 @@ public final class Catalog {
 		return ImmutableList.copyOf(this.moduleIndex.keySet());
 	}
 
+	public List<String> ontologyModules() {
+		return ImmutableList.copyOf(this.ontologyModuleIndex.keySet());
+	}
+
 	public List<String> externalModules() {
 		return ImmutableList.copyOf(this.externalModuleIndex.keySet());
 	}
@@ -225,7 +304,7 @@ public final class Catalog {
 			MoreObjects.
 				toStringHelper(getClass()).
 					omitNullValues().
-					add("base",this.base).
+					add("context",this.context).
 					add("modules",this.modules).
 					add("moduleIndex",this.moduleIndex).
 					add("canonicalModuleIndex",this.canonicalModuleIndex).
@@ -236,10 +315,6 @@ public final class Catalog {
 
 	private static String owl(final String string) {
 		return "http://www.w3.org/2002/07/owl#"+string;
-	}
-
-	public URI getBase() {
-		return this.base;
 	}
 
 }

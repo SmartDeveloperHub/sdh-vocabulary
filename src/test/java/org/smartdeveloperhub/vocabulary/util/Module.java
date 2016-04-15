@@ -31,7 +31,6 @@ import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.jena.atlas.web.ContentType;
@@ -40,7 +39,7 @@ import org.apache.jena.riot.RDFLanguages;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableSortedSet;
-import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 public final class Module {
 
@@ -93,25 +92,32 @@ public final class Module {
 		}
 	}
 
-	private final List<String> imports;
+	private final Context context;
 
 	private Path   location;
-	private String relativePath;
-	private String ontology;
-	private String versionIRI;
 	private Format format;
 
-	Module() {
-		this.imports=Lists.newArrayList();
-	}
+	private String relativePath;
+	private URI    canonicalNamespace;
 
-	Module withRelativePath(final String value) {
-		this.relativePath=value;
-		return this;
+	private String ontology;
+	private String versionIRI;
+	private final Set<String> priorVersions;
+	private final Set<String> imports;
+
+	private String versionInfo;
+
+
+	Module(final Context context) {
+		this.context = context;
+		this.imports=Sets.newLinkedHashSet();
+		this.priorVersions=Sets.newLinkedHashSet();
 	}
 
 	Module withLocation(final Path value) {
 		this.location=value;
+		this.canonicalNamespace=this.context.getCanonicalNamespace(this.location);
+		this.relativePath=this.context.getRelativePath(this.location);
 		return this;
 	}
 
@@ -130,13 +136,27 @@ public final class Module {
 		return this;
 	}
 
-	Module withImports(final Collection<? extends String> strings) {
-		this.imports.addAll(strings);
+	Module withVersionInfo(final String versionInfo) {
+		this.versionInfo = versionInfo;
 		return this;
 	}
 
-	boolean isCanonical(final URI base) {
-		return this.ontology!=null && !this.ontology.equals(this.versionIRI) && this.ontology.startsWith(base.toString());
+	Module withPriorVersions(final Collection<? extends String> priorVersions) {
+		this.priorVersions.addAll(priorVersions);
+		return this;
+	}
+
+	Module withImports(final Collection<? extends String> imports) {
+		this.imports.addAll(imports);
+		return this;
+	}
+
+	URI canonicalNamespace() {
+		return this.canonicalNamespace;
+	}
+
+	boolean isCanonical() {
+		return this.ontology!=null && !this.ontology.equals(this.versionIRI) && this.ontology.startsWith(this.context.base().toString());
 	}
 
 	public Path location() {
@@ -157,6 +177,10 @@ public final class Module {
 
 	public String versionIRI() {
 		return this.versionIRI;
+	}
+
+	public Set<String> priorVersions() {
+		return ImmutableSortedSet.copyOf(this.priorVersions);
 	}
 
 	public Set<String> imports() {
@@ -192,12 +216,15 @@ public final class Module {
 			MoreObjects.
 				toStringHelper(getClass()).
 					omitNullValues().
+					add("context",this.context).
 					add("location",this.location).
 					add("relativePath",this.relativePath).
 					add("format",this.format).
 					add("external",isExternal()).
 					add("ontology",this.ontology).
 					add("versionIRI",this.versionIRI).
+					add("versionInfo",this.versionInfo).
+					add("priorVersions",this.priorVersions.isEmpty()?null:this.priorVersions).
 					add("imports",this.imports.isEmpty()?null:this.imports).
 					toString();
 	}

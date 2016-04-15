@@ -47,7 +47,7 @@ public final class Catalogs {
 		private final Result<Catalog> catalogResult;
 
 		private CatalogBuilder(final URI base, final Path root) {
-			this.catalog=new Catalog(base,root);
+			this.catalog=new Catalog(Context.create(base,root));
 			this.catalogResult=Result.newInstance();
 		}
 
