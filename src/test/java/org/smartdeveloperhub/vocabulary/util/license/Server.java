@@ -30,6 +30,9 @@ import static io.undertow.Handlers.path;
 
 import java.util.concurrent.ConcurrentMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.Maps;
 
 import io.undertow.Undertow;
@@ -43,13 +46,17 @@ final class Server {
 	private final class VocabularyProvider implements HttpHandler {
 		@Override
 		public void handleRequest(final HttpServerExchange exchange) throws Exception {
-			final String relativePath = exchange.getRelativePath();
-			final String licenseId=Server.this.vocabularies.get(relativePath.substring(1,relativePath.length()));
+			final String relativePath=exchange.getRelativePath();
+			final String key=relativePath.substring(1,relativePath.length());
+			final String licenseId=Server.this.vocabularies.get(key);
+			LOGGER.debug("Requested local vocabulary '{}' related to license '{}'...",key,licenseId);
 			exchange.setStatusCode(StatusCodes.OK);
 			exchange.getResponseHeaders().add(Headers.CONTENT_TYPE,"application/rdf+xml;charset=UTF-8");
-			exchange.getResponseSender().send(createMockOntology(exchange.getRequestURL(),licenseId));
+			exchange.getResponseSender().send(createMockOntology(location(key),licenseId));
 		}
 	}
+
+	private static final Logger LOGGER=LoggerFactory.getLogger(Server.class);
 
 	private static final String NL = System.lineSeparator();
 
@@ -77,21 +84,35 @@ final class Server {
 
 	String publish(final String licenseURI) {
 		final String key=String.format("%8X",licenseURI.hashCode());
-		this.vocabularies.putIfAbsent(key, licenseURI);
-		return String.format("http://%s:%s/vocabulary/%s",this.host,this.port,key);
+		final String location = location(key);
+		if(this.vocabularies.putIfAbsent(key, licenseURI)==null) {
+			LOGGER.debug("Published vocabulary '{}' for license '{}' at '{}'",key,licenseURI,location);
+		}
+		return location;
+	}
+
+	private String location(final String key) {
+		final String location = String.format("http://%s:%s/vocabulary/%s",this.host,this.port,key);
+		return location;
 	}
 
 	void start() {
 		this.server.start();
+		LOGGER.info("Started local vocabulary provider at port {} for host {}",this.port,this.host);
 	}
 
 	void stop() {
 		this.server.stop();
+		LOGGER.info("Stopped local vocabulary provider at port {} for host {}",this.port,this.host);
 	}
 
 	static String createMockOntology(final String base, final String licenseURI) {
 		final StringBuilder builder=new StringBuilder();
-		builder.append("<?xml version=\"1.0\"?>").append(NL);
+//		builder.append("<?xml version=\"1.0\"?>").append(NL);
+//		builder.append("<?xml version=\"1.0\" standalone=\"yes\" encoding=\"UTF-8\"?>").append(NL);
+//		builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>").append(NL);
+//		builder.append("<?xml version=\"1.0\" standalone=\"yes\"?>").append(NL);
+		builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>").append(NL);
 		builder.append("<rdf:RDF").append(NL);
 		builder.append("  xml:base=\"").append(base).append("\"").append(NL);
 		builder.append("  xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"").append(NL);
@@ -101,7 +122,9 @@ final class Server {
 		builder.append("      <terms:license rdf:resource=\"").append(licenseURI).append("\"/>").append(NL);
 		builder.append("    </owl:Ontology>").append(NL);
 		builder.append("</rdf:RDF>").append(NL);
-		return builder.toString();
+		final String vocabulary = builder.toString();
+		LOGGER.trace("Vocabulary for license '{}' with base '{}':\n{}",licenseURI,base,vocabulary);
+		return vocabulary;
 	}
 
 }

@@ -77,14 +77,12 @@ final class LicensiusClient {
 		if(LicensiusClient.server==null) {
 			LicensiusClient.server=new Server(host,port);
 			LicensiusClient.server.start();
-			LOGGER.info("Started local server {}:{}",host,port);
 		}
 	}
 
 	static synchronized void shutdown() {
 		if(LicensiusClient.server!=null) {
 			LicensiusClient.server.stop();
-			LOGGER.info("Stopped local server");
 		}
 	}
 
