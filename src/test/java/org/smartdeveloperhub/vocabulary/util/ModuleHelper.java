@@ -97,6 +97,11 @@ final class ModuleHelper {
 		return writer.toString();
 	}
 
+	Model export() {
+		Preconditions.checkState(this.model!=null);
+		return this.model;
+	}
+
 	List<Resource> getResourcesOfType(final String type) {
 		Preconditions.checkState(this.model!=null);
 		final ResIterator iterator =

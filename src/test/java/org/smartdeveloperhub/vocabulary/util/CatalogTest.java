@@ -29,10 +29,6 @@ package org.smartdeveloperhub.vocabulary.util;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-import java.net.URI;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
@@ -42,17 +38,8 @@ public class CatalogTest {
 	@Rule
 	public TestName name=new TestName();
 
-	private static final Path ROOT = Paths.get("src/test/resources/vocabulary");
-	private static final URI BASE = URI.create("http://www.smartdeveloperhub.org/vocabulary/");
-	private static final Context CONTEXT = Context.create(BASE, ROOT);
-
-	private Catalog createSut() {
-		final Catalog sut=new Catalog(CONTEXT);
-		return sut;
-	}
-
-	private Path moduleLocation(final String name) {
-		return ROOT.resolve(name);
+	private Catalog catalog() {
+		return new Catalog(TestHelper.CONTEXT);
 	}
 
 	private void showResult(final Result<Module> result) {
@@ -62,32 +49,32 @@ public class CatalogTest {
 
 	@Test
 	public void testLoadModule$anonymousOntology() throws Exception {
-		final Catalog sut = createSut();
-		final Result<Module> result = sut.loadModule(moduleLocation("anon_ontology.ttl"));
+		final Catalog sut = catalog();
+		final Result<Module> result = sut.loadModule(TestHelper.moduleLocation("anon_ontology.ttl"));
 		showResult(result);
 		assertThat(result.isAvailable(),equalTo(false));
 	}
 
 	@Test
 	public void testLoadModule$badVersionInfo() throws Exception {
-		final Catalog sut = createSut();
-		final Result<Module> result = sut.loadModule(moduleLocation("versioned_module_with_bad_version_info.ttl"));
+		final Catalog sut = catalog();
+		final Result<Module> result = sut.loadModule(TestHelper.moduleLocation("versioned_module_with_bad_version_info.ttl"));
 		showResult(result);
 		assertThat(result.isAvailable(),equalTo(true));
 	}
 
 	@Test
 	public void testLoadModule$multipleVersionInfo() throws Exception {
-		final Catalog sut = createSut();
-		final Result<Module> result = sut.loadModule(moduleLocation("versioned_module_with_multiple_version_info.ttl"));
+		final Catalog sut = catalog();
+		final Result<Module> result = sut.loadModule(TestHelper.moduleLocation("versioned_module_with_multiple_version_info.ttl"));
 		showResult(result);
 		assertThat(result.isAvailable(),equalTo(true));
 	}
 
 	@Test
 	public void testLoadModule$versionInfoNotAllowed() throws Exception {
-		final Catalog sut = createSut();
-		final Result<Module> result = sut.loadModule(moduleLocation("unversioned_module_with_version_info.ttl"));
+		final Catalog sut = catalog();
+		final Result<Module> result = sut.loadModule(TestHelper.moduleLocation("unversioned_module_with_version_info.ttl"));
 		showResult(result);
 		assertThat(result.isAvailable(),equalTo(true));
 	}
