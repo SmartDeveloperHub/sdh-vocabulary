@@ -8,8 +8,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({
 	CatalogTest.class,
 	CatalogsTest.class,
-	VocabularyHelperTest.class
+	VocabularyHelperTest.class,
+	PropertyDefinitionTest.class
 })
 public class UnitTestsSuite {
-
 }
