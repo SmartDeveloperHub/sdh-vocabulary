@@ -98,7 +98,7 @@ public final class Module {
 	private Format format;
 
 	private String relativePath;
-	private URI    canonicalNamespace;
+	private URI    locationNamespace;
 
 	private String ontology;
 	private String versionIRI;
@@ -116,7 +116,7 @@ public final class Module {
 
 	Module withLocation(final Path value) {
 		this.location=value;
-		this.canonicalNamespace=this.context.getCanonicalNamespace(this.location);
+		this.locationNamespace=this.context.getCanonicalNamespace(this.location);
 		this.relativePath=this.context.getRelativePath(this.location);
 		return this;
 	}
@@ -151,12 +151,24 @@ public final class Module {
 		return this;
 	}
 
-	URI canonicalNamespace() {
-		return this.canonicalNamespace;
+	Context context() {
+		return this.context;
+	}
+
+	URI locationNamespace() {
+		return this.locationNamespace;
 	}
 
 	boolean isCanonical() {
-		return this.ontology!=null && !this.ontology.equals(this.versionIRI) && this.ontology.startsWith(this.context.base().toString());
+		return isLocal() && !isVersion();
+	}
+
+	/**
+	 * NOTE: We are checking for an antipattern: it should not be the case that
+	 * the ontology URI matches the versionIRI
+	 */
+	boolean isCanonicalVersion() {
+		return isLocal() && isVersion() && !this.ontology.equals(this.versionIRI);
 	}
 
 	public Path location() {
@@ -187,8 +199,17 @@ public final class Module {
 		return ImmutableSortedSet.copyOf(this.imports);
 	}
 
+	public boolean isLocal() {
+		return
+			isOntology() &&
+			this.context.includesNamespace(this.ontology) &&
+			(isVersion()?
+				this.context.includesNamespace(this.versionIRI):
+					true);
+	}
+
 	public boolean isExternal() {
-		return this.relativePath.startsWith("external/");
+		return !isLocal();
 	}
 
 	public boolean isOntology() {
@@ -219,6 +240,7 @@ public final class Module {
 					add("context",this.context).
 					add("location",this.location).
 					add("relativePath",this.relativePath).
+					add("locationNamespace",this.locationNamespace).
 					add("format",this.format).
 					add("external",isExternal()).
 					add("ontology",this.ontology).

@@ -113,11 +113,20 @@ public final class Catalog {
 		this.moduleIndex.put(module.relativePath(), size);
 		if(module.isExternal()) {
 			this.externalModuleIndex.put(module.relativePath(), size);
-		}
-		if(module.isOntology()) {
-			this.ontologyModuleIndex.put(module.relativePath(), size);
-			if(module.isCanonical()) {
-				this.canonicalModuleIndex.put(getBase().relativize(URI.create(module.ontology())).toString(),size);
+		} else {
+			final boolean canonical = module.isCanonical();
+			for(final String covariant:Modules.getOntologyNamespace(module).covariants()) {
+				if(canonical) {
+					this.canonicalModuleIndex.put(getBase().relativize(URI.create(covariant)).toString(),size);
+				} else {
+					this.ontologyModuleIndex.put(getBase().relativize(URI.create(covariant)).toString(),size);
+				}
+			}
+			if(module.isCanonicalVersion()) {
+				final Namespace namespace=Modules.getVersionNamespace(module);
+				for(final String covariant:namespace.covariants()) {
+					this.ontologyModuleIndex.put(getBase().relativize(URI.create(covariant)).toString(),size);
+				}
 			}
 		}
 	}
@@ -226,7 +235,7 @@ public final class Catalog {
 				withFormat(format);
 		try {
 			final ModuleHelper helper=new ModuleHelper(file);
-			if(helper.load(module.canonicalNamespace(),module.format()).isAvailable()) {
+			if(helper.load(module.locationNamespace(),module.format()).isAvailable()) {
 				populateOntologyDetails(helper, report, module);
 				if(report.errors().isEmpty()) {
 					addModule(module);
@@ -249,8 +258,22 @@ public final class Catalog {
 		return report;
 	}
 
+	public Path getRoot() {
+		return this.context.root();
+	}
+
 	public URI getBase() {
 		return this.context.base();
+	}
+
+	public Module get(final String moduleId) {
+		Module result=null;
+		final Integer index = this.moduleIndex.get(moduleId);
+		if(index!=null) {
+			result=this.modules.get(index);
+		}
+		return result;
+
 	}
 
 	public Module resolve(final URI ontology) {
@@ -258,10 +281,12 @@ public final class Catalog {
 		final URI relativeURI = getBase().relativize(ontology);
 		if(!relativeURI.isAbsolute()) {
 			final String relativePath = relativeURI.toString();
-			if(this.moduleIndex.containsKey(relativePath)) {
-				result=this.modules.get(this.moduleIndex.get(relativePath));
-			} else if(this.canonicalModuleIndex.containsKey(relativePath)) {
+			if(this.canonicalModuleIndex.containsKey(relativePath)) {
 				result=this.modules.get(this.canonicalModuleIndex.get(relativePath));
+			} else if(this.ontologyModuleIndex.containsKey(relativePath)) {
+				result=this.modules.get(this.ontologyModuleIndex.get(relativePath));
+			} else if(this.externalModuleIndex.containsKey(relativePath)) {
+				result=this.modules.get(this.externalModuleIndex.get(relativePath));
 			}
 		}
 		return result;

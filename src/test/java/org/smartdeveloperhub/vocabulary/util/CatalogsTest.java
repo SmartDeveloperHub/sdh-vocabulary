@@ -30,6 +30,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.sameInstance;
 
 import java.io.IOException;
 import java.net.URI;
@@ -111,6 +113,32 @@ public class CatalogsTest {
 			assertThat(module,notNullValue());
 			assertThat(module.relativePath(),equalTo(relativePath));
 		}
+	}
+
+	@Test
+	public void dealsNamespaces() throws IOException {
+		final Result<Catalog> result = Catalogs.loadFrom(TestHelper.TEST_ROOT,TestHelper.BASE);
+		assertThat(result.toString(),result.isAvailable(),equalTo(true));
+		final Catalog catalog = result.get();
+		assertThat(catalog,notNullValue());
+		for(final String moduleId:catalog.modules()) {
+			final Module module=catalog.get(moduleId);
+			System.out.println(module.toString());
+		}
+
+		assertThat(catalog.resolve(absoluteResource("")),notNullValue());
+		assertThat(catalog.resolve(absoluteResource("index")),nullValue());
+
+		final Module hashModule = catalog.resolve(absoluteResource("hash#"));
+		assertThat(hashModule,notNullValue());
+		assertThat(catalog.resolve(absoluteResource("hash")),sameInstance(hashModule));
+		assertThat(catalog.resolve(absoluteResource("v1/hash#")),sameInstance(hashModule));
+		assertThat(catalog.resolve(absoluteResource("v1/hash")),sameInstance(hashModule));
+
+		final Module slashModule = catalog.resolve(absoluteResource("slash/"));
+		assertThat(slashModule,notNullValue());
+		assertThat(catalog.resolve(absoluteResource("v1/slash/")),sameInstance(slashModule));
+		assertThat(catalog.resolve(absoluteResource("v1/slash/index")),nullValue());
 	}
 
 	private static URI absoluteResource(final String relativePath) {

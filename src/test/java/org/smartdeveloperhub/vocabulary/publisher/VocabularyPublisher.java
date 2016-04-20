@@ -96,7 +96,7 @@ public class VocabularyPublisher {
 		System.out.printf("Found %d modules%n",catalog.size());
 		final List<Module> externals=Lists.newArrayList();
 		for(final String moduleId:catalog.modules()) {
-			final Module module = catalog.resolve(URI.create(moduleId));
+			final Module module = catalog.get(moduleId);
 			if(module.isExternal()) {
 				externals.add(module);
 				continue;

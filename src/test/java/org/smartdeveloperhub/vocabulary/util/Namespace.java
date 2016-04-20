@@ -26,57 +26,60 @@
  */
 package org.smartdeveloperhub.vocabulary.util;
 
-import java.io.File;
-import java.net.URI;
-import java.nio.file.Path;
+import java.util.Set;
 
-import com.google.common.base.MoreObjects;
+import com.google.common.collect.Sets;
 
-final class Context {
+final class Namespace {
 
-	private final URI base;
-	private final Path root;
-
-	private Context(final URI base, final Path root) {
-		this.base = base;
-		this.root = root;
+	enum Type {
+		HASH,
+		SLASH,
+		;
+		private static Namespace.Type fromURI(final String uri) {
+			if(uri.endsWith("/")) {
+				return Type.SLASH;
+			}
+			return Type.HASH;
+		}
 	}
 
-	URI base() {
-		return this.base;
+	private final String uri;
+	private final Namespace.Type type;
+
+	Namespace(final String uri) {
+		this.uri = uri;
+		this.type=Type.fromURI(uri);
 	}
 
-	Path root() {
-		return this.root;
+	String uri() {
+		return this.uri;
 	}
 
-	boolean includesNamespace(final String ontology) {
-		return !this.base.relativize(URI.create(ontology)).isAbsolute();
+	Namespace.Type type() {
+		return this.type;
 	}
 
-	String getRelativePath(final Path file) {
-		final Path absoluteBasePath = file.getParent().resolve(MorePaths.getFileName(file));
-		final Path relativeBasePath = this.root.relativize(absoluteBasePath);
-		return relativeBasePath.toString().replace(File.separatorChar, '/');
+	Set<String> covariants() {
+		final Set<String> result=Sets.newHashSet(this.uri);
+		if(Type.HASH.equals(this.type)) {
+			result.add(this.uri.substring(0,this.uri.length()-1));
+		}
+		return result;
 	}
 
-	URI getCanonicalNamespace(final Path file) {
-		return this.base.resolve(getRelativePath(file));
+	@Override
+	public int hashCode() {
+		return covariants().hashCode();
+	}
+	@Override
+	public boolean equals(final Object obj) {
+		return covariants().equals(obj);
 	}
 
 	@Override
 	public String toString() {
-		return
-			MoreObjects.
-				toStringHelper(getClass()).
-					omitNullValues().
-					add("base",this.base).
-					add("root",this.root).
-					toString();
-	}
-
-	static Context create(final URI base, final Path root) {
-		return new Context(base,root);
+		return this.uri;
 	}
 
 }

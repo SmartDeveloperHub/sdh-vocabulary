@@ -49,7 +49,7 @@ public class PropertyDefinitionTest {
 	private Model model;
 
 	private static Model load(final String relativePath) throws IOException {
-		return TestHelper.load(relativePath);
+		return TestHelper.load(TestHelper.VALIDATION_CONTEXT, relativePath);
 	}
 
 	private static String uriRef(final String localPart) {

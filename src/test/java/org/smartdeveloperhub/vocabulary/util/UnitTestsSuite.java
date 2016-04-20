@@ -32,6 +32,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({
+	ModulesTest.class,
 	CatalogTest.class,
 	CatalogsTest.class,
 	VocabularyHelperTest.class,

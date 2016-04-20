@@ -38,12 +38,18 @@ import com.hp.hpl.jena.rdf.model.RDFReader;
 
 public class TestHelper {
 
-	static final Path    ROOT    = Paths.get("src","test","resources","vocabulary");
-	static final URI     BASE    = URI.create("http://www.smartdeveloperhub.org/vocabulary/");
-	static final Context CONTEXT = Context.create(BASE,ROOT);
+	static final URI     BASE = URI.create("http://www.smartdeveloperhub.org/vocabulary/");
 
-	static Model load(final String relativePath) throws IOException {
-		final Path file=ROOT.resolve(relativePath);
+	static final Path    MAIN_ROOT       = Paths.get("src","main","resources","vocabulary");
+	static final Path    TEST_ROOT       = Paths.get("src","test","resources","vocabulary");
+	static final Path    VALIDATION_ROOT = Paths.get("src","test","resources","modules");
+
+	static final Context MAIN_CONTEXT       = Context.create(BASE,MAIN_ROOT);
+	static final Context TEST_CONTEXT       = Context.create(BASE,TEST_ROOT);
+	static final Context VALIDATION_CONTEXT = Context.create(BASE,VALIDATION_ROOT);
+
+	static Model load(final Context context, final String relativePath) throws IOException {
+		final Path file=moduleLocation(context,relativePath);
 		final Model model=ModelFactory.createDefaultModel();
 		final RDFReader reader=model.getReader("TURTLE");
 		reader.setProperty("error-mode", "strict-fatal");
@@ -52,7 +58,7 @@ public class TestHelper {
 				model,
 				new FileReader(
 					file.toFile()),
-					CONTEXT.getCanonicalNamespace(file).toString());
+					context.getCanonicalNamespace(file).toString());
 		return model;
 	}
 
@@ -60,8 +66,8 @@ public class TestHelper {
 		return BASE.resolve(ontology+"#"+localPart).toString();
 	}
 
-	static Path moduleLocation(final String name) {
-		return ROOT.resolve(name);
+	static Path moduleLocation(final Context context, final String name) {
+		return context.root().resolve(name);
 	}
 
 }

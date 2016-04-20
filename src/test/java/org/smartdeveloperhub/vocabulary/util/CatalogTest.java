@@ -38,10 +38,6 @@ public class CatalogTest {
 	@Rule
 	public TestName name=new TestName();
 
-	private Catalog catalog() {
-		return new Catalog(TestHelper.CONTEXT);
-	}
-
 	private void showResult(final Result<Module> result) {
 		System.out.println(this.name.getMethodName());
 		System.out.printf("Result:%n%s%n",result);
@@ -49,34 +45,44 @@ public class CatalogTest {
 
 	@Test
 	public void testLoadModule$anonymousOntology() throws Exception {
-		final Catalog sut = catalog();
-		final Result<Module> result = sut.loadModule(TestHelper.moduleLocation("anon_ontology.ttl"));
+		final Result<Module> result = loadModule("anon_ontology.ttl");
 		showResult(result);
 		assertThat(result.isAvailable(),equalTo(false));
 	}
 
 	@Test
 	public void testLoadModule$badVersionInfo() throws Exception {
-		final Catalog sut = catalog();
-		final Result<Module> result = sut.loadModule(TestHelper.moduleLocation("versioned_module_with_bad_version_info.ttl"));
+		final Result<Module> result = loadModule("versioned_module_with_bad_version_info.ttl");
 		showResult(result);
 		assertThat(result.isAvailable(),equalTo(true));
 	}
 
 	@Test
 	public void testLoadModule$multipleVersionInfo() throws Exception {
-		final Catalog sut = catalog();
-		final Result<Module> result = sut.loadModule(TestHelper.moduleLocation("versioned_module_with_multiple_version_info.ttl"));
+		final Result<Module> result = loadModule("versioned_module_with_multiple_version_info.ttl");
 		showResult(result);
 		assertThat(result.isAvailable(),equalTo(true));
 	}
 
 	@Test
 	public void testLoadModule$versionInfoNotAllowed() throws Exception {
-		final Catalog sut = catalog();
-		final Result<Module> result = sut.loadModule(TestHelper.moduleLocation("unversioned_module_with_version_info.ttl"));
+		final Result<Module> result = loadModule("unversioned_module_with_version_info.ttl");
 		showResult(result);
 		assertThat(result.isAvailable(),equalTo(true));
+	}
+
+	private Catalog catalog() {
+		return new Catalog(TestHelper.VALIDATION_CONTEXT);
+	}
+
+	private Result<Module> loadModule(final String moduleName) {
+		return
+			catalog().
+				loadModule(
+					TestHelper.
+						moduleLocation(
+							TestHelper.VALIDATION_CONTEXT,
+							moduleName));
 	}
 
 }
