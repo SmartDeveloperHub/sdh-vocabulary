@@ -26,28 +26,69 @@
  */
 package org.smartdeveloperhub.vocabulary.publisher.handlers;
 
-import io.undertow.server.HttpHandler;
-import io.undertow.server.HttpServerExchange;
-import io.undertow.util.StatusCodes;
-
 import java.net.URI;
 
 import org.smartdeveloperhub.vocabulary.util.Catalog;
 import org.smartdeveloperhub.vocabulary.util.Module;
 
+import io.undertow.server.HttpHandler;
+import io.undertow.server.HttpServerExchange;
+import io.undertow.util.StatusCodes;
+
 final class CatalogHandler implements HttpHandler {
 
-	private final Catalog catalog;
-	private final HttpHandler next;
+	private final class NullHandler implements HttpHandler {
 
-	CatalogHandler(final Catalog catalog, final HttpHandler next) {
+		private NullHandler() {
+		}
+
+		@Override
+		public void handleRequest(final HttpServerExchange exchange) throws Exception {
+			final Module module = Attachments.getModule(exchange);
+			if(module==null) {
+				System.out.printf("No handler available for serving Catalog requests...%n");
+			} else {
+				System.out.printf("No handler available for serving Module requests (%s)...%n",catalogEntry(module));
+			}
+			exchange.setStatusCode(StatusCodes.NOT_FOUND);
+		}
+	}
+
+	private final Catalog catalog;
+	private HttpHandler moduleHandler;
+	private HttpHandler catalogHandler;
+
+	private CatalogHandler(final Catalog catalog) {
 		this.catalog = catalog;
-		this.next = next;
+		this.moduleHandler=new NullHandler();
+		this.catalogHandler=new NullHandler();
+	}
+
+	CatalogHandler catalogHandler(final HttpHandler next) {
+		this.catalogHandler=next;
+		if(this.catalogHandler==null) {
+			this.catalogHandler=new NullHandler();
+		}
+		return this;
+	}
+
+	CatalogHandler moduleHandler(final HttpHandler next) {
+		this.moduleHandler=next;
+		if(this.moduleHandler==null) {
+			this.moduleHandler=new NullHandler();
+		}
+		return this;
 	}
 
 	@Override
 	public void handleRequest(final HttpServerExchange exchange) throws Exception {
 		String moduleName=exchange.getRelativePath().substring(1);
+		if(moduleName.isEmpty()) {
+			System.out.printf("Accessing vocabulary catalog%n");
+			Attachments.setBase(exchange,this.catalog.getBase());
+			this.catalogHandler.handleRequest(exchange);
+			return;
+		}
 		final String ext = HandlerUtil.getExtension(moduleName);
 		moduleName=moduleName.substring(0,moduleName.length()-ext.length()-(ext.isEmpty()?0:1));
 		final Module module=this.catalog.resolve(URI.create(moduleName));
@@ -55,15 +96,23 @@ final class CatalogHandler implements HttpHandler {
 			System.out.printf("Accessing %s --> NOT FOUND%n",exchange.getRelativePath());
 			exchange.setStatusCode(StatusCodes.NOT_FOUND);
 		} else {
-			System.out.printf("Accessing %s --> %s [%s]%n",exchange.getRelativePath(),resolve(moduleName),resolve(module.relativePath()));
+			System.out.printf("Accessing %s --> %s [%s]%n",exchange.getRelativePath(),resolve(moduleName),catalogEntry(module));
 			Attachments.setModule(exchange, module);
 			Attachments.setBase(exchange, this.catalog.getBase());
-			this.next.handleRequest(exchange);
+			this.moduleHandler.handleRequest(exchange);
 		}
+	}
+
+	private String catalogEntry(final Module module) {
+		return "catalog:"+this.catalog.getRoot().relativize(module.location()).toString().replace('\\', '/');
 	}
 
 	private URI resolve(final String path) {
 		return this.catalog.getBase().resolve(path);
+	}
+
+	public static CatalogHandler create(final Catalog catalog) {
+		return new CatalogHandler(catalog);
 	}
 
 }

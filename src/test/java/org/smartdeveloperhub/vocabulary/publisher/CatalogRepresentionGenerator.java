@@ -30,8 +30,6 @@ import java.nio.ByteBuffer;
 
 import org.ldp4j.http.Variant;
 import org.smartdeveloperhub.vocabulary.publisher.handlers.Attachments;
-import org.smartdeveloperhub.vocabulary.publisher.handlers.HandlerUtil;
-import org.smartdeveloperhub.vocabulary.util.Module;
 
 import com.google.common.base.Strings;
 
@@ -40,9 +38,9 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 import io.undertow.util.StatusCodes;
 
-final class RepresentionGenerator implements HttpHandler {
+final class CatalogRepresentionGenerator implements HttpHandler {
 
-	RepresentionGenerator() {
+	CatalogRepresentionGenerator() {
 		// Package-private
 	}
 
@@ -54,12 +52,7 @@ final class RepresentionGenerator implements HttpHandler {
 			exchange.getResponseSender().send("Queries not allowed");
 		} else {
 			final Variant variant=Attachments.getVariant(exchange);
-			final Module module=Attachments.getModule(exchange);
-			final String representation =
-				module.
-					transform(
-						HandlerUtil.canonicalURI(exchange,module.relativePath()),
-						Formats.fromMediaType(variant.type()));
+			final String representation="<html><head><body>TODO: Generate VOCAB</body></head></html>";
 			exchange.setStatusCode(StatusCodes.OK);
 			exchange.getResponseSender().send(ByteBuffer.wrap(representation.getBytes(variant.charset().charset())));
 		}

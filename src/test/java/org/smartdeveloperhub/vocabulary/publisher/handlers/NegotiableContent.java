@@ -26,53 +26,60 @@
  */
 package org.smartdeveloperhub.vocabulary.publisher.handlers;
 
-import java.util.Set;
+import java.util.List;
 
-import com.google.common.collect.Sets;
+import org.ldp4j.http.CharacterEncoding;
+import org.ldp4j.http.Language;
+import org.ldp4j.http.MediaType;
+import org.ldp4j.http.Negotiable;
 
-import io.undertow.server.HttpHandler;
-import io.undertow.server.HttpServerExchange;
-import io.undertow.util.Headers;
-import io.undertow.util.HttpString;
-import io.undertow.util.Methods;
-import io.undertow.util.StatusCodes;
+import com.google.common.collect.Lists;
 
-final class AllowedMethodsHandler implements HttpHandler {
+public final class NegotiableContent {
 
-	private final Set<String> methods;
-	private final HttpHandler next;
+	private final List<MediaType> mediaTypes;
+	private final List<CharacterEncoding> characterEncodings;
+	private final List<Language> languages;
 
-	private AllowedMethodsHandler(final HttpHandler aHandler) {
-		this.next=aHandler;
-		this.methods=Sets.newLinkedHashSet();
+	private NegotiableContent() {
+		this.mediaTypes=Lists.newArrayList();
+		this.characterEncodings=Lists.newArrayList();
+		this.languages=Lists.newArrayList();
 	}
 
-	AllowedMethodsHandler allow(final HttpString method) {
-		if(method!=null) {
-			this.methods.add(method.toString());
-			if(method.equals(Methods.GET)) {
-				this.methods.add(Methods.HEAD_STRING);
-			}
+	public NegotiableContent support(final MediaType mediaType) {
+		return addNegotiable(mediaType, this.mediaTypes);
+	}
+
+	public NegotiableContent support(final CharacterEncoding characterEncoding) {
+		return addNegotiable(characterEncoding,this.characterEncodings);
+	}
+
+	public NegotiableContent support(final Language language) {
+		return addNegotiable(language,this.languages);
+	}
+
+	private <T extends Negotiable> NegotiableContent addNegotiable(final T mediaType, final List<? super T> collection) {
+		if(mediaType!=null) {
+			collection.add(mediaType);
 		}
 		return this;
 	}
 
-	@Override
-	public void handleRequest(final HttpServerExchange exchange) throws Exception {
-		if(!this.methods.contains(exchange.getRequestMethod().toString())) {
-			exchange.setStatusCode(StatusCodes.METHOD_NOT_ALLOWED);
-			exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
-			exchange.getResponseSender().send(String.format("Unsupported method (%s)",exchange.getRequestMethod()));
-			exchange.getResponseHeaders().putAll(Headers.ALLOW,this.methods);
-		} else {
-			if(this.next!=null) {
-				this.next.handleRequest(exchange);
-			}
-		}
+	public static NegotiableContent newInstance() {
+		return new NegotiableContent();
 	}
 
-	static AllowedMethodsHandler create(final HttpHandler aHandler) {
-		return new AllowedMethodsHandler(aHandler);
+	List<MediaType> mediaTypes() {
+		return this.mediaTypes;
+	}
+
+	List<CharacterEncoding> characterEncodings() {
+		return this.characterEncodings;
+	}
+
+	List<Language> languages() {
+		return this.languages;
 	}
 
 }

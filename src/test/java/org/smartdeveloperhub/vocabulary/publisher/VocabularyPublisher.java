@@ -27,25 +27,30 @@
 package org.smartdeveloperhub.vocabulary.publisher;
 
 import static io.undertow.Handlers.path;
-import static org.smartdeveloperhub.vocabulary.publisher.handlers.MoreHandlers.allow;
 import static org.smartdeveloperhub.vocabulary.publisher.handlers.MoreHandlers.catalogResolver;
 import static org.smartdeveloperhub.vocabulary.publisher.handlers.MoreHandlers.contentNegotiation;
+import static org.smartdeveloperhub.vocabulary.publisher.handlers.MoreHandlers.methodController;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Scanner;
 
+import org.ldp4j.http.CharacterEncodings;
+import org.ldp4j.http.MediaTypes;
+import org.smartdeveloperhub.vocabulary.publisher.handlers.NegotiableContent;
 import org.smartdeveloperhub.vocabulary.util.AppAssembler;
 import org.smartdeveloperhub.vocabulary.util.Application;
 import org.smartdeveloperhub.vocabulary.util.Catalog;
 import org.smartdeveloperhub.vocabulary.util.Catalogs;
 import org.smartdeveloperhub.vocabulary.util.Module;
+import org.smartdeveloperhub.vocabulary.util.Module.Format;
 import org.smartdeveloperhub.vocabulary.util.Result;
 
 import com.google.common.collect.Lists;
@@ -150,24 +155,56 @@ public class VocabularyPublisher {
 		final Undertow server =
 			Undertow.
 				builder().
-					addHttpListener(8080, "localhost").
+					addHttpListener(8080,"localhost").
 					setHandler(
-							path().
-								addPrefixPath(
-									"/vocabulary/",
-									catalogResolver(catalog,
-										allow(Methods.GET,
+						path().
+							addPrefixPath(
+								"/vocabulary/",
+								catalogResolver(catalog).
+									moduleHandler(
+										methodController(
 											contentNegotiation(
-												new RepresentionGenerator()
-											)
-										)
+												new ModuleRepresentionGenerator(),
+												negotiableModuleContent())
+											).
+											allow(Methods.GET)
+									).
+									catalogHandler(
+										methodController(
+											contentNegotiation(
+												new CatalogRepresentionGenerator(),
+												negotiableCatalogContent())).
+											allow(Methods.GET)
 									)
-								)
-							).
+							)
+					).
 					build();
 		server.start();
 		awaitTerminationRequest();
 		server.stop();
+	}
+
+	private static NegotiableContent negotiableModuleContent() {
+		return
+			NegotiableContent.
+				newInstance().
+					support(Formats.toMediaType(Format.TURTLE)).
+					support(Formats.toMediaType(Format.RDF_XML)).
+					support(Formats.toMediaType(Format.JSON_LD)).
+					support(MediaTypes.of("text","html")).
+					support(CharacterEncodings.of(StandardCharsets.UTF_8)).
+					support(CharacterEncodings.of(StandardCharsets.ISO_8859_1)).
+					support(CharacterEncodings.of(StandardCharsets.US_ASCII));
+	}
+
+	private static NegotiableContent negotiableCatalogContent() {
+		return
+			NegotiableContent.
+				newInstance().
+					support(MediaTypes.of("text","html")).
+					support(CharacterEncodings.of(StandardCharsets.UTF_8)).
+					support(CharacterEncodings.of(StandardCharsets.ISO_8859_1)).
+					support(CharacterEncodings.of(StandardCharsets.US_ASCII));
 	}
 
 

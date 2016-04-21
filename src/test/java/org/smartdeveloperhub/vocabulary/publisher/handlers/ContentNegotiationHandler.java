@@ -35,13 +35,14 @@ import java.util.Map.Entry;
 
 import org.ldp4j.http.Alternative;
 import org.ldp4j.http.Alternatives;
-import org.ldp4j.http.CharacterEncodings;
+import org.ldp4j.http.CharacterEncoding;
 import org.ldp4j.http.ContentNegotiation;
 import org.ldp4j.http.ContentNegotiator;
+import org.ldp4j.http.Language;
+import org.ldp4j.http.MediaType;
 import org.ldp4j.http.Negotiable;
 import org.ldp4j.http.NegotiationResult;
 import org.ldp4j.http.Variant;
-import org.smartdeveloperhub.vocabulary.publisher.Formats;
 import org.smartdeveloperhub.vocabulary.util.Module.Format;
 
 import com.google.common.base.Joiner;
@@ -58,9 +59,11 @@ import io.undertow.util.StatusCodes;
 final class ContentNegotiationHandler implements HttpHandler {
 
 	private final HttpHandler next;
+	private final NegotiableContent content;
 
-	ContentNegotiationHandler(final HttpHandler next) {
+	private ContentNegotiationHandler(final HttpHandler next, final NegotiableContent content) {
 		this.next = next;
+		this.content = content;
 	}
 
 	@Override
@@ -81,11 +84,13 @@ final class ContentNegotiationHandler implements HttpHandler {
 	}
 
 	private void forwardRequestHandling(final HttpServerExchange exchange, final NegotiationResult negotiation) throws Exception {
-		final Variant variant = negotiation.variant();
-		Attachments.setVariant(exchange, variant);
-		logAcceptance(variant);
-		addContentNegotiationHeaders(exchange,negotiation,true);
-		this.next.handleRequest(exchange);
+		if(this.next!=null) {
+			final Variant variant = negotiation.variant();
+			Attachments.setVariant(exchange, variant);
+			logAcceptance(variant);
+			addContentNegotiationHeaders(exchange,negotiation,true);
+			this.next.handleRequest(exchange);
+		}
 	}
 
 	private void logAcceptance(final Variant variant) {
@@ -122,15 +127,16 @@ final class ContentNegotiationHandler implements HttpHandler {
 	}
 
 	private ContentNegotiator defaultNegotiator() {
-		final ContentNegotiator negotiator=
-			ContentNegotiator.
-				newInstance().
-					support(Formats.toMediaType(Format.TURTLE)).
-					support(Formats.toMediaType(Format.RDF_XML)).
-					support(Formats.toMediaType(Format.JSON_LD)).
-					support(CharacterEncodings.of(StandardCharsets.UTF_8)).
-					support(CharacterEncodings.of(StandardCharsets.ISO_8859_1)).
-					support(CharacterEncodings.of(StandardCharsets.US_ASCII));
+		ContentNegotiator negotiator=ContentNegotiator.newInstance();
+		for(final MediaType value:this.content.mediaTypes()) {
+			negotiator=negotiator.support(value);
+		}
+		for(final CharacterEncoding value:this.content.characterEncodings()) {
+			negotiator=negotiator.support(value);
+		}
+		for(final Language value:this.content.languages()) {
+			negotiator=negotiator.support(value);
+		}
 		return negotiator;
 	}
 
@@ -224,4 +230,7 @@ final class ContentNegotiationHandler implements HttpHandler {
 		return builder.toString();
 	}
 
+	static ContentNegotiationHandler create(final HttpHandler aHandler, final NegotiableContent aContent) {
+		return new ContentNegotiationHandler(aHandler,aContent);
+	}
 }

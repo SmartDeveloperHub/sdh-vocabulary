@@ -29,23 +29,67 @@ package org.smartdeveloperhub.vocabulary.publisher.handlers;
 import org.smartdeveloperhub.vocabulary.util.Catalog;
 
 import io.undertow.server.HttpHandler;
+import io.undertow.server.HttpServerExchange;
 import io.undertow.util.HttpString;
 
 public final class MoreHandlers {
 
+	public static final class MethodControlHandler implements HttpHandler {
+
+		private final AllowedMethodsHandler delegate;
+
+		private MethodControlHandler(final HttpHandler aHandler) {
+			this.delegate=AllowedMethodsHandler.create(aHandler);
+		}
+
+		public MethodControlHandler allow(final HttpString method) {
+			this.delegate.allow(method);
+			return this;
+		}
+
+		@Override
+		public void handleRequest(final HttpServerExchange exchange) throws Exception {
+			this.delegate.handleRequest(exchange);
+		}
+	}
+
+	public static final class CatalogResolverHandler implements HttpHandler{
+
+		private final CatalogHandler delegate;
+
+		private CatalogResolverHandler(final Catalog catalog) {
+			this.delegate=CatalogHandler.create(catalog);
+		}
+
+		public CatalogResolverHandler catalogHandler(final HttpHandler handler) {
+			this.delegate.catalogHandler(handler);
+			return this;
+		}
+
+		public CatalogResolverHandler moduleHandler(final HttpHandler handler) {
+			this.delegate.moduleHandler(handler);
+			return this;
+		}
+
+		@Override
+		public void handleRequest(final HttpServerExchange exchange) throws Exception {
+			this.delegate.handleRequest(exchange);
+		}
+	}
+
 	private MoreHandlers() {
 	}
 
-	public static HttpHandler allow(final HttpString method, final HttpHandler aHandler) {
-		return AllowedMethodsHandler.create().allow(method).setNext(aHandler);
+	public static MethodControlHandler methodController(final HttpHandler aHandler) {
+		return new MethodControlHandler(aHandler);
 	}
 
-	public static HttpHandler catalogResolver(final Catalog catalog, final HttpHandler aHandler) {
-		return new CatalogHandler(catalog, aHandler);
+	public static CatalogResolverHandler catalogResolver(final Catalog catalog) {
+		return new CatalogResolverHandler(catalog);
 	}
 
-	public static HttpHandler contentNegotiation(final HttpHandler aHandler) {
-		return new ContentNegotiationHandler(aHandler);
+	public static HttpHandler contentNegotiation(final HttpHandler aHandler, final NegotiableContent aContent) {
+		return ContentNegotiationHandler.create(aHandler, aContent);
 	}
 
 }
