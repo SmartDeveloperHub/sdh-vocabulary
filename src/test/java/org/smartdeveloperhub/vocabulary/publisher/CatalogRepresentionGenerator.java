@@ -26,12 +26,18 @@
  */
 package org.smartdeveloperhub.vocabulary.publisher;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 import org.ldp4j.http.Variant;
 import org.smartdeveloperhub.vocabulary.publisher.handlers.Attachments;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
+import com.google.common.io.Resources;
+import com.hubspot.jinjava.Jinjava;
 
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
@@ -52,9 +58,47 @@ final class CatalogRepresentionGenerator implements HttpHandler {
 			exchange.getResponseSender().send("Queries not allowed");
 		} else {
 			final Variant variant=Attachments.getVariant(exchange);
-			final String representation="<html><head><body>TODO: Generate VOCAB</body></head></html>";
+//			final String representation="<html><head><body>TODO: Generate VOCAB</body></head></html>";
+			final String representation=generate();
 			exchange.setStatusCode(StatusCodes.OK);
 			exchange.getResponseSender().send(ByteBuffer.wrap(representation.getBytes(variant.charset().charset())));
+		}
+	}
+
+	private String generate() {
+		try {
+			final Jinjava jinjava = new Jinjava();
+			final ImmutableMap<String, Object> context=
+				ImmutableMap.<String,Object>builder().
+					put("publication",
+						ImmutableMap.<String,Object>builder().
+							put("title","www.smartdeveloperhub.org").
+							put("date","April, 2016").
+							put("copyright","Center for Open Middleware").
+							put("tags",Lists.newArrayList("tag1","tag2")).
+							put("meta",
+								ImmutableMap.<String,Object>builder().
+									put("description","www.smartdeveloperhub.org").
+									put("language","en").
+									put("keywords","ALM, Linked Data, RDF, OWL").
+									put("author","Miguel Esteban Guti&eacute;rrez").
+									build()).
+							put("owner",
+								ImmutableMap.<String,Object>builder().
+									put("uri","http://www.smartdeveloperhub.org").
+									put("name","Smart Developer Hub").
+									put("logo","logo.gif").
+									build()).
+							build()).
+					build();
+			final String template=
+				Resources.
+					toString(
+						Resources.getResource("templates/vocab.html"),
+						StandardCharsets.UTF_8);
+			return jinjava.render(template, context);
+		} catch (final IOException e) {
+			throw new AssertionError("Should not fail to load template");
 		}
 	}
 

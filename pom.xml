@@ -122,6 +122,13 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.hubspot.jinjava</groupId>
+			<artifactId>jinjava</artifactId>
+			<version>2.0.11-java7</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 			<version>${jackson.version}</version>
@@ -211,6 +218,8 @@
 				<configuration>
 					<excludes>
 						<exclude>src/main/resources/vocabulary/external/**</exclude>
+						<exclude>src/test/resources/assets/**</exclude>
+						<exclude>src/test/resources/templates/**</exclude>
 					</excludes>
 				</configuration>
 			</plugin>

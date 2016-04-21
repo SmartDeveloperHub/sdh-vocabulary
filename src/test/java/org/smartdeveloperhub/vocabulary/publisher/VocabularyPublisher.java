@@ -27,6 +27,7 @@
 package org.smartdeveloperhub.vocabulary.publisher;
 
 import static io.undertow.Handlers.path;
+import static io.undertow.Handlers.resource;
 import static org.smartdeveloperhub.vocabulary.publisher.handlers.MoreHandlers.catalogResolver;
 import static org.smartdeveloperhub.vocabulary.publisher.handlers.MoreHandlers.contentNegotiation;
 import static org.smartdeveloperhub.vocabulary.publisher.handlers.MoreHandlers.methodController;
@@ -56,6 +57,7 @@ import org.smartdeveloperhub.vocabulary.util.Result;
 import com.google.common.collect.Lists;
 
 import io.undertow.Undertow;
+import io.undertow.server.handlers.resource.ClassPathResourceManager;
 import io.undertow.util.Methods;
 
 public class VocabularyPublisher {
@@ -158,6 +160,12 @@ public class VocabularyPublisher {
 					addHttpListener(8080,"localhost").
 					setHandler(
 						path().
+							addPrefixPath(
+								"/vocabulary/assets/",
+								resource(
+									new ClassPathResourceManager(
+										VocabularyPublisher.class.getClassLoader(),
+										"assets"))).
 							addPrefixPath(
 								"/vocabulary/",
 								catalogResolver(catalog).
