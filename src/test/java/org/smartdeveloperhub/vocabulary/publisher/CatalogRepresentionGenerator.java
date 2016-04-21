@@ -26,7 +26,6 @@
  */
 package org.smartdeveloperhub.vocabulary.publisher;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
@@ -34,6 +33,7 @@ import org.ldp4j.http.Variant;
 import org.smartdeveloperhub.vocabulary.publisher.handlers.Attachments;
 
 import com.google.common.base.Strings;
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.io.Resources;
@@ -65,6 +65,7 @@ final class CatalogRepresentionGenerator implements HttpHandler {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private String generate() {
 		try {
 			final Jinjava jinjava = new Jinjava();
@@ -89,6 +90,33 @@ final class CatalogRepresentionGenerator implements HttpHandler {
 									put("name","Smart Developer Hub").
 									put("logo","logo.gif").
 									build()).
+							put("ontologies",
+								Lists.newArrayList(
+									ImmutableMap.<String,Object>builder().
+										put("uri","http://www.smartdeveloperhub.org/sdh").
+										put("title","Smart Developer Hub Ontology").
+										put("id","www.smartdeveloperhub.org.sdh").
+										put("license",
+											ImmutableMap.<String,Object>builder().
+												put("uri","http://purl.org/NET/rdflicense/cc-by-nc-sa2.0").
+												put("label","CC-BY-NC-SA").
+												build()).
+										put("languages",
+											Lists.
+												newArrayList(
+													ImmutableMap.<String,Object>builder().
+														put("uri","http://lexvo.org/id/iso639-3/eng").
+														put("label","en").
+														build()
+												)).
+										put("domains",Lists.newArrayList("ALM","Application Lifecycle Management","Software Engineering","Linked Data")).
+										put("description",
+											ImmutableMap.<String,Object>builder().
+												put("text","Quite a long description of the Smart Developer Hub vocabulary").
+												put("abstract","Abbreviated description of the Smart Developer Hub vocabulary").
+												build()).
+										build()
+								)).
 							build()).
 					build();
 			final String template=
@@ -97,8 +125,9 @@ final class CatalogRepresentionGenerator implements HttpHandler {
 						Resources.getResource("templates/vocab.html"),
 						StandardCharsets.UTF_8);
 			return jinjava.render(template, context);
-		} catch (final IOException e) {
-			throw new AssertionError("Should not fail to load template");
+		} catch(final Exception e) {
+			System.err.println(e);
+			return "<html><head></head><body><h1>OOPS! Something went wrong...</h1><pre>"+Throwables.getStackTraceAsString(e)+"</pre></body></html>";
 		}
 	}
 

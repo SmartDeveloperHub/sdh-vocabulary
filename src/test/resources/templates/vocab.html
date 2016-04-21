@@ -9,10 +9,10 @@
     <meta name="author" content="{{ publication.meta.author}}"/>
 
     <title>{{ publication.title }}</title>
-
     <link rel="stylesheet" type="text/css" href="assets/themes/blue/style.css" media="print, projection, screen">
     <link rel="stylesheet" type="text/css" href="assets/css/jquery-ui.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="assets/css/vocab.css">
     <style type="text/css">
       body {
         padding-top: 60px;
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="assets/js/jquery.tablesorter.min.js"></script>
     <script type="text/javascript" src="assets/js/jquery.stickytableheaders.js"></script>
     <script type="text/javascript" src="assets/js/jquery-ui.js"></script>
-    <script type="text/javascript" src="assets/js/bootstrap.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <script type="text/javascript" id="js">
       $(document)
         .ready(function () {
@@ -101,6 +101,89 @@
           </tr>
         </thead>
         <tbody>
+        {% if publication.ontologies %}
+          {% for onto in publication.ontologies %}
+           <tr id="tr{{ loop.index }}">
+            <td>
+              <a href="{{ onto.uri }}" target="_blank">{{ onto.title }}</a>
+              <a href="ontologies/{{ onto.id  }}.html" target="_blank">
+                <span
+                  class="glyphicon glyphicon-info-sign"
+                  data-toggle="tooltip"
+                  data-placement="bottom"
+                  title="More information about this vocabulary"></span>
+              </a>
+            </td>
+            <td>
+              {# 
+                 NOTE: 
+                 For the time being this set is fixed, but we should allow 
+                 defining dynamically which are the supported media types
+                 and which one is the canonical implementation
+              #}
+              <span class="label label-primary">rdf+xml</span>
+              <span class="label label-primary">turtle</span>
+              <span class="label label-primary">ld+json</span>
+              <span class="label label-primary">html</span>
+            </td>
+            <td>
+            {% if onto.license %}
+              <a href="{{ onto.license.uri }}" target="_blank">
+                <span class="label label-success">{{ onto.license.label }}</span>
+              </a>
+            {% else %}
+              <span class="label label-default">Undefined</span>
+            {% endif %}
+            </td>
+            <td>
+            {% if onto.languages %}
+              {% for lang in onto.languages %}
+              <a href="{{ lang.uri }}" target="_blank">
+                <span class="label label-primary">{{ lang.label }}</span>
+              </a>
+              {% endfor %}
+            {% else %}
+              <span class="label label-default">Undefined</span>
+            {% endif %}
+            </td>
+            <td>
+            {% if onto.domains %}
+              {% for domain in onto.domains %}
+              <span class="label label-primary">{{ domain }}</span>
+              {% endfor %}
+            {% else %}
+              <span class="label label-default">Undefined</span>
+            {% endif %}
+            </td>
+            <td>
+            {% if onto.description.abstract %}
+              <p id="collapse{{ loop.index }}" data-toggle="collapse">
+                {{ onto.description.abstract }} ... <a class="more{{ loop.index }}">See more</a>
+              </p>
+              <script>
+                $('#collapse{{ loop.index }}')
+                  .click(function () {
+                    if ($('a').hasClass('more{{ loop.index }}')) {
+                      $('#collapse{{ loop.index }}').html('{{ onto.description.text }} <a class="less{{ loop.index }}">See less</a>');
+                    } else {
+                      $('#collapse{{ loop.index }}').html('{{ onto.description.abstract }}...<a class="more{{ loop.index }}">See more</a>');
+                    }
+                  });
+              </script>
+            {% elif onto.description.text %}
+              {{ onto.description.text }}
+            {% else %}
+              <i>No description available</i>
+            {% endif %}
+              <input type="hidden" name="inp{{ loop.index }}" id="inp{{ loop.index }}" value="{{ onto.title }}--{% for domain in onto.domains %}{{ domain }}--{% endfor %}">
+            </td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="6"><em>No ontologies available yet</em></td>
+          </tr>
+        {% endif %}
         </tbody>
       </table>
       <hr/>

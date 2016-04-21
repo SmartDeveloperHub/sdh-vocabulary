@@ -47,6 +47,5 @@ DCELEMENTS (http://purl.org/dc/elements/1.1/) : src/main/resources/vocabulary/ex
 + Retrieved on: May 25, 2015
 + License: Creative Commons, Attribution 3.0 Unported License
 
-In addition, this repository contains third-party JavaScript libraries, CSS 
-documents, glyphs, fonts, and icons under the src/test/resources/assets/ 
-directory, license under the Apache License 2.0 and/or MIT License. 
+In addition, this repository contains the jQuery 1.10 distribution which is licensed 
+under the MIT License.

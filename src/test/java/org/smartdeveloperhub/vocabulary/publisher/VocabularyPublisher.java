@@ -57,6 +57,8 @@ import org.smartdeveloperhub.vocabulary.util.Result;
 import com.google.common.collect.Lists;
 
 import io.undertow.Undertow;
+import io.undertow.server.HttpHandler;
+import io.undertow.server.HttpServerExchange;
 import io.undertow.server.handlers.resource.ClassPathResourceManager;
 import io.undertow.util.Methods;
 
@@ -162,10 +164,21 @@ public class VocabularyPublisher {
 						path().
 							addPrefixPath(
 								"/vocabulary/assets/",
-								resource(
-									new ClassPathResourceManager(
-										VocabularyPublisher.class.getClassLoader(),
-										"assets"))).
+								new HttpHandler() {
+
+									final HttpHandler next=
+										resource(
+											new ClassPathResourceManager(
+													VocabularyPublisher.class.getClassLoader(),
+													"assets"));
+
+									@Override
+									public void handleRequest(final HttpServerExchange exchange) throws Exception {
+										System.out.printf("Retrieving asset %s%n",exchange.getRelativePath());
+										this.next.handleRequest(exchange);
+									}
+								}
+							).
 							addPrefixPath(
 								"/vocabulary/",
 								catalogResolver(catalog).
