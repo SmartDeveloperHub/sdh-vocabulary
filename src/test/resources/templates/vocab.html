@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ publication.meta.language }}">
   <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content="{{ publication.meta.description }}"/>
-    <meta name="languaje" content="{{ publication.meta.language }}"/>
-    <meta name="keywords" content="{{ publication.meta.keywords}}"/>
-    <meta name="author" content="{{ publication.meta.author}}"/>
+    <meta name="keywords" content="Ontologies{% for keyword in publication.meta.keywords %}, {{ keyword }}{% endfor %}"/>
+  {% for author in publication.meta.authors %}
+    <meta name="author" content="{{ author  }}"/>
+  {% endfor %}
 
     <title>{{ publication.title }}</title>
+ 
     <link rel="stylesheet" type="text/css" href="assets/themes/blue/style.css" media="print, projection, screen">
     <link rel="stylesheet" type="text/css" href="assets/css/jquery-ui.css">
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -156,22 +158,22 @@
             {% endif %}
             </td>
             <td>
-            {% if onto.description.abstract %}
+            {% if onto.summary %}
               <p id="collapse{{ loop.index }}" data-toggle="collapse">
-                {{ onto.description.abstract }} ... <a class="more{{ loop.index }}">See more</a>
+                {{ onto.summary }} ... <a class="more{{ loop.index }}">See more</a>
               </p>
               <script>
                 $('#collapse{{ loop.index }}')
                   .click(function () {
                     if ($('a').hasClass('more{{ loop.index }}')) {
-                      $('#collapse{{ loop.index }}').html('{{ onto.description.text }} <a class="less{{ loop.index }}">See less</a>');
+                      $('#collapse{{ loop.index }}').html('{{ onto.description }} &nbsp;<a class="less{{ loop.index }}">See less</a>');
                     } else {
-                      $('#collapse{{ loop.index }}').html('{{ onto.description.abstract }}...<a class="more{{ loop.index }}">See more</a>');
+                      $('#collapse{{ loop.index }}').html('{{ onto.summary }} ... &nbsp;<a class="more{{ loop.index }}">See more</a>');
                     }
                   });
               </script>
-            {% elif onto.description.text %}
-              {{ onto.description.text }}
+            {% elif onto.description %}
+              {{ onto.description }}
             {% else %}
               <i>No description available</i>
             {% endif %}
@@ -190,18 +192,13 @@
       <footer class="footer">
         <div class="row">
           <div class="col-md-10">
-            Developed by
-            <a href="{{ publication.owner.uri }}" target="_blank">{{ publication.owner.name }}</a>
-            <br/>
-            Built with <a target="_blank" href="http://getbootstrap.com/">Bootstrap</a>,
-            with icons from <a target="_blank" href="http://glyphicons.com/">Glyphicons</a>
-            <br/>
-            Latest revision {{ publication.date }}
-            <br/>
+            Developed by <a href="{{ publication.owner.uri }}" target="_blank">{{ publication.owner.name }}</a><br/>
+            Built with <a target="_blank" href="http://getbootstrap.com/">Bootstrap</a>, with icons from <a target="_blank" href="http://glyphicons.com/">Glyphicons</a><br/>
+            Latest revision {{ publication.date }}<br/>
             <p>&copy; {{ publication.copyright }}</p>
           </div>
           <div class="col-md-2">
-            <a href="{{ publication.owner.uri }}" target="_blank"><img src="assets/{{ publication.owner.logo }}" alt="{{ publication.owner.name }} logo" class="img-rounded img-responsive"/></a>
+            <a href="{{ publication.owner.uri }}" target="_blank"><img src="assets/{{ publication.owner.logo }}" alt="{{ publication.owner.name }} logo" class="img-rounded img-responsive" style="max-height:90px;"/></a>
           </div>
         </div>
       </footer>
@@ -209,9 +206,11 @@
     <script type="text/javascript" id="tags">
       $(function () {
         var availableTags = [
-          {% for tag in publication.tags %}
-          "{{ tag }}",
-          {% endfor %}
+        {% for tag in publication.tags %}
+          "{{ tag }}"{% if not loop.last %},
+        {% endif %}
+        {% endfor %}
+
         ];
         $("#tags").autocomplete({
           select: function (event, ui) {
