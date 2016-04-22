@@ -28,8 +28,6 @@ package org.smartdeveloperhub.vocabulary.publisher.model;
 
 import java.util.List;
 
-import org.smartdeveloperhub.vocabulary.util.license.License;
-
 import com.google.common.collect.Lists;
 
 public class Ontology {
@@ -39,12 +37,14 @@ public class Ontology {
 	private String title;
 	private String summary;
 	private String description;
-	// TODO: An ontology may have multiple licenses...
-	private License license;
+	private List<License> licenses;
+	private List<Language> languages;
 	private List<String> domains;
 
 	public Ontology() {
 		this.domains=Lists.newArrayList();
+		this.licenses=Lists.newArrayList();
+		this.languages=Lists.newArrayList();
 	}
 
 	public String getId() {
@@ -87,12 +87,20 @@ public class Ontology {
 		this.description = description;
 	}
 
-	public License getLicense() {
-		return this.license;
+	public List<License> getLicenses() {
+		return this.licenses;
 	}
 
-	public void setLicense(final License license) {
-		this.license = license;
+	public void setLicenses(final List<License> license) {
+		this.licenses = license;
+	}
+
+	public List<Language> getLanguages() {
+		return this.languages;
+	}
+
+	public void setLanguages(final List<Language> languages) {
+		this.languages = languages;
 	}
 
 	public List<String> getDomains() {

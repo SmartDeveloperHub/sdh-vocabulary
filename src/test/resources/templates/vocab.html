@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="{{ publication.meta.language }}">
+<html lang="{{ publication.metadata.language }}">
   <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta name="description" content="{{ publication.meta.description }}"/>
-    <meta name="keywords" content="Ontologies{% for keyword in publication.meta.keywords %}, {{ keyword }}{% endfor %}"/>
-  {% for author in publication.meta.authors %}
+    <meta name="description" content="{{ publication.metadata.description }}"/>
+    <meta name="keywords" content="Ontologies{% for keyword in publication.metadata.keywords %}, {{ keyword }}{% endfor %}"/>
+  {% for author in publication.metadata.authors %}
     <meta name="author" content="{{ author  }}"/>
   {% endfor %}
 
@@ -129,10 +129,12 @@
               <span class="label label-primary">html</span>
             </td>
             <td>
-            {% if onto.license %}
-              <a href="{{ onto.license.uri }}" target="_blank">
-                <span class="label label-success">{{ onto.license.label }}</span>
+            {% if onto.licenses %}
+              {% for license in onto.licenses %}
+              <a href="{{ license.uri }}" target="_blank">
+                <span class="label label-success">{{ license.label }}</span>
               </a>
+              {% endfor %}
             {% else %}
               <span class="label label-default">Undefined</span>
             {% endif %}

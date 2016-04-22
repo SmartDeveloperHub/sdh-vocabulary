@@ -63,7 +63,7 @@
 		<sesame.version>2.7.9</sesame.version>
 		<jena.version>2.13.0</jena.version>
 		<undertow.version>1.3.17.Final</undertow.version>
-		<jackson.version>2.4.4</jackson.version>
+		<jackson.version>2.7.3</jackson.version>
 		<app.publisher.main>org.smartdeveloperhub.vocabulary.publisher.VocabularyPublisher</app.publisher.main>
 		<app.explorer.main>org.smartdeveloperhub.vocabulary.util.VocabularyExplorer</app.explorer.main>
 	</properties>
@@ -89,12 +89,7 @@
 			<artifactId>guava</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-			<scope>test</scope>
-		</dependency>
-
+		<!-- RDF/SPARQL support -->
 		<dependency>
 			<groupId>org.apache.jena</groupId>
 			<artifactId>jena-arq</artifactId>
@@ -107,6 +102,7 @@
 			</exclusions>
 		</dependency>
 
+		<!-- HTTP Server -->
 		<dependency>
 			<groupId>io.undertow</groupId>
 			<artifactId>undertow-core</artifactId>
@@ -114,6 +110,7 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- Content negotiation support -->
 		<dependency>
 			<groupId>org.ldp4j.commons</groupId>
 			<artifactId>ldp4j-commons-http</artifactId>
@@ -121,6 +118,7 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- Catalog Representation templating -->
 		<dependency>
 			<groupId>com.hubspot.jinjava</groupId>
 			<artifactId>jinjava</artifactId>
@@ -128,6 +126,7 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- JSON/YAML parsing -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
@@ -147,8 +146,22 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-yaml</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		
+		<!-- Licensius Client -->
+		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Default logger -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
 			<scope>test</scope>
 		</dependency>
 
@@ -159,16 +172,16 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- CI Testing  -->
 		<dependency>
-			<groupId>org.openrdf.sesame</groupId>
-			<artifactId>sesame-rio-turtle</artifactId>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Default logger -->
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
+			<groupId>org.openrdf.sesame</groupId>
+			<artifactId>sesame-rio-turtle</artifactId>
 			<scope>test</scope>
 		</dependency>
 

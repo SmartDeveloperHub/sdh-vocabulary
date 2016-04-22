@@ -26,79 +26,24 @@
  */
 package org.smartdeveloperhub.vocabulary.publisher.model;
 
-import java.util.List;
+public class License {
+	private String uri;
+	private String label;
 
-import com.google.common.collect.Lists;
-
-public class Site {
-
-	private String title;
-	private String date;
-	private String copyright;
-	private Owner owner;
-	private Metadata metadata;
-	private List<String> tags;
-	private List<Ontology> ontologies;
-
-	public Site() {
-		this.tags=Lists.newArrayList();
-		this.ontologies=Lists.newArrayList();
+	public String getUri() {
+		return this.uri;
 	}
 
-	public String getTitle() {
-		return this.title;
+	public void setUri(final String uri) {
+		this.uri = uri;
 	}
 
-	public void setTitle(final String title) {
-		this.title = title;
+	public String getLabel() {
+		return this.label;
 	}
 
-	public String getDate() {
-		return this.date;
-	}
-
-	public void setDate(final String date) {
-		this.date= date;
-	}
-
-	public String getCopyright() {
-		return this.copyright;
-	}
-
-	public void setCopyright(final String copyright) {
-		this.copyright = copyright;
-	}
-
-	public Owner getOwner() {
-		return this.owner;
-	}
-
-	public void setOwner(final Owner owner) {
-		this.owner = owner;
-	}
-
-	public Metadata getMetadata() {
-		return this.metadata;
-	}
-
-	public void setMetadata(final Metadata metadata) {
-		this.metadata = metadata;
-	}
-
-	public void setOntologies(final List<Ontology> ontologies) {
-		this.ontologies=ontologies;
-	}
-
-	public List<Ontology> getOntologies() {
-		return this.ontologies;
-	}
-
-	public void setTags(final List<String> tags) {
-		this.tags=tags;
-	}
-
-	public List<String> getTags() {
-		return this.tags;
+	public void setLabel(final String label) {
+		this.label = label;
 	}
 
 }

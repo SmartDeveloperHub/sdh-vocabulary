@@ -27,7 +27,6 @@
 package org.smartdeveloperhub.vocabulary.publisher;
 
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import org.ldp4j.http.Variant;
@@ -36,13 +35,9 @@ import org.smartdeveloperhub.vocabulary.publisher.model.Metadata;
 import org.smartdeveloperhub.vocabulary.publisher.model.Owner;
 
 import com.google.common.base.Strings;
-import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.html.HtmlEscapers;
-import com.google.common.io.Resources;
-import com.hubspot.jinjava.Jinjava;
-import com.hubspot.jinjava.JinjavaConfig;
 
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
@@ -83,6 +78,43 @@ final class CatalogRepresentionGenerator implements HttpHandler {
 		meta.getAuthors().add("Miguel Esteban Guti&eacute;rrez");
 		meta.getKeywords().addAll(Arrays.asList("Smart Developer Hub","SDH","ALM","Linked Data"));
 
+
+		final ImmutableMap<String, Object> ontology = ImmutableMap.<String,Object>builder().
+			put("id","www.smartdeveloperhub.org.sdh").
+			put("uri","http://www.smartdeveloperhub.org/sdh").
+			put("title","Smart Developer Hub Ontology").
+			put("domains",
+				Lists.
+					newArrayList(
+						"ALM",
+						"Application Lifecycle Management",
+						"Software Engineering",
+						"Linked Data")).
+			put("summary",
+				HtmlEscapers.
+					htmlEscaper().
+						escape("Abbreviated description of the 'Smart Developer Hub vocabulary'")).
+			put("description",
+				HtmlEscapers.
+					htmlEscaper().
+						escape("Quite a long description of the 'Smart Developer Hub vocabulary'")).
+			put("licenses",
+				Lists.
+					newArrayList(
+						ImmutableMap.<String,Object>builder().
+							put("uri","http://purl.org/NET/rdflicense/cc-by-nc-sa2.0").
+							put("label","CC-BY-NC-SA").
+							build()
+					)).
+			put("languages",
+				Lists.
+					newArrayList(
+						ImmutableMap.<String,Object>builder().
+							put("uri","http://lexvo.org/id/iso639-3/eng").
+							put("label","en").
+							build()
+					)).
+			build();
 		final ImmutableMap<String, Object> context=
 			ImmutableMap.<String,Object>builder().
 				put("publication",
@@ -91,53 +123,22 @@ final class CatalogRepresentionGenerator implements HttpHandler {
 						put("date","April, 2016").
 						put("copyright","Center for Open Middleware").
 						put("tags",Lists.newArrayList("Smart Developer Hub","SDH","ALM","Linked Data")).
-						put("meta",meta).
+						put("metadata",meta).
 						put("owner",owner).
 						put("ontologies",
 							Lists.newArrayList(
-								ImmutableMap.<String,Object>builder().
-								    put("id","www.smartdeveloperhub.org.sdh").
-									put("uri","http://www.smartdeveloperhub.org/sdh").
-									put("title","Smart Developer Hub Ontology").
-									put("license",
-										ImmutableMap.<String,Object>builder().
-											put("uri","http://purl.org/NET/rdflicense/cc-by-nc-sa2.0").
-											put("label","CC-BY-NC-SA").
-											build()).
-									put("languages",
-										Lists.
-											newArrayList(
-												ImmutableMap.<String,Object>builder().
-													put("uri","http://lexvo.org/id/iso639-3/eng").
-													put("label","en").
-													build()
-											)).
-									put("domains",Lists.newArrayList("ALM","Application Lifecycle Management","Software Engineering","Linked Data")).
-									put("summary",HtmlEscapers.htmlEscaper().escape("Abbreviated description of the 'Smart Developer Hub vocabulary'")).
-									put("description",HtmlEscapers.htmlEscaper().escape("Quite a long description of the 'Smart Developer Hub vocabulary'")).
-									build()
+								ontology,
+								ontology,
+								ontology,
+								ontology,
+								ontology,
+								ontology,
+								ontology,
+								ontology
 							)).
 						build()).
 				build();
-		try {
-			final String template=
-				Resources.
-					toString(
-						Resources.getResource("templates/vocab.html"),
-						StandardCharsets.UTF_8);
-			final JinjavaConfig config=
-				JinjavaConfig.
-					newBuilder().
-						withLstripBlocks(true).
-						withTrimBlocks(true).
-						build();
-			return
-				new Jinjava(config).
-					render(template,context);
-		} catch(final Exception e) {
-			System.err.println(e);
-			return "<html><head></head><body><h1>OOPS! Something went wrong...</h1><pre>"+Throwables.getStackTraceAsString(e)+"</pre></body></html>";
-		}
+		return Templates.catalogRepresentation(context);
 	}
 
 }

@@ -24,81 +24,20 @@
  *   Bundle      : sdh-vocabulary-0.3.0-SNAPSHOT.jar
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  */
-package org.smartdeveloperhub.vocabulary.publisher.model;
+package org.smartdeveloperhub.vocabulary.publisher;
 
-import java.util.List;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.notNullValue;
 
-import com.google.common.collect.Lists;
+import org.junit.Test;
+import org.smartdeveloperhub.vocabulary.publisher.model.Example;
 
-public class Site {
+public class TemplatesTest {
 
-	private String title;
-	private String date;
-	private String copyright;
-	private Owner owner;
-	private Metadata metadata;
-	private List<String> tags;
-	private List<Ontology> ontologies;
-
-	public Site() {
-		this.tags=Lists.newArrayList();
-		this.ontologies=Lists.newArrayList();
-	}
-
-	public String getTitle() {
-		return this.title;
-	}
-
-	public void setTitle(final String title) {
-		this.title = title;
-	}
-
-	public String getDate() {
-		return this.date;
-	}
-
-	public void setDate(final String date) {
-		this.date= date;
-	}
-
-	public String getCopyright() {
-		return this.copyright;
-	}
-
-	public void setCopyright(final String copyright) {
-		this.copyright = copyright;
-	}
-
-	public Owner getOwner() {
-		return this.owner;
-	}
-
-	public void setOwner(final Owner owner) {
-		this.owner = owner;
-	}
-
-	public Metadata getMetadata() {
-		return this.metadata;
-	}
-
-	public void setMetadata(final Metadata metadata) {
-		this.metadata = metadata;
-	}
-
-	public void setOntologies(final List<Ontology> ontologies) {
-		this.ontologies=ontologies;
-	}
-
-	public List<Ontology> getOntologies() {
-		return this.ontologies;
-	}
-
-	public void setTags(final List<String> tags) {
-		this.tags=tags;
-	}
-
-	public List<String> getTags() {
-		return this.tags;
+	@Test
+	public void testCatalogRepresentationSite() throws Exception {
+		final String catalogRepresentation = Templates.catalogRepresentation(Example.site());
+		assertThat(catalogRepresentation,notNullValue());
 	}
 
 }
