@@ -30,6 +30,7 @@ public class Language {
 
 	private String uri;
 	private String label;
+	private String name;
 
 	public String getUri() {
 		return this.uri;
@@ -45,6 +46,14 @@ public class Language {
 
 	public void setLabel(final String label) {
 		this.label = label;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(final String name) {
+		this.name = name;
 	}
 
 }

@@ -112,6 +112,7 @@ final class CatalogRepresentionGenerator implements HttpHandler {
 						ImmutableMap.<String,Object>builder().
 							put("uri","http://lexvo.org/id/iso639-3/eng").
 							put("label","en").
+							put("name","English").
 							build()
 					)).
 			build();

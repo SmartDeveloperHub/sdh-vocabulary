@@ -143,7 +143,11 @@
             {% if onto.languages %}
               {% for lang in onto.languages %}
               <a href="{{ lang.uri }}" target="_blank">
-                <span class="label label-primary">{{ lang.label }}</span>
+                <span
+                  class="label label-primary"
+                  data-toggle="tooltip"
+                  data-placement="right"
+                  title="{{ lang.name }}">{{ lang.label }}</span>
               </a>
               {% endfor %}
             {% else %}

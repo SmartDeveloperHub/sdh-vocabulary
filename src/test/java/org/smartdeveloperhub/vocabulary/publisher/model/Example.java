@@ -27,7 +27,11 @@
 package org.smartdeveloperhub.vocabulary.publisher.model;
 
 import java.util.Arrays;
+import java.util.Locale;
 
+import org.smartdeveloperhub.vocabulary.language.Languages;
+
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 public class Example {
@@ -67,8 +71,9 @@ public class Example {
 
 	public static Language language() {
 		final Language language=new Language();
-		language.setUri("http://lexvo.org/id/iso639-3/eng");
+		language.setUri(Iterables.getFirst(Languages.getInstance().uri("en"),"Unknown"));
 		language.setLabel("en");
+		language.setName(Languages.getInstance().localizedName("en",Locale.ENGLISH));
 		return language;
 	}
 
