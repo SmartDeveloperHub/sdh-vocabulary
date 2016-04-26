@@ -87,14 +87,16 @@ public final class Templates {
 
 	private static Site curate(final Site site) {
 		final Site clone=Model.clone(site);
-		// TODO: Should we allow having a custom date specified or gather it from the ontologies in the catalog, i.e., that latest modification from all the modules.
 		// TODO: What if there's no metadata, or it does not have language, or the language is not valid?
+		final Locale siteLocale =
+			Locale.
+				forLanguageTag(
+					clone.getMetadata().getLanguage());
+		// TODO: Should we allow having a custom date specified or gather it from the ontologies in the catalog, i.e., that latest modification from all the modules.
 		clone.setDate(
 			DateTimeFormat.
 				forPattern("MMMM, YYYY").
-					withLocale(
-						Locale.
-							forLanguageTag(clone.getMetadata().getLanguage())).
+					withLocale(siteLocale).
 					print(System.currentTimeMillis()));
 		final Escaper escaper = HtmlEscapers.htmlEscaper();
 		final List<String> tags = clone.getTags();
@@ -105,11 +107,21 @@ public final class Templates {
 				// TODO: What if the domain is null
 				tags.add(domain);
 			}
-			// TODO: What if the summary or the description have non-ASCII characters that are not escaped by the Guava escaper?
 			ontology.setSummary(escape(escaper, ontology.getSummary()));
 			ontology.setDescription(escape(escaper, ontology.getDescription()));
 		}
 		return clone;
+	}
+
+	public static String truncate(final String description) {
+		String summary=description;
+		if(summary.length()>120) {
+			final int nextSpace=summary.indexOf(" ",120);
+			if(nextSpace!=-1) {
+				summary=summary.substring(0,nextSpace);
+			}
+		}
+		return summary;
 	}
 
 	public static String catalogRepresentation(final Map<String, Object> bindings) {
