@@ -233,6 +233,7 @@
 						<exclude>src/main/resources/vocabulary/external/**</exclude>
 						<exclude>src/test/resources/assets/**</exclude>
 						<exclude>src/test/resources/templates/**</exclude>
+						<exclude>src/test/resources/org/smartdeveloperhub/vocabulary/language/lexvo.pack</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
