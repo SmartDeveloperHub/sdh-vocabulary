@@ -24,18 +24,15 @@
  *   Bundle      : sdh-vocabulary-0.3.0-SNAPSHOT.jar
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  */
-package org.smartdeveloperhub.vocabulary.util;
+package org.smartdeveloperhub.vocabulary.util.rdf;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+interface Constraint<T> {
 
-@RunWith(Suite.class)
-@SuiteClasses({
-	ModulesTest.class,
-	CatalogTest.class,
-	CatalogsTest.class,
-	VocabularyHelperTest.class
-})
-public class UnitTestsSuite {
+	interface Decission {
+		boolean accepted();
+		String explanation();
+	}
+
+	Decission check(T value);
+
 }

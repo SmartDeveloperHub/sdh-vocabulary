@@ -24,33 +24,16 @@
  *   Bundle      : sdh-vocabulary-0.3.0-SNAPSHOT.jar
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  */
-package org.smartdeveloperhub.vocabulary.util;
+package org.smartdeveloperhub.vocabulary.util.rdf;
 
-import com.hp.hpl.jena.rdf.model.AnonId;
-import com.hp.hpl.jena.rdf.model.Literal;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.RDFVisitor;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
-final class NodeUtils implements RDFVisitor {
-
-	private NodeUtils() {
-	}
-
-	@Override
-	public Object visitURI(final Resource r, final String uri) {
-		return uri;
-	}
-	@Override
-	public Object visitLiteral(final Literal l) {
-		return l.getLexicalForm();
-	}
-	@Override
-	public Object visitBlank(final Resource r, final AnonId id) {
-		return id.getLabelString();
-	}
-
-	static String toString(final RDFNode node) {
-		return (String)node.visitWith(new NodeUtils());
-	}
+@RunWith(Suite.class)
+@SuiteClasses({
+	GenericPropertyDefinitionTest.class,
+	TextPropertyDefinitionTest.class
+})
+public class UnitTestsSuite {
 }

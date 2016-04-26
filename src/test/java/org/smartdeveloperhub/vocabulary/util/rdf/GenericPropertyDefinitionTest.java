@@ -24,24 +24,25 @@
  *   Bundle      : sdh-vocabulary-0.3.0-SNAPSHOT.jar
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  */
-package org.smartdeveloperhub.vocabulary.util;
+package org.smartdeveloperhub.vocabulary.util.rdf;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
-import org.smartdeveloperhub.vocabulary.util.PropertyDefinition.Evaluation;
+import org.smartdeveloperhub.vocabulary.util.TestHelper;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 
-public class PropertyDefinitionTest {
+public class GenericPropertyDefinitionTest {
 
 	@Rule
 	public TestName name=new TestName();
@@ -63,8 +64,8 @@ public class PropertyDefinitionTest {
 
 	@Test
 	public void defaultMinCardinalityIsZero() {
-		final PropertyDefinition definition=
-			PropertyDefinition.
+		final GenericPropertyDefinition<List<String>> definition =
+			GenericPropertyDefinition.
 				builder("property").
 					build();
 		assertThat(definition.minCard(),equalTo(0));
@@ -72,8 +73,8 @@ public class PropertyDefinitionTest {
 
 	@Test
 	public void defaultMaxCardinalityIsMaxInteger() {
-		final PropertyDefinition definition=
-			PropertyDefinition.
+		final GenericPropertyDefinition<List<String>> definition =
+			GenericPropertyDefinition.
 				builder("property").
 					build();
 		assertThat(definition.maxCard(),equalTo(Integer.MAX_VALUE));
@@ -82,7 +83,7 @@ public class PropertyDefinitionTest {
 	@Test
 	public void minCardinalityCannotBeNegative() {
 		try {
-			PropertyDefinition.
+			GenericPropertyDefinition.
 				builder("property").
 					minCard(-1);
 			fail("Should not accept negative min cardinality");
@@ -94,7 +95,7 @@ public class PropertyDefinitionTest {
 	@Test
 	public void maxCardinalityCannotBeNegative() {
 		try {
-			PropertyDefinition.
+			GenericPropertyDefinition.
 				builder("property").
 					maxCard(-1);
 			fail("Should not accept negative max cardinality");
@@ -105,8 +106,8 @@ public class PropertyDefinitionTest {
 
 	@Test
 	public void optionalChangesMinCardinalityToZero() {
-		final PropertyDefinition definition=
-			PropertyDefinition.
+		final GenericPropertyDefinition<List<String>> definition =
+			GenericPropertyDefinition.
 				builder("property").
 					minCard(1).
 					maxCard(10).
@@ -118,8 +119,8 @@ public class PropertyDefinitionTest {
 
 	@Test
 	public void requiredChangesMinCardinalityToOneIfPreviousWasZero() {
-		final PropertyDefinition definition=
-			PropertyDefinition.
+		final GenericPropertyDefinition<List<String>> definition =
+			GenericPropertyDefinition.
 				builder("property").
 					minCard(0).
 					maxCard(10).
@@ -131,8 +132,8 @@ public class PropertyDefinitionTest {
 
 	@Test
 	public void requiredDoesNotChangeMinCardinalityIfPreviousWasEqualToOne() {
-		final PropertyDefinition definition=
-			PropertyDefinition.
+		final GenericPropertyDefinition<List<String>> definition =
+			GenericPropertyDefinition.
 				builder("property").
 					minCard(1).
 					maxCard(10).
@@ -144,8 +145,8 @@ public class PropertyDefinitionTest {
 
 	@Test
 	public void requiredDoesNotChangeMinCardinalityIfPreviousWasGreaterThanOne() {
-		final PropertyDefinition definition=
-			PropertyDefinition.
+		final GenericPropertyDefinition<List<String>> definition =
+			GenericPropertyDefinition.
 				builder("property").
 					minCard(3).
 					maxCard(10).
@@ -157,8 +158,8 @@ public class PropertyDefinitionTest {
 
 	@Test
 	public void unboundChangesMaxCardinalityToMaxInteger() {
-		final PropertyDefinition definition=
-			PropertyDefinition.
+		final GenericPropertyDefinition<List<String>> definition =
+			GenericPropertyDefinition.
 				builder("property").
 					minCard(0).
 					maxCard(10).
@@ -171,7 +172,7 @@ public class PropertyDefinitionTest {
 	@Test
 	public void maxCardinalityCannotBeLowerThanMinCardinality() {
 		try {
-			PropertyDefinition.
+			GenericPropertyDefinition.
 				builder("property").
 					cardinality(5, 4);
 			fail("Should not accept a max cardinality lower than min cardinality");
@@ -183,12 +184,12 @@ public class PropertyDefinitionTest {
 	@Test
 	public void evaluationFailsIfNoResourceAreDetectedWhenRequired() throws Exception {
 		final Resource resource = resource("noResource");
-		final PropertyDefinition definition =
-			PropertyDefinition.
+		final GenericPropertyDefinition<List<String>> definition =
+			GenericPropertyDefinition.
 				builder(uriRef("property")).
 					resource().
 					build();
-		final Evaluation evaluation = evaluate(definition, resource);
+		final Evaluation<List<String>> evaluation = evaluate(definition, resource);
 		assertThat(evaluation.passes(),equalTo(false));
 		assertThat(evaluation.failures().size(),equalTo(4));
 	}
@@ -196,12 +197,12 @@ public class PropertyDefinitionTest {
 	@Test
 	public void evaluationFailsIfNoURIrefsAreDetectedWhenRequired() throws Exception {
 		final Resource resource = resource("noURIref");
-		final PropertyDefinition definition =
-			PropertyDefinition.
+		final GenericPropertyDefinition<List<String>> definition =
+			GenericPropertyDefinition.
 				builder(uriRef("property")).
 					uriRef().
 					build();
-		final Evaluation evaluation = evaluate(definition, resource);
+		final Evaluation<List<String>> evaluation = evaluate(definition, resource);
 		assertThat(evaluation.passes(),equalTo(false));
 		assertThat(evaluation.failures().size(),equalTo(5));
 	}
@@ -209,12 +210,12 @@ public class PropertyDefinitionTest {
 	@Test
 	public void evaluationFailsIfNoBlankNodesAreDetectedWhenRequired() throws Exception {
 		final Resource resource = resource("noBlankNode");
-		final PropertyDefinition definition =
-			PropertyDefinition.
+		final GenericPropertyDefinition<List<String>> definition =
+			GenericPropertyDefinition.
 				builder(uriRef("property")).
 					blankNode().
 					build();
-		final Evaluation evaluation = evaluate(definition, resource);
+		final Evaluation<List<String>> evaluation = evaluate(definition, resource);
 		assertThat(evaluation.passes(),equalTo(false));
 		assertThat(evaluation.failures().size(),equalTo(6));
 	}
@@ -222,12 +223,12 @@ public class PropertyDefinitionTest {
 	@Test
 	public void evaluationFailsIfNoLiteralsAreDetectedWhenRequired() throws Exception {
 		final Resource resource = resource("noLiteral");
-		final PropertyDefinition definition =
-			PropertyDefinition.
+		final GenericPropertyDefinition<List<String>> definition =
+			GenericPropertyDefinition.
 				builder(uriRef("property")).
 					literal().
 					build();
-		final Evaluation evaluation = evaluate(definition, resource);
+		final Evaluation<List<String>> evaluation = evaluate(definition, resource);
 		assertThat(evaluation.passes(),equalTo(false));
 		assertThat(evaluation.failures().size(),equalTo(3));
 	}
@@ -235,12 +236,12 @@ public class PropertyDefinitionTest {
 	@Test
 	public void evaluationFailsIfNoLanguageLiteralsAreDetectedWhenRequired() throws Exception {
 		final Resource resource = resource("noLanguageLiteral");
-		final PropertyDefinition definition =
-			PropertyDefinition.
+		final GenericPropertyDefinition<List<String>> definition =
+			GenericPropertyDefinition.
 				builder(uriRef("property")).
 					languageLiteral().
 					build();
-		final Evaluation evaluation = evaluate(definition, resource);
+		final Evaluation<List<String>> evaluation = evaluate(definition, resource);
 		assertThat(evaluation.passes(),equalTo(false));
 		assertThat(evaluation.failures().size(),equalTo(6));
 	}
@@ -248,12 +249,12 @@ public class PropertyDefinitionTest {
 	@Test
 	public void evaluationFailsIfNoTypedLiteralsAreDetectedWhenRequired() throws Exception {
 		final Resource resource = resource("noTypedLiteral");
-		final PropertyDefinition definition =
-			PropertyDefinition.
+		final GenericPropertyDefinition<List<String>> definition =
+			GenericPropertyDefinition.
 				builder(uriRef("property")).
 					typedLiteral(uriRef("type")).
 					build();
-		final Evaluation evaluation = evaluate(definition, resource);
+		final Evaluation<List<String>> evaluation = evaluate(definition, resource);
 		assertThat(evaluation.passes(),equalTo(false));
 		assertThat(evaluation.failures().size(),equalTo(7));
 	}
@@ -261,12 +262,12 @@ public class PropertyDefinitionTest {
 	@Test
 	public void evaluationFailsIfNotEnoughValuesAreDefined() throws Exception {
 		final Resource resource = resource("notEnoughValues");
-		final PropertyDefinition definition =
-			PropertyDefinition.
+		final GenericPropertyDefinition<List<String>> definition =
+			GenericPropertyDefinition.
 				builder(uriRef("property")).
 					cardinality(10,Integer.MAX_VALUE).
 					build();
-		final Evaluation evaluation = evaluate(definition, resource);
+		final Evaluation<List<String>> evaluation = evaluate(definition, resource);
 		assertThat(evaluation.passes(),equalTo(false));
 		assertThat(evaluation.failures().size(),equalTo(1));
 	}
@@ -274,18 +275,18 @@ public class PropertyDefinitionTest {
 	@Test
 	public void evaluationFailsIfTooManyValuesAreDefined() throws Exception {
 		final Resource resource = resource("tooManyValues");
-		final PropertyDefinition definition =
-			PropertyDefinition.
+		final GenericPropertyDefinition<List<String>> definition =
+			GenericPropertyDefinition.
 				builder(uriRef("property")).
 					cardinality(0,1).
 					build();
-		final Evaluation evaluation = evaluate(definition, resource);
+		final Evaluation<List<String>> evaluation = evaluate(definition, resource);
 		assertThat(evaluation.passes(),equalTo(false));
 		assertThat(evaluation.failures().size(),equalTo(1));
 	}
 
-	private Evaluation evaluate(final PropertyDefinition definition, final Resource resource) {
-		final Evaluation evaluation=definition.evaluate(resource);
+	private Evaluation<List<String>> evaluate(final PropertyDefinition<List<String>> definition, final Resource resource) {
+		final Evaluation<List<String>> evaluation=definition.evaluate(resource);
 		System.out.println("Test: "+this.name.getMethodName());
 		System.out.println("- Definition: "+definition);
 		System.out.println("- Resource..: "+resource);

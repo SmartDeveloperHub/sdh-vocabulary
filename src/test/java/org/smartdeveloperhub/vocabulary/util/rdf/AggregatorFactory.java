@@ -24,18 +24,13 @@
  *   Bundle      : sdh-vocabulary-0.3.0-SNAPSHOT.jar
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  */
-package org.smartdeveloperhub.vocabulary.util;
+package org.smartdeveloperhub.vocabulary.util.rdf;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.Resource;
 
-@RunWith(Suite.class)
-@SuiteClasses({
-	ModulesTest.class,
-	CatalogTest.class,
-	CatalogsTest.class,
-	VocabularyHelperTest.class
-})
-public class UnitTestsSuite {
+public interface AggregatorFactory<T> {
+
+	Aggregator<T> newInstance(Resource resource, Property property);
+
 }

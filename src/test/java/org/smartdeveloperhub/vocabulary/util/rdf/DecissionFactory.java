@@ -24,18 +24,52 @@
  *   Bundle      : sdh-vocabulary-0.3.0-SNAPSHOT.jar
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  */
-package org.smartdeveloperhub.vocabulary.util;
+package org.smartdeveloperhub.vocabulary.util.rdf;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import org.smartdeveloperhub.vocabulary.util.rdf.Constraint.Decission;
 
-@RunWith(Suite.class)
-@SuiteClasses({
-	ModulesTest.class,
-	CatalogTest.class,
-	CatalogsTest.class,
-	VocabularyHelperTest.class
-})
-public class UnitTestsSuite {
+public final class DecissionFactory {
+
+	private static final class Accept implements Decission {
+		@Override
+		public boolean accepted() {
+			return true;
+		}
+		@Override
+		public String explanation() {
+			throw new IllegalStateException("Should not be invoked");
+		}
+	}
+
+	private static final class Reject implements Decission {
+
+		private final String explanation;
+
+		private Reject(final String explanation) {
+			this.explanation = explanation;
+		}
+
+		@Override
+		public boolean accepted() {
+			return false;
+		}
+		@Override
+		public String explanation() {
+			return this.explanation;
+		}
+	}
+
+	private static final DecissionFactory.Accept ACCEPT = new Accept();
+
+	private DecissionFactory() {
+	}
+
+	public static Decission accept() {
+		return ACCEPT;
+	}
+
+	public static Decission reject(final String msg, final Object... args) {
+		return new Reject(String.format(msg, args));
+	}
+
 }

@@ -24,18 +24,46 @@
  *   Bundle      : sdh-vocabulary-0.3.0-SNAPSHOT.jar
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  */
-package org.smartdeveloperhub.vocabulary.util;
+package org.smartdeveloperhub.vocabulary.util.rdf;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import java.util.List;
 
-@RunWith(Suite.class)
-@SuiteClasses({
-	ModulesTest.class,
-	CatalogTest.class,
-	CatalogsTest.class,
-	VocabularyHelperTest.class
-})
-public class UnitTestsSuite {
+public final class Evaluation<T> {
+
+	private final String resource;
+	private final String property;
+	private final List<String> failures;
+	private final T result;
+
+	private Evaluation(final String resource, final String property, final T values, final List<String> failures) {
+		this.resource=resource;
+		this.property=property;
+		this.result=values;
+		this.failures=failures;
+	}
+
+	public String resource() {
+		return this.resource;
+	}
+
+	public String property() {
+		return this.property;
+	}
+
+	public T result() {
+		return this.result;
+	}
+
+	public boolean passes() {
+		return this.failures.isEmpty();
+	}
+
+	public List<String> failures() {
+		return this.failures;
+	}
+
+	static <T> Evaluation<T> create(final String resource, final String property, final T result, final List<String> failures) {
+		return new Evaluation<T>(resource, property, result, failures);
+	}
+
 }

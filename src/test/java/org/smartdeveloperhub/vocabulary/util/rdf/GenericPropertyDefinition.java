@@ -24,30 +24,76 @@
  *   Bundle      : sdh-vocabulary-0.3.0-SNAPSHOT.jar
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  */
-package org.smartdeveloperhub.vocabulary.util;
+package org.smartdeveloperhub.vocabulary.util.rdf;
 
 import java.util.List;
 
-import org.smartdeveloperhub.vocabulary.util.PropertyDefinition.Constraint.Decission;
+import org.smartdeveloperhub.vocabulary.util.rdf.Constraint.Decission;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 
-final class PropertyDefinition {
+final class GenericPropertyDefinition<T> implements PropertyDefinition<T> {
 
-	interface Constraint<T> {
-		interface Decission {
-			boolean accepted();
-			String explanation();
+	private static final class DefaultAggregatorFactory implements AggregatorFactory<List<String>> {
+
+		private static final class DefaultAggregator extends Aggregator<List<String>> {
+
+			private final List<String> values;
+
+			private DefaultAggregator(final Resource resource, final Property property){
+				super(resource,property);
+				this.values=Lists.newArrayList();
+			}
+
+			@Override
+			public List<String> aggregation() {
+				return this.values;
+			}
+
+			@Override
+			protected Decission aggregateBlankNode(final String labelString) {
+				this.values.add(labelString);
+				return DecissionFactory.accept();
+			}
+
+			@Override
+			protected Decission aggregateURIRef(final String uri) {
+				this.values.add(uri);
+				return DecissionFactory.accept();
+			}
+
+			@Override
+			protected Decission aggregateStringLiteral(final String value) {
+				this.values.add(value);
+				return DecissionFactory.accept();
+			}
+
+			@Override
+			protected Decission aggregateTypedLiteral(final String value, final String datatype) {
+				this.values.add(value);
+				return DecissionFactory.accept();
+			}
+
+			@Override
+			protected Decission aggregateLanguageLiteral(final String value, final String language) {
+				this.values.add(value);
+				return DecissionFactory.accept();
+			}
 		}
-		Decission check(T value);
+
+		@Override
+		public Aggregator<List<String>> newInstance(final Resource resource, final Property property) {
+			return new DefaultAggregator(resource,property);
+		}
+
 	}
 
 	interface TypeConstraint extends Constraint<RDFNode> {
@@ -65,15 +111,17 @@ final class PropertyDefinition {
 
 	}
 
-	static final class Builder {
+	static final class Builder<T> {
 
 		private final String property;
+		private final AggregatorFactory<T> factory;
 		private TypeConstraint typeConstraint;
 		private CardinalityConstraint minCardConstraint;
 		private CardinalityConstraint maxCardConstraint;
 
-		private Builder(final String property) {
+		private Builder(final String property, final AggregatorFactory<T> factory) {
 			this.property=property;
+			this.factory=factory;
 			this.typeConstraint=
 				CustomTypeConstraint.
 					newInstance(
@@ -81,7 +129,7 @@ final class PropertyDefinition {
 			cardinality(0,Integer.MAX_VALUE);
 		}
 
-		Builder cardinality(final int minCard, final int maxCard) {
+		Builder<T> cardinality(final int minCard, final int maxCard) {
 			Preconditions.checkArgument(minCard>=0,"Min cardinality cannot be lower than 0 (%s)",minCard);
 			Preconditions.checkArgument(maxCard>=0,"Max cardinality cannot be lower than 0 (%s)",maxCard);
 			Preconditions.checkArgument(minCard<=maxCard,"Max cardinality cannot be lower than min cardinality (%s<%s)",maxCard,minCard);
@@ -90,103 +138,71 @@ final class PropertyDefinition {
 			return this;
 		}
 
-		Builder minCard(final int minCard) {
+		Builder<T> minCard(final int minCard) {
 			return cardinality(minCard,this.maxCardConstraint.cardinality());
 		}
 
-		Builder maxCard(final int maxCard) {
+		Builder<T> maxCard(final int maxCard) {
 			return cardinality(this.minCardConstraint.cardinality(),maxCard);
 		}
 
-		Builder required() {
+		Builder<T> required() {
 			return cardinality(Math.max(this.minCardConstraint.cardinality(), 1),this.maxCardConstraint.cardinality());
 		}
 
-		Builder optional() {
+		Builder<T> optional() {
 			return cardinality(0,this.maxCardConstraint.cardinality());
 		}
 
-		Builder unbound() {
+		Builder<T> unbound() {
 			return cardinality(this.minCardConstraint.cardinality(),Integer.MAX_VALUE);
 		}
 
-		Builder resource() {
+		Builder<T> resource() {
 			this.typeConstraint=CustomTypeConstraint.newInstance(new ResourceTypeChecker());
 			return this;
 		}
 
-		Builder blankNode() {
+		Builder<T> blankNode() {
 			this.typeConstraint=CustomTypeConstraint.newInstance(new BlankNodeTypeChecker());
 			return this;
 		}
 
-		Builder uriRef() {
+		Builder<T> uriRef() {
 			this.typeConstraint=CustomTypeConstraint.newInstance(new URIrefTypeChecker());
 			return this;
 		}
 
-		Builder literal() {
+		Builder<T> literal() {
 			this.typeConstraint=CustomTypeConstraint.newInstance(new LiteralTypeChecker());
 			return this;
 		}
 
-		Builder typedLiteral(final String type) {
+		Builder<T> typedLiteral(final String type) {
 			this.typeConstraint=CustomTypeConstraint.newInstance(new TypedLiteralTypeChecker(type));
 			return this;
 		}
 
-		Builder languageLiteral() {
+		<E> Builder<E> aggregator(final AggregatorFactory<E> visitor) {
+			final Builder<E> result = new Builder<E>(this.property,visitor);
+			result.minCardConstraint=this.minCardConstraint;
+			result.maxCardConstraint=this.maxCardConstraint;
+			result.typeConstraint=this.typeConstraint;
+			return result;
+		}
+
+		Builder<T> languageLiteral() {
 			this.typeConstraint=CustomTypeConstraint.newInstance(new LanguageLiteralTypeChecker());
 			return this;
 		}
 
-		PropertyDefinition build() {
-			return new PropertyDefinition(this.property,this.typeConstraint,this.minCardConstraint,this.maxCardConstraint);
+		GenericPropertyDefinition<T> build() {
+			return new GenericPropertyDefinition<T>(this.property,this.typeConstraint,this.minCardConstraint,this.maxCardConstraint,this.factory);
 		}
 
 	}
 
-	static final class Evaluation {
-
-		private final String resource;
-		private final String property;
-		private final List<String> values;
-		private final List<String> failures;
-
-		private Evaluation(final String resource, final String property, final List<String> values, final List<String> failures) {
-			this.resource=resource;
-			this.property=property;
-			this.values=values;
-			this.failures=failures;
-		}
-
-		String resource() {
-			return this.resource;
-		}
-
-		String property() {
-			return this.property;
-		}
-
-		String value() {
-			return Iterables.getFirst(this.values,null);
-		}
-
-		List<String> values() {
-			return this.values;
-		}
-
-		boolean passes() {
-			return this.failures.isEmpty();
-		}
-
-		List<String> failures() {
-			return this.failures;
-		}
-
-	}
-
-	private static final class MaxCardinalityConstraint implements PropertyDefinition.CardinalityConstraint {
+	private static final class MaxCardinalityConstraint implements GenericPropertyDefinition.CardinalityConstraint {
 
 		private final int cardinality;
 
@@ -215,7 +231,7 @@ final class PropertyDefinition {
 
 	}
 
-	private static final class MinCardinalityConstraint implements PropertyDefinition.CardinalityConstraint {
+	private static final class MinCardinalityConstraint implements GenericPropertyDefinition.CardinalityConstraint {
 
 		private final int cardinality;
 
@@ -249,7 +265,7 @@ final class PropertyDefinition {
 			private final RDFNode value;
 			private final TypeChecker checker;
 
-			private TypeDecission(final RDFNode value, final PropertyDefinition.TypeChecker checker) {
+			private TypeDecission(final RDFNode value, final GenericPropertyDefinition.TypeChecker checker) {
 				this.value = value;
 				this.checker = checker;
 			}
@@ -286,13 +302,13 @@ final class PropertyDefinition {
 			return this.checker.type();
 		}
 
-		static CustomTypeConstraint newInstance(final PropertyDefinition.TypeChecker checker) {
+		static CustomTypeConstraint newInstance(final GenericPropertyDefinition.TypeChecker checker) {
 			return new CustomTypeConstraint(checker);
 		}
 
 	}
 
-	private static final class AnyTypeChecker implements PropertyDefinition.TypeChecker {
+	private static final class AnyTypeChecker implements GenericPropertyDefinition.TypeChecker {
 		@Override
 		public boolean isValid(final RDFNode value) {
 			return true;
@@ -303,7 +319,7 @@ final class PropertyDefinition {
 		}
 	}
 
-	private static final class LanguageLiteralTypeChecker implements PropertyDefinition.TypeChecker {
+	private static final class LanguageLiteralTypeChecker implements GenericPropertyDefinition.TypeChecker {
 
 		@Override
 		public boolean isValid(final RDFNode value) {
@@ -320,7 +336,7 @@ final class PropertyDefinition {
 
 	}
 
-	private static final class TypedLiteralTypeChecker implements PropertyDefinition.TypeChecker {
+	private static final class TypedLiteralTypeChecker implements GenericPropertyDefinition.TypeChecker {
 
 		private final String type;
 
@@ -343,7 +359,7 @@ final class PropertyDefinition {
 
 	}
 
-	private static final class LiteralTypeChecker implements PropertyDefinition.TypeChecker {
+	private static final class LiteralTypeChecker implements GenericPropertyDefinition.TypeChecker {
 
 		@Override
 		public boolean isValid(final RDFNode value) {
@@ -357,7 +373,7 @@ final class PropertyDefinition {
 
 	}
 
-	private static final class URIrefTypeChecker implements PropertyDefinition.TypeChecker {
+	private static final class URIrefTypeChecker implements GenericPropertyDefinition.TypeChecker {
 
 		@Override
 		public boolean isValid(final RDFNode value) {
@@ -371,7 +387,7 @@ final class PropertyDefinition {
 
 	}
 
-	private static final class BlankNodeTypeChecker implements PropertyDefinition.TypeChecker {
+	private static final class BlankNodeTypeChecker implements GenericPropertyDefinition.TypeChecker {
 
 		@Override
 		public boolean isValid(final RDFNode value) {
@@ -385,7 +401,7 @@ final class PropertyDefinition {
 
 	}
 
-	private static final class ResourceTypeChecker implements PropertyDefinition.TypeChecker {
+	private static final class ResourceTypeChecker implements GenericPropertyDefinition.TypeChecker {
 
 		@Override
 		public boolean isValid(final RDFNode value) {
@@ -400,46 +416,59 @@ final class PropertyDefinition {
 	}
 
 	private final String property;
+	private final AggregatorFactory<T> factory;
 	private final TypeConstraint typeConstraint;
 	private final CardinalityConstraint minCardConstraint;
 	private final CardinalityConstraint maxCardConstraint;
 
-	private PropertyDefinition(final String property, final TypeConstraint typeConstraint, final CardinalityConstraint minCard, final CardinalityConstraint maxCard) {
+	private GenericPropertyDefinition(final String property, final TypeConstraint typeConstraint, final CardinalityConstraint minCard, final CardinalityConstraint maxCard, final AggregatorFactory<T> factory) {
 		this.property = property;
 		this.typeConstraint = typeConstraint;
 		this.minCardConstraint = minCard;
 		this.maxCardConstraint = maxCard;
+		this.factory = factory;
 	}
 
-	String property() {
+	@Override
+	public String property() {
 		return this.property;
 	}
 
-	int minCard() {
+	@Override
+	public int minCard() {
 		return this.minCardConstraint.cardinality();
 	}
 
-	int maxCard() {
+	@Override
+	public int maxCard() {
 		return this.maxCardConstraint.cardinality();
 	}
 
-	String type() {
+	@Override
+	public String type() {
 		return this.typeConstraint.type();
 	}
 
-	Evaluation evaluate(final Resource resource) {
-		final List<String> allValues=Lists.newArrayList();
-		final List<String> values=Lists.newArrayList();
+	@Override
+	public Evaluation<T> evaluate(final Resource resource) {
+		final Aggregator<T> aggregator=
+			this.factory.newInstance(
+					resource,
+					ResourceFactory.createProperty(this.property));
+		final List<RDFNode> allValues=Lists.newArrayList();
 		final List<String> failures=Lists.newArrayList();
-		final StmtIterator statements = resource.listProperties(ResourceFactory.createProperty(this.property));
+		final StmtIterator statements = resource.listProperties(aggregator.property());
 		try {
 			while(statements.hasNext()) {
 				final Statement statement = statements.next();
 				final RDFNode object = statement.getObject();
 				final Decission check = this.typeConstraint.check(object);
-				allValues.add(NodeUtils.toString(object));
+				allValues.add(object);
 				if(check.accepted()) {
-					values.add(NodeUtils.toString(object));
+					final Decission valueCheck = aggregator.check(object);
+					if(!valueCheck.accepted()) {
+						failures.add(valueCheck.explanation());
+					}
 				} else {
 					failures.add(check.explanation());
 				}
@@ -455,7 +484,7 @@ final class PropertyDefinition {
 		if(!maxCardCheck.accepted()) {
 			failures.add(maxCardCheck.explanation());
 		}
-		return new Evaluation(NodeUtils.toString(resource),this.property,values,failures);
+		return Evaluation.create(NodeUtils.toString(resource),this.property,aggregator.aggregation(),failures);
 	}
 
 	@Override
@@ -470,8 +499,8 @@ final class PropertyDefinition {
 					toString();
 	}
 
-	static Builder builder(final String property) {
-		return new Builder(property);
+	static Builder<List<String>> builder(final String property) {
+		return new Builder<>(property,new DefaultAggregatorFactory());
 	}
 
 	private static String toString(final int value) {
