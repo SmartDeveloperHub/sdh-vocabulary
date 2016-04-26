@@ -32,8 +32,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-	GenericPropertyDefinitionTest.class,
-	TextPropertyDefinitionTest.class
+	GenericPropertyDefinitionTest.class
 })
 public class UnitTestsSuite {
 }
