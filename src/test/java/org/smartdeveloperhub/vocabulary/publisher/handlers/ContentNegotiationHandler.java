@@ -106,7 +106,7 @@ final class ContentNegotiationHandler implements HttpHandler {
 		final URI canonicalURI = HandlerUtil.canonicalURI(exchange);
 		final String message = acceptableResources(canonicalURI,negotiation.alternatives());
 		exchange.getResponseSender().send(message);
-		System.out.println("Not acceptable: "+message);
+		System.out.println("Not acceptable:\n"+message);
 	}
 
 	private void addContentNegotiationHeaders(final HttpServerExchange exchange, final NegotiationResult negotiation, final boolean accepted) {
@@ -181,6 +181,7 @@ final class ContentNegotiationHandler implements HttpHandler {
 		for(final String value:headers(headers,ContentNegotiation.ACCEPT_LANGUAGE)) {
 			try {
 				negotiator.acceptLanguage(value);
+				System.out.println("- Accept-Language: "+value);
 			} catch(final IllegalArgumentException e) {
 				failures.add(Failure.create(ContentNegotiation.ACCEPT_LANGUAGE,value,e));
 			}
@@ -191,6 +192,7 @@ final class ContentNegotiationHandler implements HttpHandler {
 		for(final String value:headers(headers,ContentNegotiation.ACCEPT_CHARSET)) {
 			try {
 				negotiator.acceptCharset(value);
+				System.out.println("- Accept-Charset: "+value);
 			} catch(final IllegalArgumentException e) {
 				failures.add(Failure.create(ContentNegotiation.ACCEPT_CHARSET,value,e));
 			}
@@ -201,6 +203,7 @@ final class ContentNegotiationHandler implements HttpHandler {
 		for(final String value:headers(headers,ContentNegotiation.ACCEPT)) {
 			try {
 				negotiator.accept(value);
+				System.out.println("- Accept: "+value);
 			} catch(final IllegalArgumentException e) {
 				failures.add(Failure.create(ContentNegotiation.ACCEPT,value,e));
 			}
