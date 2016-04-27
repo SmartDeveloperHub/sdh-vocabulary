@@ -53,30 +53,6 @@ public final class MoreHandlers {
 		}
 	}
 
-	public static final class CatalogResolverHandler implements HttpHandler{
-
-		private final CatalogHandler delegate;
-
-		private CatalogResolverHandler(final Catalog catalog) {
-			this.delegate=CatalogHandler.create(catalog);
-		}
-
-		public CatalogResolverHandler catalogHandler(final HttpHandler handler) {
-			this.delegate.catalogHandler(handler);
-			return this;
-		}
-
-		public CatalogResolverHandler moduleHandler(final HttpHandler handler) {
-			this.delegate.moduleHandler(handler);
-			return this;
-		}
-
-		@Override
-		public void handleRequest(final HttpServerExchange exchange) throws Exception {
-			this.delegate.handleRequest(exchange);
-		}
-	}
-
 	private MoreHandlers() {
 	}
 
@@ -84,8 +60,12 @@ public final class MoreHandlers {
 		return new MethodControlHandler(aHandler);
 	}
 
-	public static CatalogResolverHandler catalogResolver(final Catalog catalog) {
-		return new CatalogResolverHandler(catalog);
+	public static HttpHandler catalogReverseProxy(final Catalog catalog, final HttpHandler aHandler) {
+		return new CatalogReverseProxyHandler(catalog, aHandler);
+	}
+
+	public static HttpHandler moduleReverseProxy(final Catalog catalog, final HttpHandler aHandler) {
+		return new ModuleReverseProxyHandler(catalog,aHandler);
 	}
 
 	public static HttpHandler contentNegotiation(final HttpHandler aHandler, final NegotiableContent aContent) {

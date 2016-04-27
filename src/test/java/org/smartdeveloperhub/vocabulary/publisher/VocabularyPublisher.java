@@ -27,10 +27,10 @@
 package org.smartdeveloperhub.vocabulary.publisher;
 
 import static io.undertow.Handlers.path;
-import static io.undertow.Handlers.resource;
-import static org.smartdeveloperhub.vocabulary.publisher.handlers.MoreHandlers.catalogResolver;
+import static org.smartdeveloperhub.vocabulary.publisher.handlers.MoreHandlers.catalogReverseProxy;
 import static org.smartdeveloperhub.vocabulary.publisher.handlers.MoreHandlers.contentNegotiation;
 import static org.smartdeveloperhub.vocabulary.publisher.handlers.MoreHandlers.methodController;
+import static org.smartdeveloperhub.vocabulary.publisher.handlers.MoreHandlers.moduleReverseProxy;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import org.ldp4j.http.CharacterEncodings;
+import org.ldp4j.http.MediaType;
 import org.ldp4j.http.MediaTypes;
 import org.smartdeveloperhub.vocabulary.publisher.handlers.NegotiableContent;
 import org.smartdeveloperhub.vocabulary.util.AppAssembler;
@@ -57,12 +58,12 @@ import org.smartdeveloperhub.vocabulary.util.Result;
 import com.google.common.collect.Lists;
 
 import io.undertow.Undertow;
-import io.undertow.server.HttpHandler;
-import io.undertow.server.HttpServerExchange;
-import io.undertow.server.handlers.resource.ClassPathResourceManager;
 import io.undertow.util.Methods;
 
 public class VocabularyPublisher {
+
+	private static final MediaType HTML = MediaTypes.of("text","html");
+
 
 	public static void main(final String... args) throws FileNotFoundException, IOException {
 		if(args.length!=2) {
@@ -81,7 +82,7 @@ public class VocabularyPublisher {
 				final Catalog catalog = result.get();
 				showCatalog(catalog);
 				try {
-					publish(catalog);
+					publish(catalog,base.getPath());
 				} finally {
 					System.out.println("Publisher terminated.");
 				}
@@ -155,7 +156,9 @@ public class VocabularyPublisher {
 		}
 	}
 
-	private static void publish(final Catalog catalog) {
+	private static void publish(final Catalog catalog,final String basePath) {
+		System.out.println("* Publishing vocabularies under "+basePath);
+		final String assetsPath = "assets/";
 		final Undertow server =
 			Undertow.
 				builder().
@@ -163,40 +166,30 @@ public class VocabularyPublisher {
 					setHandler(
 						path().
 							addPrefixPath(
-								"/vocabulary/assets/",
-								new HttpHandler() {
-
-									final HttpHandler next=
-										resource(
-											new ClassPathResourceManager(
-													VocabularyPublisher.class.getClassLoader(),
-													"assets"));
-
-									@Override
-									public void handleRequest(final HttpServerExchange exchange) throws Exception {
-										System.out.printf("Retrieving asset %s%n",exchange.getRelativePath());
-										this.next.handleRequest(exchange);
-									}
-								}
+								basePath+assetsPath,
+								new AssetProvider(assetsPath)
 							).
+							addExactPath(
+								basePath,
+								catalogReverseProxy(
+									catalog,
+									methodController(
+										contentNegotiation(
+											new CatalogRepresentionGenerator(),
+											negotiableCatalogContent())
+										).
+										allow(Methods.GET))).
 							addPrefixPath(
-								"/vocabulary/",
-								catalogResolver(catalog).
-									moduleHandler(
-										methodController(
-											contentNegotiation(
-												new ModuleRepresentionGenerator(),
-												negotiableModuleContent())
-											).
-											allow(Methods.GET)
-									).
-									catalogHandler(
-										methodController(
-											contentNegotiation(
-												new CatalogRepresentionGenerator(),
-												negotiableCatalogContent())).
-											allow(Methods.GET)
-									)
+								basePath,
+								moduleReverseProxy(
+									catalog,
+									methodController(
+										contentNegotiation(
+											new ModuleRepresentionGenerator(),
+											negotiableModuleContent())
+										).
+										allow(Methods.GET)
+								)
 							)
 					).
 					build();
@@ -212,7 +205,7 @@ public class VocabularyPublisher {
 					support(Formats.toMediaType(Format.TURTLE)).
 					support(Formats.toMediaType(Format.RDF_XML)).
 					support(Formats.toMediaType(Format.JSON_LD)).
-					support(MediaTypes.of("text","html")).
+					support(HTML).
 					support(CharacterEncodings.of(StandardCharsets.UTF_8)).
 					support(CharacterEncodings.of(StandardCharsets.ISO_8859_1)).
 					support(CharacterEncodings.of(StandardCharsets.US_ASCII));
@@ -222,7 +215,7 @@ public class VocabularyPublisher {
 		return
 			NegotiableContent.
 				newInstance().
-					support(MediaTypes.of("text","html")).
+					support(HTML).
 					support(CharacterEncodings.of(StandardCharsets.UTF_8)).
 					support(CharacterEncodings.of(StandardCharsets.ISO_8859_1)).
 					support(CharacterEncodings.of(StandardCharsets.US_ASCII));

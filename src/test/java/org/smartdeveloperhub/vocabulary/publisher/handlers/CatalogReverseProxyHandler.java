@@ -26,42 +26,26 @@
  */
 package org.smartdeveloperhub.vocabulary.publisher.handlers;
 
-import java.net.URI;
-import java.nio.file.Paths;
+import org.smartdeveloperhub.vocabulary.util.Catalog;
 
+import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 
-public final class HandlerUtil {
+final class CatalogReverseProxyHandler implements HttpHandler {
 
-	private HandlerUtil() {
+	private final Catalog catalog;
+	private final HttpHandler next;
+
+	CatalogReverseProxyHandler(final Catalog catalog, final HttpHandler next) {
+		this.next = next;
+		this.catalog = catalog;
 	}
 
-	public static String getExtension(final String module) {
-		final String fileName = Paths.get(module).getFileName().toString();
-		final int dotIndex = fileName.lastIndexOf('.');
-		return dotIndex == -1 ? "" : fileName.substring(dotIndex + 1);
-	}
-
-	static URI canonicalURI(final HttpServerExchange exchange) {
-		final String relativePath = exchange.getRelativePath();
-		final String normalizedRelativePath = relativePath.isEmpty()?relativePath:relativePath.substring(1);
-		return getBase(exchange).resolve(normalizedRelativePath);
-	}
-
-	public static URI canonicalURI(final HttpServerExchange exchange, final String path) {
-		return getBase(exchange).resolve(path);
-	}
-
-	private static URI getBase(final HttpServerExchange exchange) {
-		URI base=Attachments.getBase(exchange);
-		if(base==null) {
-			base=physicalBase(exchange);
-		}
-		return base;
-	}
-
-	private static URI physicalBase(final HttpServerExchange exchange) {
-		return URI.create(String.format("%s://%s%s/",exchange.getRequestScheme(),exchange.getHostAndPort(),exchange.getResolvedPath()));
+	@Override
+	public void handleRequest(final HttpServerExchange exchange) throws Exception {
+		Attachments.setBase(exchange, this.catalog.getBase());
+		System.out.println("Accessing catalog --> "+HandlerUtil.canonicalURI(exchange, exchange.getRelativePath()));
+		this.next.handleRequest(exchange);
 	}
 
 }
