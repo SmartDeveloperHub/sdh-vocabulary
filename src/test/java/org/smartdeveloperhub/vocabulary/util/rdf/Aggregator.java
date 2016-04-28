@@ -39,12 +39,12 @@ public abstract class Aggregator<T> implements Constraint<RDFNode> {
 
 		@Override
 		public final Decission visitBlank(final Resource resource, final AnonId id) {
-			return aggregateBlankNode(id.getLabelString());
+			return aggregateBlankNode(resource,id.getLabelString());
 		}
 
 		@Override
 		public final Decission visitURI(final Resource resource, final String uri) {
-			return aggregateURIRef(uri);
+			return aggregateURIRef(resource,uri);
 		}
 
 		@Override
@@ -84,11 +84,11 @@ public abstract class Aggregator<T> implements Constraint<RDFNode> {
 		return this.property;
 	}
 
-	protected Decission aggregateBlankNode(final String labelString) {
+	protected Decission aggregateBlankNode(final Resource resource, final String labelString) {
 		return DecissionFactory.accept();
 	}
 
-	protected Decission aggregateURIRef(final String uri) {
+	protected Decission aggregateURIRef(final Resource resource, final String uri) {
 		return DecissionFactory.accept();
 	}
 

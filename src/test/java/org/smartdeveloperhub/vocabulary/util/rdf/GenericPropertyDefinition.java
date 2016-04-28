@@ -59,13 +59,13 @@ final class GenericPropertyDefinition<T> implements PropertyDefinition<T> {
 			}
 
 			@Override
-			protected Decission aggregateBlankNode(final String labelString) {
+			protected Decission aggregateBlankNode(final Resource resource, final String labelString) {
 				this.values.add(labelString);
 				return DecissionFactory.accept();
 			}
 
 			@Override
-			protected Decission aggregateURIRef(final String uri) {
+			protected Decission aggregateURIRef(final Resource resource, final String uri) {
 				this.values.add(uri);
 				return DecissionFactory.accept();
 			}
