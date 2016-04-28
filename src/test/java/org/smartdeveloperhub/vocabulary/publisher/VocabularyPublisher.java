@@ -58,12 +58,12 @@ import org.smartdeveloperhub.vocabulary.util.Result;
 import com.google.common.collect.Lists;
 
 import io.undertow.Undertow;
+import io.undertow.server.handlers.PathHandler;
 import io.undertow.util.Methods;
 
 public class VocabularyPublisher {
 
 	private static final MediaType HTML = MediaTypes.of("text","html");
-
 
 	public static void main(final String... args) throws FileNotFoundException, IOException {
 		if(args.length!=2) {
@@ -159,43 +159,81 @@ public class VocabularyPublisher {
 	private static void publish(final Catalog catalog,final String basePath) {
 		System.out.println("* Publishing vocabularies under "+basePath);
 		final String assetsPath = "assets/";
+		final PathHandler pathHandler=
+			path().
+				addPrefixPath(
+					basePath+assetsPath,
+					new AssetProvider(assetsPath)
+				).
+				addExactPath(
+					basePath,
+					catalogReverseProxy(
+						catalog,
+						methodController(
+							contentNegotiation(
+								new CatalogRepresentionGenerator(),
+								htmlContent())
+							).
+							allow(Methods.GET))).
+				addPrefixPath(
+					basePath,
+					moduleReverseProxy(
+						catalog,
+						methodController(
+							contentNegotiation(
+								new ModuleRepresentionGenerator(),
+								negotiableModuleContent())
+							).
+							allow(Methods.GET)
+					)
+				);
+		configureDocumentationHandlers(catalog,pathHandler);
 		final Undertow server =
 			Undertow.
 				builder().
 					addHttpListener(8080,"localhost").
-					setHandler(
-						path().
-							addPrefixPath(
-								basePath+assetsPath,
-								new AssetProvider(assetsPath)
-							).
-							addExactPath(
-								basePath,
-								catalogReverseProxy(
-									catalog,
-									methodController(
-										contentNegotiation(
-											new CatalogRepresentionGenerator(),
-											negotiableCatalogContent())
-										).
-										allow(Methods.GET))).
-							addPrefixPath(
-								basePath,
-								moduleReverseProxy(
-									catalog,
-									methodController(
-										contentNegotiation(
-											new ModuleRepresentionGenerator(),
-											negotiableModuleContent())
-										).
-										allow(Methods.GET)
-								)
-							)
-					).
+					setHandler(pathHandler).
 					build();
 		server.start();
 		awaitTerminationRequest();
 		server.stop();
+	}
+
+	private static void configureDocumentationHandlers(final Catalog catalog, final PathHandler pathHandler) {
+		for(final String moduleId:catalog.modules()) {
+			final Module module=catalog.get(moduleId);
+			if(!module.isLocal()) {
+				continue;
+			}
+			final Documentation doc=Documentation.create(catalog.getBase(),catalog.getRoot(),module);
+			System.out.printf("- Documentation (%s):%n",doc.implementationIRI());
+			System.out.printf("  + Root........: %s --> %s (%s)%n",doc.root(),doc.rootPath(),doc.assetsPath());
+			System.out.printf("  + Landing page: %s --> %s%n",doc.landingPage(),doc.landingPagePath());
+			if(doc.needsRedirect()) {
+				System.out.printf("  + Redirection.: %s --> %s%n",doc.redirection(),doc.redirectionPath());
+			}
+			pathHandler.
+				addExactPath(
+					doc.landingPagePath(),
+					methodController(
+						contentNegotiation(
+							new ModuleLandingPage(doc),
+							htmlContent())
+						).
+						allow(Methods.GET)
+				).
+				addPrefixPath(
+					doc.rootPath(),
+					new ExternalAssetProvider(doc.assetsPath())
+				);
+			if(doc.needsRedirect()) {
+				pathHandler.
+					addExactPath(
+						doc.redirectionPath(),
+						methodController(new TemporaryRedirect(doc.landingPage())).allow(Methods.GET)
+					);
+			}
+		}
 	}
 
 	private static NegotiableContent negotiableModuleContent() {
@@ -205,13 +243,12 @@ public class VocabularyPublisher {
 					support(Formats.toMediaType(Format.TURTLE)).
 					support(Formats.toMediaType(Format.RDF_XML)).
 					support(Formats.toMediaType(Format.JSON_LD)).
-					support(HTML).
 					support(CharacterEncodings.of(StandardCharsets.UTF_8)).
 					support(CharacterEncodings.of(StandardCharsets.ISO_8859_1)).
 					support(CharacterEncodings.of(StandardCharsets.US_ASCII));
 	}
 
-	private static NegotiableContent negotiableCatalogContent() {
+	private static NegotiableContent htmlContent() {
 		return
 			NegotiableContent.
 				newInstance().

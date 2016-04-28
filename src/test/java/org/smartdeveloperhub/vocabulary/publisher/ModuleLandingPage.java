@@ -26,13 +26,16 @@
  */
 package org.smartdeveloperhub.vocabulary.publisher;
 
+import java.io.File;
+import java.io.FileReader;
 import java.nio.ByteBuffer;
+import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.ldp4j.http.Variant;
 import org.smartdeveloperhub.vocabulary.publisher.handlers.Attachments;
-import org.smartdeveloperhub.vocabulary.publisher.handlers.HandlerUtil;
-import org.smartdeveloperhub.vocabulary.util.Module;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 
 import io.undertow.server.HttpHandler;
@@ -40,10 +43,12 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 import io.undertow.util.StatusCodes;
 
-final class ModuleRepresentionGenerator implements HttpHandler {
+final class ModuleLandingPage implements HttpHandler {
 
-	ModuleRepresentionGenerator() {
-		// Package-private
+	private final Documentation doc;
+
+	ModuleLandingPage(final Documentation doc) {
+		this.doc = doc;
 	}
 
 	@Override
@@ -52,17 +57,32 @@ final class ModuleRepresentionGenerator implements HttpHandler {
 			exchange.setStatusCode(StatusCodes.BAD_REQUEST);
 			exchange.getResponseHeaders().put(Headers.CONTENT_TYPE,"text/plain; charset=\"UTF-8\"");
 			exchange.getResponseSender().send("Queries not allowed");
+			exchange.endExchange();
 		} else {
 			final Variant variant=Attachments.getVariant(exchange);
-			final Module module=Attachments.getModule(exchange);
-			final String representation=
-				module.
-					transform(
-						HandlerUtil.canonicalURI(exchange,module.relativePath()),
-						Formats.fromMediaType(variant.type()));
+			final File file = findIndexFile(variant);
+			String representation;
+			if(file.isFile()) {
+				final List<String> readLines=IOUtils.readLines(new FileReader(file));
+				representation=Joiner.on("\n").join(readLines);
+			} else {
+				representation=defaultLandingPage(variant);
+			}
 			exchange.setStatusCode(StatusCodes.OK);
 			exchange.getResponseSender().send(ByteBuffer.wrap(representation.getBytes(variant.charset().charset())));
 		}
 	}
 
+	private String defaultLandingPage(final Variant variant) {
+		return "<html><head><body>TODO: Generate HTML documentation for ontology "+this.doc.implementationIRI()+" in "+variant.language().locale().getDisplayLanguage()+"</body></head></html>";
+	}
+
+	private File findIndexFile(final Variant variant) {
+		final String primaryTag = variant.language().primaryTag();
+		File file=this.doc.assetsPath().resolve("index-"+primaryTag+".html").toFile();
+		if(!file.isFile()) {
+			file=this.doc.assetsPath().resolve("index.html").toFile();
+		}
+		return file;
+	}
 }

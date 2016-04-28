@@ -26,43 +26,30 @@
  */
 package org.smartdeveloperhub.vocabulary.publisher;
 
-import java.nio.ByteBuffer;
+import static io.undertow.Handlers.resource;
 
-import org.ldp4j.http.Variant;
-import org.smartdeveloperhub.vocabulary.publisher.handlers.Attachments;
-import org.smartdeveloperhub.vocabulary.publisher.handlers.HandlerUtil;
-import org.smartdeveloperhub.vocabulary.util.Module;
-
-import com.google.common.base.Strings;
+import java.nio.file.Path;
 
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
-import io.undertow.util.Headers;
-import io.undertow.util.StatusCodes;
+import io.undertow.server.handlers.resource.PathResourceManager;
 
-final class ModuleRepresentionGenerator implements HttpHandler {
+final class ExternalAssetProvider implements HttpHandler {
 
-	ModuleRepresentionGenerator() {
-		// Package-private
+	private final HttpHandler next;
+	private final Path assetPath;
+
+	ExternalAssetProvider(final Path assetPath) {
+		this.assetPath = assetPath;
+		this.next =
+			resource(
+				new PathResourceManager(assetPath,100000,false,false));
 	}
 
 	@Override
 	public void handleRequest(final HttpServerExchange exchange) throws Exception {
-		if(!Strings.isNullOrEmpty(exchange.getQueryString())) {
-			exchange.setStatusCode(StatusCodes.BAD_REQUEST);
-			exchange.getResponseHeaders().put(Headers.CONTENT_TYPE,"text/plain; charset=\"UTF-8\"");
-			exchange.getResponseSender().send("Queries not allowed");
-		} else {
-			final Variant variant=Attachments.getVariant(exchange);
-			final Module module=Attachments.getModule(exchange);
-			final String representation=
-				module.
-					transform(
-						HandlerUtil.canonicalURI(exchange,module.relativePath()),
-						Formats.fromMediaType(variant.type()));
-			exchange.setStatusCode(StatusCodes.OK);
-			exchange.getResponseSender().send(ByteBuffer.wrap(representation.getBytes(variant.charset().charset())));
-		}
+		System.out.printf("Retrieving asset %s from %n",exchange.getRelativePath(),this.assetPath);
+		this.next.handleRequest(exchange);
 	}
 
 }
