@@ -24,59 +24,12 @@
  *   Bundle      : sdh-vocabulary-0.3.0-SNAPSHOT.jar
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  */
-package org.smartdeveloperhub.vocabulary.util;
+package org.smartdeveloperhub.vocabulary.publisher.spi;
 
-import java.io.File;
-import java.net.URI;
-import java.nio.file.Path;
+import org.smartdeveloperhub.vocabulary.util.Module;
 
-import com.google.common.base.MoreObjects;
+public interface DocumentationDeploymentFactory {
 
-public final class Context {
-
-	private final URI base;
-	private final Path root;
-
-	private Context(final URI base, final Path root) {
-		this.base = base;
-		this.root = root;
-	}
-
-	public URI base() {
-		return this.base;
-	}
-
-	public Path root() {
-		return this.root;
-	}
-
-	boolean includesNamespace(final String ontology) {
-		return !this.base.relativize(URI.create(ontology)).isAbsolute();
-	}
-
-	String getRelativePath(final Path file) {
-		final Path absoluteBasePath = file.getParent().resolve(MorePaths.getFileName(file));
-		final Path relativeBasePath = this.root.relativize(absoluteBasePath);
-		return relativeBasePath.toString().replace(File.separatorChar, '/');
-	}
-
-	URI getCanonicalNamespace(final Path file) {
-		return this.base.resolve(getRelativePath(file));
-	}
-
-	@Override
-	public String toString() {
-		return
-			MoreObjects.
-				toStringHelper(getClass()).
-					omitNullValues().
-					add("base",this.base).
-					add("root",this.root).
-					toString();
-	}
-
-	static Context create(final URI base, final Path root) {
-		return new Context(base,root);
-	}
+	DocumentationDeployment create(Module module);
 
 }

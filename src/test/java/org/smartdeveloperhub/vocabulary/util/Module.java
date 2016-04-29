@@ -151,10 +151,6 @@ public final class Module {
 		return this;
 	}
 
-	Context context() {
-		return this.context;
-	}
-
 	URI locationNamespace() {
 		return this.locationNamespace;
 	}
@@ -169,6 +165,10 @@ public final class Module {
 	 */
 	boolean isCanonicalVersion() {
 		return isLocal() && isVersion() && !this.ontology.equals(this.versionIRI);
+	}
+
+	public Context context() {
+		return this.context;
 	}
 
 	public Path location() {
@@ -189,6 +189,17 @@ public final class Module {
 
 	public String versionIRI() {
 		return this.versionIRI;
+	}
+
+	/**
+	 * TODO: Should we allow haven versionIRI but not ontology IRI?
+	 */
+	public String implementationIRI() {
+		String implementationIRI=this.versionIRI;
+		if(implementationIRI==null) {
+			implementationIRI=this.ontology;
+		}
+		return implementationIRI;
 	}
 
 	public Set<String> priorVersions() {

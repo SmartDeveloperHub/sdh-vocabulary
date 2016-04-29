@@ -34,6 +34,8 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.ldp4j.http.Variant;
 import org.smartdeveloperhub.vocabulary.publisher.handlers.Attachments;
+import org.smartdeveloperhub.vocabulary.publisher.spi.DocumentationDeployment;
+import org.smartdeveloperhub.vocabulary.publisher.spi.DocumentationProvider;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
@@ -45,10 +47,12 @@ import io.undertow.util.StatusCodes;
 
 final class ModuleLandingPage implements HttpHandler {
 
-	private final Documentation doc;
+	private final DocumentationDeployment doc;
+	private final DocumentationProvider provider;
 
-	ModuleLandingPage(final Documentation doc) {
+	ModuleLandingPage(final DocumentationDeployment doc, final DocumentationProvider provider) {
 		this.doc = doc;
+		this.provider = provider;
 	}
 
 	@Override
@@ -74,14 +78,14 @@ final class ModuleLandingPage implements HttpHandler {
 	}
 
 	private String defaultLandingPage(final Variant variant) {
-		return "<html><head><body>TODO: Generate HTML documentation for ontology "+this.doc.implementationIRI()+" in "+variant.language().locale().getDisplayLanguage()+"</body></head></html>";
+		return "<html><head><body>TODO: Generate HTML documentation for ontology "+this.doc.module().implementationIRI()+" in "+variant.language().locale().getDisplayLanguage()+"</body></head></html>";
 	}
 
 	private File findIndexFile(final Variant variant) {
 		final String primaryTag = variant.language().primaryTag();
-		File file=this.doc.assetsPath().resolve("index-"+primaryTag+".html").toFile();
+		File file=this.provider.assetsPath().resolve("index-"+primaryTag+".html").toFile();
 		if(!file.isFile()) {
-			file=this.doc.assetsPath().resolve("index.html").toFile();
+			file=this.provider.assetsPath().resolve("index.html").toFile();
 		}
 		return file;
 	}

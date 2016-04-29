@@ -47,6 +47,10 @@ import org.ldp4j.http.CharacterEncodings;
 import org.ldp4j.http.MediaType;
 import org.ldp4j.http.MediaTypes;
 import org.smartdeveloperhub.vocabulary.publisher.handlers.NegotiableContent;
+import org.smartdeveloperhub.vocabulary.publisher.spi.DocumentationDeployment;
+import org.smartdeveloperhub.vocabulary.publisher.spi.DocumentationDeploymentFactory;
+import org.smartdeveloperhub.vocabulary.publisher.spi.DocumentationProvider;
+import org.smartdeveloperhub.vocabulary.publisher.spi.DocumentationProviderFactory;
 import org.smartdeveloperhub.vocabulary.util.AppAssembler;
 import org.smartdeveloperhub.vocabulary.util.Application;
 import org.smartdeveloperhub.vocabulary.util.Catalog;
@@ -62,6 +66,20 @@ import io.undertow.server.handlers.PathHandler;
 import io.undertow.util.Methods;
 
 public class VocabularyPublisher {
+
+	private static final class DefaultDocumentationProviderFactory implements DocumentationProviderFactory {
+		@Override
+		public DocumentationProvider create(final Module module) {
+			return ImmutableDocumentationProvider.create(module);
+		}
+	}
+
+	private static final class DefaultDocumentationDeploymentFactory implements DocumentationDeploymentFactory {
+		@Override
+		public DocumentationDeployment create(final Module module) {
+			return ImmutableDocumentationDeployment.create(module);
+		}
+	}
 
 	private static final MediaType HTML = MediaTypes.of("text","html");
 
@@ -83,6 +101,8 @@ public class VocabularyPublisher {
 				showCatalog(catalog);
 				try {
 					publish(catalog,base.getPath());
+				} catch(final RuntimeException e) {
+					e.printStackTrace(System.err);
 				} finally {
 					System.out.println("Publisher terminated.");
 				}
@@ -187,7 +207,12 @@ public class VocabularyPublisher {
 							allow(Methods.GET)
 					)
 				);
-		configureDocumentationHandlers(catalog,pathHandler);
+		final DocumentationDeployer deployer=
+			DocumentationDeployer.
+				create(
+					new DefaultDocumentationDeploymentFactory(),
+					new DefaultDocumentationProviderFactory());
+		deployer.deploy(catalog,pathHandler);;
 		final Undertow server =
 			Undertow.
 				builder().
@@ -197,43 +222,6 @@ public class VocabularyPublisher {
 		server.start();
 		awaitTerminationRequest();
 		server.stop();
-	}
-
-	private static void configureDocumentationHandlers(final Catalog catalog, final PathHandler pathHandler) {
-		for(final String moduleId:catalog.modules()) {
-			final Module module=catalog.get(moduleId);
-			if(!module.isLocal()) {
-				continue;
-			}
-			final Documentation doc=Documentation.create(catalog.getBase(),catalog.getRoot(),module);
-			System.out.printf("- Documentation (%s):%n",doc.implementationIRI());
-			System.out.printf("  + Root........: %s --> %s (%s)%n",doc.root(),doc.rootPath(),doc.assetsPath());
-			System.out.printf("  + Landing page: %s --> %s%n",doc.landingPage(),doc.landingPagePath());
-			if(doc.needsRedirect()) {
-				System.out.printf("  + Redirection.: %s --> %s%n",doc.redirection(),doc.redirectionPath());
-			}
-			pathHandler.
-				addExactPath(
-					doc.landingPagePath(),
-					methodController(
-						contentNegotiation(
-							new ModuleLandingPage(doc),
-							htmlContent())
-						).
-						allow(Methods.GET)
-				).
-				addPrefixPath(
-					doc.rootPath(),
-					new ExternalAssetProvider(doc.assetsPath())
-				);
-			if(doc.needsRedirect()) {
-				pathHandler.
-					addExactPath(
-						doc.redirectionPath(),
-						methodController(new TemporaryRedirect(doc.landingPage())).allow(Methods.GET)
-					);
-			}
-		}
 	}
 
 	private static NegotiableContent negotiableModuleContent() {
