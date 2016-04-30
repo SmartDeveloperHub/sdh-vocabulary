@@ -95,7 +95,8 @@ public final class Catalog {
 	private final List<Module> modules;
 	private final Map<String,Integer> moduleIndex;
 	private final Map<String,Integer> canonicalModuleIndex;
-	private final Map<String,Integer> externalModuleIndex;
+	private final Map<String,Integer> externalModuleNamespaceIndex;
+	private final Map<String,Integer> externalModuleImplementationIndex;
 	private final Map<String,Integer> ontologyModuleIndex;
 
 	Catalog(final Context context) {
@@ -103,7 +104,8 @@ public final class Catalog {
 		this.modules=Lists.newArrayList();
 		this.moduleIndex=Maps.newLinkedHashMap();
 		this.canonicalModuleIndex=Maps.newLinkedHashMap();
-		this.externalModuleIndex=Maps.newLinkedHashMap();
+		this.externalModuleNamespaceIndex=Maps.newLinkedHashMap();
+		this.externalModuleImplementationIndex=Maps.newLinkedHashMap();
 		this.ontologyModuleIndex=Maps.newLinkedHashMap();
 	}
 
@@ -112,7 +114,8 @@ public final class Catalog {
 		this.modules.add(module);
 		this.moduleIndex.put(module.relativePath(), size);
 		if(module.isExternal()) {
-			this.externalModuleIndex.put(module.relativePath(), size);
+			this.externalModuleNamespaceIndex.put(module.relativePath(), size);
+			this.externalModuleImplementationIndex.put(this.context.getImplementationPath(module.location()), size);
 		} else {
 			final boolean canonical = module.isCanonical();
 			for(final String covariant:Modules.getOntologyNamespace(module).covariants()) {
@@ -285,8 +288,10 @@ public final class Catalog {
 				result=this.modules.get(this.canonicalModuleIndex.get(relativePath));
 			} else if(this.ontologyModuleIndex.containsKey(relativePath)) {
 				result=this.modules.get(this.ontologyModuleIndex.get(relativePath));
-			} else if(this.externalModuleIndex.containsKey(relativePath)) {
-				result=this.modules.get(this.externalModuleIndex.get(relativePath));
+			} else if(this.externalModuleNamespaceIndex.containsKey(relativePath)) {
+				result=this.modules.get(this.externalModuleNamespaceIndex.get(relativePath));
+			} else if(this.externalModuleImplementationIndex.containsKey(relativePath)) {
+				result=this.modules.get(this.externalModuleImplementationIndex.get(relativePath));
 			}
 		}
 		return result;
@@ -309,7 +314,7 @@ public final class Catalog {
 	}
 
 	public List<String> externalModules() {
-		return ImmutableList.copyOf(this.externalModuleIndex.keySet());
+		return ImmutableList.copyOf(this.externalModuleNamespaceIndex.keySet());
 	}
 
 	public List<String> canonicalModules() {
@@ -319,7 +324,7 @@ public final class Catalog {
 	public List<String> versionModules() {
 		final List<String> result = Lists.newArrayList(this.moduleIndex.keySet());
 		result.removeAll(this.canonicalModuleIndex.keySet());
-		result.removeAll(this.externalModuleIndex.keySet());
+		result.removeAll(this.externalModuleNamespaceIndex.keySet());
 		return ImmutableList.copyOf(result);
 	}
 
@@ -333,7 +338,7 @@ public final class Catalog {
 					add("modules",this.modules).
 					add("moduleIndex",this.moduleIndex).
 					add("canonicalModuleIndex",this.canonicalModuleIndex).
-					add("externalModuleIndex",this.externalModuleIndex).
+					add("externalModuleIndex",this.externalModuleNamespaceIndex).
 					add("ontologyModuleIndex",this.ontologyModuleIndex).
 					toString();
 	}

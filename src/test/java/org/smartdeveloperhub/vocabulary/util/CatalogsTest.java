@@ -32,6 +32,7 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
+import static org.junit.Assume.assumeThat;
 
 import java.io.IOException;
 import java.net.URI;
@@ -88,6 +89,18 @@ public class CatalogsTest {
 	}
 
 	@Test
+	public void absoluteExternalModuleImplementationsCanBeResolved() throws Exception {
+		for(final String relativePath:this.catalog.externalModules()) {
+			final Module module=this.catalog.resolve(absoluteResource(relativePath));
+			assumeThat(module,notNullValue());
+			assumeThat(module.relativePath(),equalTo(relativePath));
+			final URI externalLocation = module.context().getImplementationEndpoint(module.location());
+			final Module same=this.catalog.resolve(externalLocation);
+			assertThat(same,sameInstance(module));
+		}
+	}
+
+	@Test
 	public void relativeCanonicalModulesCanBeResolved() throws Exception {
 		for(final String relativePath:this.catalog.canonicalModules()) {
 			final Module module=this.catalog.resolve(relativeResource(relativePath));
@@ -123,7 +136,7 @@ public class CatalogsTest {
 		assertThat(catalog,notNullValue());
 		for(final String moduleId:catalog.modules()) {
 			final Module module=catalog.get(moduleId);
-			System.out.println(module.toString());
+			assertThat(module,notNullValue());
 		}
 
 		assertThat(catalog.resolve(absoluteResource("")),notNullValue());
