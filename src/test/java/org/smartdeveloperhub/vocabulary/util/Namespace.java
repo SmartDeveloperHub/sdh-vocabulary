@@ -63,7 +63,11 @@ final class Namespace {
 	Set<String> covariants() {
 		final Set<String> result=Sets.newHashSet(this.uri);
 		if(Type.HASH.equals(this.type)) {
-			result.add(this.uri.substring(0,this.uri.length()-1));
+			if(this.uri.endsWith("#")) {
+				result.add(this.uri.substring(0,this.uri.length()-1));
+			} else {
+				result.add(this.uri+"#");
+			}
 		}
 		return result;
 	}
