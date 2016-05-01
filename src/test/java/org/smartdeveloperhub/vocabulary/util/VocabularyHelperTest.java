@@ -43,11 +43,13 @@ public class VocabularyHelperTest {
 		final Catalog catalog=result.get();
 		final Module ci = catalog.resolve(URI.create("v1/ci"));
 		final VocabularyHelper helper = VocabularyHelper.create(ci);
+		System.out.println("Namespace prefixes: "+helper.namespacePrefixes());
+		System.out.println("Prefixes: "+helper.prefixes());
 		dumpValues("classes", helper.classes());
 		dumpValues("object properties", helper.objectProperties());
 		dumpValues("datatype properties", helper.datatypeProperties());
 		dumpValues("individuals", helper.individuals());
-		dumpValues("URIrefs", helper.uriRefs());
+		dumpValues("URIrefs (http://www.smartdeveloperhub.org/vocabulary/ci#)", helper.uriRefs("http://www.smartdeveloperhub.org/vocabulary/ci#"));
 	}
 
 	private void dumpValues(final String type, final List<String> values) {
