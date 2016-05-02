@@ -27,19 +27,24 @@
 package org.smartdeveloperhub.vocabulary.publisher.handlers;
 
 import java.net.URI;
-import java.nio.file.Paths;
 
 import io.undertow.server.HttpServerExchange;
 
-public final class HandlerUtil {
+final class HandlerUtil {
 
 	private HandlerUtil() {
 	}
 
-	public static String getExtension(final String module) {
-		final String fileName = Paths.get(module).getFileName().toString();
-		final int dotIndex = fileName.lastIndexOf('.');
-		return dotIndex == -1 ? "" : fileName.substring(dotIndex + 1);
+	static String getExtension(final String module) {
+		final int lastSlashIndex=module.lastIndexOf('/');
+		if(lastSlashIndex==-1) {
+			return "";
+		}
+		final int dotIndex=module.lastIndexOf('.',lastSlashIndex);
+		if(dotIndex==-1) {
+			return "";
+		}
+		return module.substring(dotIndex + 1);
 	}
 
 	static URI canonicalURI(final HttpServerExchange exchange) {
@@ -48,7 +53,7 @@ public final class HandlerUtil {
 		return getBase(exchange).resolve(normalizedRelativePath);
 	}
 
-	public static URI canonicalURI(final HttpServerExchange exchange, final String path) {
+	static URI canonicalURI(final HttpServerExchange exchange, final String path) {
 		return getBase(exchange).resolve(path);
 	}
 

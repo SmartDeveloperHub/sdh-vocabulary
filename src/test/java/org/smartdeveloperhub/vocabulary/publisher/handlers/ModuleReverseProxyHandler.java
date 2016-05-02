@@ -27,7 +27,10 @@
 package org.smartdeveloperhub.vocabulary.publisher.handlers;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 
+import org.ldp4j.xml.XMLUtils;
+import org.smartdeveloperhub.vocabulary.publisher.handlers.ProxyResolution.Builder;
 import org.smartdeveloperhub.vocabulary.util.Catalog;
 import org.smartdeveloperhub.vocabulary.util.Module;
 
@@ -47,19 +50,84 @@ final class ModuleReverseProxyHandler implements HttpHandler {
 
 	@Override
 	public void handleRequest(final HttpServerExchange exchange) throws Exception {
-		String moduleName=exchange.getRelativePath().substring(1);
-		final String ext = HandlerUtil.getExtension(moduleName);
-		moduleName=moduleName.substring(0,moduleName.length()-ext.length()-(ext.isEmpty()?0:1));
-		final Module module=this.catalog.resolve(URI.create(moduleName));
-		if(module==null) {
+		final ProxyResolution resolution = resolveRequest(exchange);
+		if(resolution==null) {
 			System.out.printf("Accessing %s --> NOT FOUND%n",exchange.getRelativePath());
 			exchange.setStatusCode(StatusCodes.NOT_FOUND);
+			exchange.endExchange();
 		} else {
-			System.out.printf("Accessing %s --> %s [%s]%n",exchange.getRelativePath(),resolve(moduleName),catalogEntry(module));
-			Attachments.setModule(exchange, module);
-			Attachments.setBase(exchange, this.catalog.getBase());
+			System.out.printf("Accessing %s --> %s [%s]%n",exchange.getRelativePath(),describe(resolution),catalogEntry(resolution.target()));
+			Attachments.setResolution(exchange,resolution);
+			Attachments.setBase(exchange,this.catalog.getBase());
 			this.next.handleRequest(exchange);
 		}
+	}
+
+	private String describe(final ProxyResolution resolution) {
+		if(resolution.isFragment()) {
+			return "Term '"+resolution.fragment()+"' of "+resolution.resolvedURI();
+		} else {
+			return resolution.resolvedURI().toString();
+		}
+	}
+
+	private ProxyResolution resolveRequest(final HttpServerExchange exchange) {
+		final Builder builder=
+			ProxyResolution.
+				builder(targetRequestURI(exchange));
+		final URI canonicalURI = canonicalURI(exchange);
+		Module module=this.catalog.resolve(canonicalURI);
+		if(module!=null) {
+			return
+				builder.
+					resolved(canonicalURI).
+					module(module).
+					build();
+		}
+		final URI canonicalURIParent=canonicalURI.resolve(".");
+		if(!canonicalURIParent.equals(canonicalURI)) {
+			final String term=getTerm(exchange);
+			if(XMLUtils.isNCName(term)) {
+				module=this.catalog.resolve(canonicalURIParent);
+				if(module!=null) {
+					// TODO: Enforce that the term EXISTS in the module
+					return
+						builder.
+							resolved(canonicalURIParent).
+							module(module).
+							fragment(term).
+							build();
+				}
+			}
+		}
+		return null;
+	}
+
+	private URI targetRequestURI(final HttpServerExchange exchange) {
+		return rebase(URI.create(exchange.getRequestURI()));
+	}
+
+	private URI canonicalURI(final HttpServerExchange exchange) {
+		return resolve(moduleName(exchange));
+	}
+
+	private String moduleName(final HttpServerExchange exchange) {
+		final String normalizedRelativePath=exchange.getRelativePath().substring(1);
+		final String extension=HandlerUtil.getExtension(normalizedRelativePath);
+		return
+			normalizedRelativePath.
+				substring(
+					0,
+					normalizedRelativePath.length()-
+					(extension.isEmpty()?
+						0:
+						extension.length()+1));
+	}
+
+	private String getTerm(final HttpServerExchange exchange) {
+		final URI targetURI = URI.create(exchange.getRequestURI());
+		final URI parentURI = targetURI.resolve(".");
+		return parentURI.relativize(targetURI).toString();
 	}
 
 	private String catalogEntry(final Module module) {
@@ -68,6 +136,21 @@ final class ModuleReverseProxyHandler implements HttpHandler {
 
 	private URI resolve(final String path) {
 		return this.catalog.getBase().resolve(path);
+	}
+
+	private URI rebase(final URI uri) {
+		final URI base = this.catalog.getBase();
+		try {
+			return
+				new URI(
+					base.getScheme(),
+					base.getAuthority(),
+					uri.getPath(),
+					uri.getQuery(),
+					uri.getFragment());
+		} catch (final URISyntaxException e) {
+			throw new AssertionError("Rebasing of '"+uri+"' according to '"+base.getScheme()+"://"+base.getAuthority()+"' should not fail",e);
+		}
 	}
 
 }

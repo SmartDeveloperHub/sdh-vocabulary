@@ -30,7 +30,7 @@ import java.nio.ByteBuffer;
 
 import org.ldp4j.http.Variant;
 import org.smartdeveloperhub.vocabulary.publisher.handlers.Attachments;
-import org.smartdeveloperhub.vocabulary.publisher.handlers.HandlerUtil;
+import org.smartdeveloperhub.vocabulary.publisher.handlers.ProxyResolution;
 import org.smartdeveloperhub.vocabulary.util.Module;
 
 import com.google.common.base.Strings;
@@ -54,15 +54,46 @@ final class ModuleRepresentionGenerator implements HttpHandler {
 			exchange.getResponseSender().send("Queries not allowed");
 		} else {
 			final Variant variant=Attachments.getVariant(exchange);
-			final Module module=Attachments.getModule(exchange);
+			final ProxyResolution resolution = Attachments.getResolution(exchange);
+			final String contentLocation=getContentLocation(resolution);
+			if(contentLocation!=null) {
+				exchange.getResponseHeaders().add(Headers.CONTENT_LOCATION,contentLocation);
+			}
+			final Module module=resolution.target();
 			final String representation=
 				module.
 					transform(
-						HandlerUtil.canonicalURI(exchange,module.relativePath()),
+						module.context().base().resolve(module.relativePath()),
 						Formats.fromMediaType(variant.type()));
 			exchange.setStatusCode(StatusCodes.OK);
 			exchange.getResponseSender().send(ByteBuffer.wrap(representation.getBytes(variant.charset().charset())));
 		}
+	}
+
+	private String getContentLocation(final ProxyResolution resolution) {
+		String contentLocation=null;
+		if(isReference(resolution)) {
+			contentLocation=implementationIRI(resolution);
+		}
+		if(resolution.isFragment()) {
+			contentLocation+="#"+resolution.fragment();
+		}
+		return contentLocation;
+	}
+
+	private boolean isReference(final ProxyResolution resolution) {
+		return resolution.isFragment() || !resolution.resolvedURI().toString().equals(implementationIRI(resolution));
+	}
+
+	private String implementationIRI(final ProxyResolution resolution) {
+		return normalize(resolution.target().implementationIRI());
+	}
+
+	private String normalize(final String implementationIRI) {
+		return
+			implementationIRI.endsWith("#")?
+				implementationIRI.substring(0,implementationIRI.length()-1):
+				implementationIRI;
 	}
 
 }

@@ -64,6 +64,15 @@ public final class Context {
 		return this.base.resolve(getRelativePath(file));
 	}
 
+	String getImplementationPath(final Path file) {
+		final Path relativeBasePath = this.root.relativize(file);
+		return relativeBasePath.toString().replace(File.separatorChar, '/');
+	}
+
+	URI getImplementationEndpoint(final Path file) {
+		return this.base.resolve(getImplementationPath(file));
+	}
+
 	@Override
 	public String toString() {
 		return

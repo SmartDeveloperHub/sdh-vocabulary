@@ -26,6 +26,8 @@
  */
 package org.smartdeveloperhub.vocabulary.publisher.handlers;
 
+import java.util.concurrent.TimeUnit;
+
 import org.smartdeveloperhub.vocabulary.util.Catalog;
 
 import io.undertow.server.HttpHandler;
@@ -70,6 +72,14 @@ public final class MoreHandlers {
 
 	public static HttpHandler contentNegotiation(final HttpHandler aHandler, final NegotiableContent aContent) {
 		return ContentNegotiationHandler.create(aHandler, aContent);
+	}
+
+	public static HttpHandler probe(final HttpHandler aHandler) {
+		return new ProbeHandler(aHandler);
+	}
+
+	public static HttpHandler traceProbe(final HttpHandler aHandler, final TimeUnit unit) {
+		return new ProbeTracerHandler(unit,aHandler);
 	}
 
 }

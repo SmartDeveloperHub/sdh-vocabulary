@@ -28,42 +28,77 @@ package org.smartdeveloperhub.vocabulary.publisher.handlers;
 
 import java.net.URI;
 
-import org.ldp4j.http.Variant;
+import org.smartdeveloperhub.vocabulary.util.Module;
 
-import io.undertow.server.HttpServerExchange;
-import io.undertow.util.AttachmentKey;
+public final class ProxyResolution {
 
-public final class Attachments {
+	public static final class Builder {
 
-	private static final AttachmentKey<URI>             BASE       = AttachmentKey.create(URI.class);
-	private static final AttachmentKey<ProxyResolution> RESOLUTION = AttachmentKey.create(ProxyResolution.class);
-	private static final AttachmentKey<Variant>         VARIANT    = AttachmentKey.create(Variant.class);
+		private final URI requestURI;
+		private URI resolvedURI;
+		private Module module;
+		private String fragment;
 
-	private Attachments() {
+		private Builder(final URI requestURI) {
+			this.requestURI = requestURI;
+		}
+
+		public Builder module(final Module module) {
+			this.module = module;
+			return this;
+		}
+
+		public Builder resolved(final URI resolvedURI) {
+			this.resolvedURI = resolvedURI;
+			return this;
+		}
+
+		public Builder fragment(final String fragment) {
+			this.fragment = fragment;
+			return this;
+		}
+
+		public ProxyResolution build() {
+			return new ProxyResolution(this.requestURI,this.resolvedURI,this.module,this.fragment);
+		}
+
 	}
 
-	public static void setVariant(final HttpServerExchange exchange, final Variant variant) {
-		exchange.putAttachment(VARIANT, variant);
+	private final Module module;
+	private final String fragment;
+	private final URI requestURI;
+	private final URI resolvedURI;
+
+	private ProxyResolution(final URI requestURI, final URI resolvedURI, final Module module, final String fragment) {
+		this.requestURI = requestURI;
+		this.resolvedURI = resolvedURI;
+		this.module = module;
+		this.fragment = fragment;
 	}
 
-	public static Variant getVariant(final HttpServerExchange exchange) {
-		return exchange.getAttachment(VARIANT);
+	public Module target() {
+		return this.module;
 	}
 
-	public static void setResolution(final HttpServerExchange exchange, final ProxyResolution resolution) {
-		exchange.putAttachment(RESOLUTION, resolution);
+	public URI requestedURI() {
+		return this.requestURI;
 	}
 
-	public static ProxyResolution getResolution(final HttpServerExchange exchange) {
-		return exchange.getAttachment(RESOLUTION);
+	public URI resolvedURI() {
+		return this.resolvedURI;
 	}
 
-	public static void setBase(final HttpServerExchange exchange, final URI base) {
-		exchange.putAttachment(BASE, base);
+	public String fragment() {
+		return this.fragment;
 	}
 
-	public static URI getBase(final HttpServerExchange exchange) {
-		return exchange.getAttachment(BASE);
+	public boolean isFragment() {
+		return this.fragment!=null;
 	}
+
+	static Builder builder(final URI requestURI) {
+		return new Builder(requestURI);
+	}
+
 
 }
