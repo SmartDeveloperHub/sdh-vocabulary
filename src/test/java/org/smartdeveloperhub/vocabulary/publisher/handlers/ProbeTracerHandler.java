@@ -26,55 +26,29 @@
  */
 package org.smartdeveloperhub.vocabulary.publisher.handlers;
 
-import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
-import com.google.common.collect.Sets;
+import com.google.common.base.Stopwatch;
 
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
-import io.undertow.util.Headers;
-import io.undertow.util.HttpString;
-import io.undertow.util.Methods;
-import io.undertow.util.StatusCodes;
 
-final class AllowedMethodsHandler implements HttpHandler {
+final class ProbeTracerHandler implements HttpHandler {
 
-	private final Set<String> methods;
+	private final TimeUnit unit;
 	private final HttpHandler next;
 
-	private AllowedMethodsHandler(final HttpHandler aHandler) {
-		this.next=aHandler;
-		this.methods=Sets.newLinkedHashSet();
-	}
-
-	AllowedMethodsHandler allow(final HttpString method) {
-		if(method!=null) {
-			this.methods.add(method.toString());
-			if(method.equals(Methods.GET)) {
-				this.methods.add(Methods.HEAD_STRING);
-			}
-		}
-		return this;
+	ProbeTracerHandler(final TimeUnit unit, final HttpHandler next) {
+		this.unit = unit;
+		this.next = next;
 	}
 
 	@Override
 	public void handleRequest(final HttpServerExchange exchange) throws Exception {
-		if(this.methods.contains(exchange.getRequestMethod().toString())) {
-			if(this.next!=null) {
-				this.next.handleRequest(exchange);
-			}
-		} else {
-			exchange.setStatusCode(StatusCodes.METHOD_NOT_ALLOWED);
-			exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
-			// TODO: I18N
-			exchange.getResponseSender().send(String.format("Unsupported method (%s)",exchange.getRequestMethod()));
-			exchange.getResponseHeaders().putAll(Headers.ALLOW,this.methods);
-			exchange.endExchange();
-		}
-	}
-
-	static AllowedMethodsHandler create(final HttpHandler aHandler) {
-		return new AllowedMethodsHandler(aHandler);
+		final Stopwatch watch=MoreAttachments.getStopwatch(exchange);
+		watch.stop();
+		System.out.printf("[%s][%s] Processing took %d %s%n",exchange.getRequestPath(),exchange.getRelativePath(),watch.elapsed(this.unit),this.unit.toString());
+		this.next.handleRequest(exchange);
 	}
 
 }

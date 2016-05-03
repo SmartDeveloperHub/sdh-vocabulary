@@ -24,30 +24,27 @@
  *   Bundle      : sdh-vocabulary-0.3.0-SNAPSHOT.jar
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  */
-package org.smartdeveloperhub.vocabulary.publisher;
+package org.smartdeveloperhub.vocabulary.publisher.handlers;
 
-import java.net.URI;
+import com.google.common.base.Stopwatch;
 
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
-import io.undertow.util.Headers;
-import io.undertow.util.StatusCodes;
 
-final class TemporaryRedirect implements HttpHandler {
+final class ProbeHandler implements HttpHandler {
 
-	private final String location;
+	private final HttpHandler next;
 
-	TemporaryRedirect(final String location) {
-		this.location = location;
-	}
-
-	TemporaryRedirect(final URI location) {
-		this(location.toString());
+	ProbeHandler(final HttpHandler next) {
+		this.next = next;
 	}
 
 	@Override
 	public void handleRequest(final HttpServerExchange exchange) throws Exception {
-		exchange.setStatusCode(StatusCodes.TEMPORARY_REDIRECT);
-		exchange.getResponseHeaders().add(Headers.LOCATION,this.location);
+		final Stopwatch watch = Stopwatch.createUnstarted();
+		MoreAttachments.setStopwatch(exchange, watch);
+		watch.start();
+		this.next.handleRequest(exchange);
 	}
+
 }

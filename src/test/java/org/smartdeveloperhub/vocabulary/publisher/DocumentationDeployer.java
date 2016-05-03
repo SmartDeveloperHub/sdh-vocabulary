@@ -33,6 +33,7 @@ import java.nio.charset.StandardCharsets;
 
 import org.ldp4j.http.CharacterEncodings;
 import org.ldp4j.http.MediaTypes;
+import org.smartdeveloperhub.vocabulary.publisher.handlers.MoreHandlers;
 import org.smartdeveloperhub.vocabulary.publisher.handlers.NegotiableContent;
 import org.smartdeveloperhub.vocabulary.publisher.spi.DocumentationDeployment;
 import org.smartdeveloperhub.vocabulary.publisher.spi.DocumentationDeploymentFactory;
@@ -93,7 +94,7 @@ final class DocumentationDeployer {
 				pathHandler.
 					addExactPath(
 						deployment.canonicalLandingPage().getPath(),
-						methodController(new TemporaryRedirect(deployment.implementationLandingPage())).allow(Methods.GET)
+						methodController(MoreHandlers.temporaryRedirect(deployment.implementationLandingPage())).allow(Methods.GET)
 					);
 			}
 		}

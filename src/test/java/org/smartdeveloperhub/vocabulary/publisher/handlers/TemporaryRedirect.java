@@ -26,55 +26,29 @@
  */
 package org.smartdeveloperhub.vocabulary.publisher.handlers;
 
-import java.util.Set;
-
-import com.google.common.collect.Sets;
+import java.net.URI;
 
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
-import io.undertow.util.HttpString;
-import io.undertow.util.Methods;
 import io.undertow.util.StatusCodes;
 
-final class AllowedMethodsHandler implements HttpHandler {
+final class TemporaryRedirect implements HttpHandler {
 
-	private final Set<String> methods;
-	private final HttpHandler next;
+	private final String location;
 
-	private AllowedMethodsHandler(final HttpHandler aHandler) {
-		this.next=aHandler;
-		this.methods=Sets.newLinkedHashSet();
+	TemporaryRedirect(final String location) {
+		this.location = location;
 	}
 
-	AllowedMethodsHandler allow(final HttpString method) {
-		if(method!=null) {
-			this.methods.add(method.toString());
-			if(method.equals(Methods.GET)) {
-				this.methods.add(Methods.HEAD_STRING);
-			}
-		}
-		return this;
+	TemporaryRedirect(final URI location) {
+		this(location.toString());
 	}
 
 	@Override
 	public void handleRequest(final HttpServerExchange exchange) throws Exception {
-		if(this.methods.contains(exchange.getRequestMethod().toString())) {
-			if(this.next!=null) {
-				this.next.handleRequest(exchange);
-			}
-		} else {
-			exchange.setStatusCode(StatusCodes.METHOD_NOT_ALLOWED);
-			exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
-			// TODO: I18N
-			exchange.getResponseSender().send(String.format("Unsupported method (%s)",exchange.getRequestMethod()));
-			exchange.getResponseHeaders().putAll(Headers.ALLOW,this.methods);
-			exchange.endExchange();
-		}
+		exchange.setStatusCode(StatusCodes.TEMPORARY_REDIRECT);
+		exchange.getResponseHeaders().add(Headers.LOCATION,this.location);
+		exchange.endExchange();
 	}
-
-	static AllowedMethodsHandler create(final HttpHandler aHandler) {
-		return new AllowedMethodsHandler(aHandler);
-	}
-
 }

@@ -26,55 +26,24 @@
  */
 package org.smartdeveloperhub.vocabulary.publisher.handlers;
 
-import java.util.Set;
+import com.google.common.base.Stopwatch;
 
-import com.google.common.collect.Sets;
-
-import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
-import io.undertow.util.Headers;
-import io.undertow.util.HttpString;
-import io.undertow.util.Methods;
-import io.undertow.util.StatusCodes;
+import io.undertow.util.AttachmentKey;
 
-final class AllowedMethodsHandler implements HttpHandler {
+final class MoreAttachments {
 
-	private final Set<String> methods;
-	private final HttpHandler next;
+	private static final AttachmentKey<Stopwatch>       STOP_WATCH = AttachmentKey.create(Stopwatch.class);
 
-	private AllowedMethodsHandler(final HttpHandler aHandler) {
-		this.next=aHandler;
-		this.methods=Sets.newLinkedHashSet();
+	private MoreAttachments() {
 	}
 
-	AllowedMethodsHandler allow(final HttpString method) {
-		if(method!=null) {
-			this.methods.add(method.toString());
-			if(method.equals(Methods.GET)) {
-				this.methods.add(Methods.HEAD_STRING);
-			}
-		}
-		return this;
+	static void setStopwatch(final HttpServerExchange exchange, final Stopwatch stopwatch) {
+		exchange.putAttachment(STOP_WATCH, stopwatch);
 	}
 
-	@Override
-	public void handleRequest(final HttpServerExchange exchange) throws Exception {
-		if(this.methods.contains(exchange.getRequestMethod().toString())) {
-			if(this.next!=null) {
-				this.next.handleRequest(exchange);
-			}
-		} else {
-			exchange.setStatusCode(StatusCodes.METHOD_NOT_ALLOWED);
-			exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
-			// TODO: I18N
-			exchange.getResponseSender().send(String.format("Unsupported method (%s)",exchange.getRequestMethod()));
-			exchange.getResponseHeaders().putAll(Headers.ALLOW,this.methods);
-			exchange.endExchange();
-		}
-	}
-
-	static AllowedMethodsHandler create(final HttpHandler aHandler) {
-		return new AllowedMethodsHandler(aHandler);
+	static Stopwatch getStopwatch(final HttpServerExchange exchange) {
+		return exchange.getAttachment(STOP_WATCH);
 	}
 
 }

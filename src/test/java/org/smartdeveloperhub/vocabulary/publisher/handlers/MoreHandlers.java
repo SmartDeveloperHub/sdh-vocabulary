@@ -26,6 +26,7 @@
  */
 package org.smartdeveloperhub.vocabulary.publisher.handlers;
 
+import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
 import org.smartdeveloperhub.vocabulary.util.Catalog;
@@ -80,6 +81,10 @@ public final class MoreHandlers {
 
 	public static HttpHandler traceProbe(final HttpHandler aHandler, final TimeUnit unit) {
 		return new ProbeTracerHandler(unit,aHandler);
+	}
+
+	public static HttpHandler temporaryRedirect(final URI location) {
+		return new TemporaryRedirect(location);
 	}
 
 }
