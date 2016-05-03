@@ -34,12 +34,29 @@ final class DocumentationStrategy {
 	}
 
 	static String rootPath(final URI base, final String iri) {
-		final URI relativePath = base.relativize(URI.create(iri));
+		final String normalizedIRI = normalize(iri);
+		final URI relativePath = base.relativize(URI.create(normalizedIRI));
 		String result = "html/"+relativePath;
 		if(!result.endsWith("/")) {
 			result+="/";
 		}
 		return result;
+	}
+
+	static String normalize(final String uri) {
+		String normalizedIRI=uri;
+		if(normalizedIRI.endsWith("#")) {
+			normalizedIRI=normalizedIRI.substring(0,normalizedIRI.length()-1);
+		}
+		return normalizedIRI;
+	}
+
+	static URI normalize(final URI uri) {
+		String normalizedIRI=uri.toString();
+		if(normalizedIRI.endsWith("#")) {
+			normalizedIRI=normalizedIRI.substring(0,normalizedIRI.length()-1);
+		}
+		return URI.create(normalizedIRI);
 	}
 
 }

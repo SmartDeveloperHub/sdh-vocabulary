@@ -28,7 +28,7 @@ package org.smartdeveloperhub.vocabulary.publisher;
 
 import static io.undertow.Handlers.resource;
 
-import java.nio.file.Path;
+import org.smartdeveloperhub.vocabulary.publisher.spi.DocumentationProvider;
 
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
@@ -37,19 +37,20 @@ import io.undertow.server.handlers.resource.PathResourceManager;
 final class ExternalAssetProvider implements HttpHandler {
 
 	private final HttpHandler next;
-	private final Path assetPath;
+	private final DocumentationProvider provider;
 
-	ExternalAssetProvider(final Path assetPath) {
-		this.assetPath = assetPath;
+	ExternalAssetProvider(final DocumentationProvider provider) {
+		this.provider = provider;
 		this.next =
 			resource(
-				new PathResourceManager(assetPath,100000,false,false));
+				new PathResourceManager(provider.assetsPath(),100000,false,false));
 	}
 
 	@Override
 	public void handleRequest(final HttpServerExchange exchange) throws Exception {
-		System.out.printf("Retrieving asset %s from %n",exchange.getRelativePath(),this.assetPath);
+		System.out.printf("Retrieving asset %s from %s%n",exchange.getRelativePath(),this.provider.assetsPath());
 		this.next.handleRequest(exchange);
+		System.out.printf("Checked: %d%n", exchange.getStatusCode());
 	}
 
 }

@@ -29,6 +29,7 @@ package org.smartdeveloperhub.vocabulary.publisher;
 import static org.smartdeveloperhub.vocabulary.publisher.handlers.MoreHandlers.contentNegotiation;
 import static org.smartdeveloperhub.vocabulary.publisher.handlers.MoreHandlers.methodController;
 
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 
 import org.ldp4j.http.CharacterEncodings;
@@ -42,6 +43,8 @@ import org.smartdeveloperhub.vocabulary.publisher.spi.DocumentationProviderFacto
 import org.smartdeveloperhub.vocabulary.util.Catalog;
 import org.smartdeveloperhub.vocabulary.util.Module;
 
+import io.undertow.server.HttpHandler;
+import io.undertow.server.HttpServerExchange;
 import io.undertow.server.handlers.PathHandler;
 import io.undertow.util.Methods;
 
@@ -65,30 +68,24 @@ final class DocumentationDeployer {
 			}
 			final DocumentationDeployment deployment=this.deploymentFactory.create(module);
 			final DocumentationProvider provider=this.providerFactory.create(module);
-			System.out.printf("- Documentation (%s):%n",module.implementationIRI());
-			System.out.printf("  + Root........: %s --> %s (%s)%n",deployment.implementationRoot(),deployment.implementationRoot().getPath(),provider.assetsPath());
-			System.out.printf("  + Landing page: %s --> %s%n",deployment.implementationLandingPage(),deployment.implementationLandingPage().getPath());
-			if(module.isVersion()) {
-				System.out.printf("  + Redirection.: %s --> %s%n",deployment.canonicalLandingPage(),deployment.canonicalLandingPage().getPath());
-			}
+
+			logModuleDeployment(module,deployment,provider);
+
 			pathHandler.
 				addExactPath(
 					deployment.implementationLandingPage().getPath(),
 					methodController(
 						contentNegotiation(
-							new ModuleLandingPage(deployment,provider),
-							NegotiableContent.
-							newInstance().
-								support(MediaTypes.of("text","html")).
-								support(CharacterEncodings.of(StandardCharsets.UTF_8)).
-								support(CharacterEncodings.of(StandardCharsets.ISO_8859_1)).
-								support(CharacterEncodings.of(StandardCharsets.US_ASCII)))
+							new ModuleLandingPage(deployment,provider,false),
+							negotiableContent())
 						).
 						allow(Methods.GET)
 				).
 				addPrefixPath(
 					deployment.implementationRoot().getPath(),
-					new ExternalAssetProvider(provider.assetsPath())
+					methodController(
+						documentationAssetHandler(deployment, provider)
+						).allow(Methods.GET)
 				);
 			if(module.isVersion()) {
 				pathHandler.
@@ -96,9 +93,64 @@ final class DocumentationDeployer {
 						deployment.canonicalLandingPage().getPath(),
 						methodController(MoreHandlers.temporaryRedirect(deployment.implementationLandingPage())).allow(Methods.GET)
 					);
+				final URI canonicalRoot = deployment.canonicalLandingPage().resolve(".");
+				if(!canonicalRoot.equals(deployment.canonicalLandingPage())) {
+					pathHandler.
+						addExactPath(
+							canonicalRoot.getPath(),
+							methodController(MoreHandlers.temporaryRedirect(deployment.implementationLandingPage())).allow(Methods.GET)
+						);
+				}
 			}
 		}
+	}
 
+	private void logModuleDeployment(final Module module, final DocumentationDeployment deployment, final DocumentationProvider provider) {
+		System.out.printf("- Documentation (%s):%n",module.implementationIRI());
+		System.out.printf("  + Root........: %s --> %s (%s)%n",deployment.implementationRoot(),deployment.implementationRoot().getPath(),provider.assetsPath());
+		System.out.printf("  + Landing page: %s --> %s%n",deployment.implementationLandingPage(),deployment.implementationLandingPage().getPath());
+		if(!deployment.implementationRoot().equals(deployment.implementationLandingPage())) {
+			System.out.printf("  + Reference...: %s --> %s%n",deployment.implementationRoot(),deployment.implementationLandingPage().getPath());
+		}
+		if(module.isVersion()) {
+			System.out.printf("  + Redirection.: %s --> %s%n",deployment.canonicalLandingPage(),deployment.implementationLandingPage().getPath());
+			final URI canonicalRoot = deployment.canonicalLandingPage().resolve(".");
+			if(!canonicalRoot.equals(deployment.canonicalLandingPage())) {
+				System.out.printf("  + Redirection.: %s --> %s%n",canonicalRoot,deployment.implementationLandingPage().getPath());
+			}
+		}
+	}
+
+	private HttpHandler documentationAssetHandler(final DocumentationDeployment deployment, final DocumentationProvider provider) {
+		final HttpHandler assetHandler=new ExternalAssetProvider(provider);
+		if(!deployment.implementationRoot().equals(deployment.implementationLandingPage())) {
+			return
+				new HttpHandler() {
+					private final HttpHandler contentHandler=
+						contentNegotiation(
+							new ModuleLandingPage(deployment,provider,true),
+							negotiableContent());
+					@Override
+					public void handleRequest(final HttpServerExchange exchange) throws Exception {
+						if(exchange.getRelativePath().equals("/")) {
+							this.contentHandler.handleRequest(exchange);
+						} else {
+							assetHandler.handleRequest(exchange);
+						}
+					}
+				};
+		} else {
+			return assetHandler;
+		}
+	}
+
+	private NegotiableContent negotiableContent() {
+		return NegotiableContent.
+			newInstance().
+				support(MediaTypes.of("text","html")).
+				support(CharacterEncodings.of(StandardCharsets.UTF_8)).
+				support(CharacterEncodings.of(StandardCharsets.ISO_8859_1)).
+				support(CharacterEncodings.of(StandardCharsets.US_ASCII));
 	}
 
 	static DocumentationDeployer create(final DocumentationDeploymentFactory deploymentFactory,final DocumentationProviderFactory providerFactory) {

@@ -49,10 +49,12 @@ final class ModuleLandingPage implements HttpHandler {
 
 	private final DocumentationDeployment doc;
 	private final DocumentationProvider provider;
+	private final boolean reference;
 
-	ModuleLandingPage(final DocumentationDeployment doc, final DocumentationProvider provider) {
+	ModuleLandingPage(final DocumentationDeployment doc, final DocumentationProvider provider, final boolean reference) {
 		this.doc = doc;
 		this.provider = provider;
+		this.reference = reference;
 	}
 
 	@Override
@@ -71,6 +73,9 @@ final class ModuleLandingPage implements HttpHandler {
 				representation=Joiner.on("\n").join(readLines);
 			} else {
 				representation=defaultLandingPage(variant);
+			}
+			if(this.reference) {
+				exchange.getResponseHeaders().add(Headers.CONTENT_LOCATION,this.doc.implementationLandingPage().toString());
 			}
 			exchange.setStatusCode(StatusCodes.OK);
 			exchange.getResponseSender().send(ByteBuffer.wrap(representation.getBytes(variant.charset().charset())));
