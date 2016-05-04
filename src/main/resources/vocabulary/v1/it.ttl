@@ -27,7 +27,7 @@
 
 <http://www.smartdeveloperhub.org/vocabulary/it> rdf:type owl:Ontology ;
                                                  
-                                                 dc:publisher "http://www.centeropenmiddleware.com/"^^xsd:anyURI ;
+                                                 dcterms:dateCopyrighted "2015-2016"^^rdfs:Literal ;
                                                  
                                                  dc:title "Issue Tracker ontology"@en ;
                                                  
@@ -36,7 +36,9 @@
                                                  rdfs:comment """This ontology models a part of the concepts involved in a Issue Tracker (IT) system.
 This ontology is part of the Smart Developer Hub ontology network."""@en ;
                                                  
-                                                 dcterms:license "http://www.apache.org/licenses/LICENSE-2.0" ;
+                                                 dcterms:license <http://www.apache.org/licenses/LICENSE-2.0> ;
+                                                 
+                                                 dc:publisher <http://www.smartdeveloperhub.org/> ;
                                                  
                                                  owl:versionIRI <http://www.smartdeveloperhub.org/vocabulary/v1/it> .
 
@@ -46,6 +48,14 @@ This ontology is part of the Smart Developer Hub ontology network."""@en ;
 #    Annotation properties
 #
 #################################################################
+
+
+dcterms:rightsHolder rdf:type owl:AnnotationProperty .
+
+
+
+dcterms:dateCopyrighted rdf:type owl:AnnotationProperty .
+
 
 
 
@@ -77,6 +87,49 @@ This ontology is part of the Smart Developer Hub ontology network."""@en ;
                                                                 rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#Issue> ;
                                                                 
                                                                 rdfs:range <http://www.smartdeveloperhub.org/vocabulary/it#Version> .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#hasChangeLog
+
+<http://www.smartdeveloperhub.org/vocabulary/it#hasChangeLog> rdf:type owl:FunctionalProperty ,
+                                                                       owl:ObjectProperty ;
+                                                              
+                                                              rdfs:label "has change log"@en ;
+                                                              
+                                                              rdfs:comment "relates an issue with its change log"@en ;
+                                                              
+                                                              rdfs:range <http://www.smartdeveloperhub.org/vocabulary/it#ChangeLog> ;
+                                                              
+                                                              rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#Issue> .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#hasChangeLogEntry
+
+<http://www.smartdeveloperhub.org/vocabulary/it#hasChangeLogEntry> rdf:type owl:ObjectProperty ;
+                                                                   
+                                                                   rdfs:label "has change log entry"@en ;
+                                                                   
+                                                                   rdfs:comment "change log entries that are registered within a change log"@en ;
+                                                                   
+                                                                   rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#ChangeLog> ;
+                                                                   
+                                                                   rdfs:range <http://www.smartdeveloperhub.org/vocabulary/it#ChangeLogEntry> .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#hasChangeLogItem
+
+<http://www.smartdeveloperhub.org/vocabulary/it#hasChangeLogItem> rdf:type owl:ObjectProperty ;
+                                                                  
+                                                                  rdfs:label "has change log item"@en ;
+                                                                  
+                                                                  rdfs:comment "Change log items that are registered within and entry. That is, one change entry may have more than one change item."@en ;
+                                                                  
+                                                                  rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#ChangeLogEntry> ;
+                                                                  
+                                                                  rdfs:range <http://www.smartdeveloperhub.org/vocabulary/it#ChangeLogItem> .
 
 
 
@@ -136,6 +189,26 @@ This ontology is part of the Smart Developer Hub ontology network."""@en ;
                                                               rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#Issue> ;
                                                               
                                                               rdfs:range <http://www.smartdeveloperhub.org/vocabulary/it#Person> .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#isComposedByChangeLogItem
+
+<http://www.smartdeveloperhub.org/vocabulary/it#isComposedByChangeLogItem> rdf:type owl:ObjectProperty ;
+                                                                           
+                                                                           rdfs:label "is composed by change log item"@en ;
+                                                                           
+                                                                           rdfs:comment """Change log items that are registered in a change log. 
+
+This property allows asking for the change items that composed a change log skiping the path hasChangeLogEntry->hasChangeLogEntry between the class ChangeLog and ChangeLogItem."""@en ;
+                                                                           
+                                                                           rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#ChangeLog> ;
+                                                                           
+                                                                           rdfs:range <http://www.smartdeveloperhub.org/vocabulary/it#ChangeLogItem> ;
+                                                                           
+                                                                           owl:propertyChainAxiom ( <http://www.smartdeveloperhub.org/vocabulary/it#hasChangeLogEntry>
+                                                                                                    <http://www.smartdeveloperhub.org/vocabulary/it#hasChangeLogItem>
+                                                                                                  ) .
 
 
 
@@ -212,6 +285,87 @@ This ontology is part of the Smart Developer Hub ontology network."""@en ;
 
 
 
+###  http://www.smartdeveloperhub.org/vocabulary/it#newValue
+
+<http://www.smartdeveloperhub.org/vocabulary/it#newValue> rdf:type owl:ObjectProperty ;
+                                                          
+                                                          rdfs:label "new value"@en ;
+                                                          
+                                                          rdfs:comment "new value of the property change registered by the change log item"@en ;
+                                                          
+                                                          rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#ChangeLogItem> ;
+                                                          
+                                                          rdfs:range rdfs:Resource .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#onProperty
+
+<http://www.smartdeveloperhub.org/vocabulary/it#onProperty> rdf:type owl:ObjectProperty ;
+                                                            
+                                                            rdfs:label "on property"@en ;
+                                                            
+                                                            rdfs:comment "property which value has changed that is registered by the change log item"@en ;
+                                                            
+                                                            rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#ChangeLogItem> ;
+                                                            
+                                                            rdfs:range rdf:Property .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#previousValue
+
+<http://www.smartdeveloperhub.org/vocabulary/it#previousValue> rdf:type owl:ObjectProperty ;
+                                                               
+                                                               rdfs:label "previous value"@en ;
+                                                               
+                                                               rdfs:comment "previous value of the property change registered by the change log item"@en ;
+                                                               
+                                                               rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#ChangeLogItem> ;
+                                                               
+                                                               rdfs:range rdfs:Resource .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#triggeredByPerson
+
+<http://www.smartdeveloperhub.org/vocabulary/it#triggeredByPerson> rdf:type owl:FunctionalProperty ,
+                                                                            owl:ObjectProperty ;
+                                                                   
+                                                                   rdfs:label "triggered by person"@en ;
+                                                                   
+                                                                   rdfs:comment "person who triggers the change long entry"@en ;
+                                                                   
+                                                                   rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#ChangeLogEntry> ;
+                                                                   
+                                                                   rdfs:range <http://www.smartdeveloperhub.org/vocabulary/it#Person> .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/platform#hasResourceType
+
+platform:hasResourceType rdf:type owl:ObjectProperty .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/platform#implements
+
+platform:implements rdf:type owl:ObjectProperty .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/platform#providesDomain
+
+platform:providesDomain rdf:type owl:ObjectProperty .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/platform#vocabulary
+
+platform:vocabulary rdf:type owl:ObjectProperty .
+
+
+
 
 
 #################################################################
@@ -219,6 +373,20 @@ This ontology is part of the Smart Developer Hub ontology network."""@en ;
 #    Data properties
 #
 #################################################################
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#entryTimeStamp
+
+<http://www.smartdeveloperhub.org/vocabulary/it#entryTimeStamp> rdf:type owl:DatatypeProperty ;
+                                                                
+                                                                rdfs:label "entry time stamp"@en ;
+                                                                
+                                                                rdfs:comment "time stamp of a change log entry"@en ;
+                                                                
+                                                                rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#ChangeLogEntry> ;
+                                                                
+                                                                rdfs:range xsd:dateTime .
+
 
 
 ###  http://www.smartdeveloperhub.org/vocabulary/it#issueCustomTag
@@ -249,6 +417,24 @@ This ontology is part of the Smart Developer Hub ontology network."""@en ;
 
 
 
+###  http://www.smartdeveloperhub.org/vocabulary/platform#description
+
+platform:description rdf:type owl:DatatypeProperty .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/platform#identifier
+
+platform:identifier rdf:type owl:DatatypeProperty .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/platform#title
+
+platform:title rdf:type owl:DatatypeProperty .
+
+
+
 
 
 #################################################################
@@ -269,11 +455,41 @@ This ontology is part of the Smart Developer Hub ontology network."""@en ;
                                                      
                                                      rdfs:comment "A software bug is an error, flaw, failure or fault in a computer program or system that causes it to produce an incorrect or unexpected result, or to behave in unintended ways."@en .
 [ rdf:type owl:Axiom ;
-  rdfs:seeAlso "https://en.wikipedia.org/wiki/Software_bug" ;
   owl:annotatedTarget "A software bug is an error, flaw, failure or fault in a computer program or system that causes it to produce an incorrect or unexpected result, or to behave in unintended ways."@en ;
+  rdfs:seeAlso "https://en.wikipedia.org/wiki/Software_bug" ;
   owl:annotatedSource <http://www.smartdeveloperhub.org/vocabulary/it#Bug> ;
   owl:annotatedProperty rdfs:comment
 ] .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#ChangeLog
+
+<http://www.smartdeveloperhub.org/vocabulary/it#ChangeLog> rdf:type owl:Class ;
+                                                           
+                                                           rdfs:label "Change log"@en ;
+                                                           
+                                                           rdfs:comment "Change log associated to an issue"@en .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#ChangeLogEntry
+
+<http://www.smartdeveloperhub.org/vocabulary/it#ChangeLogEntry> rdf:type owl:Class ;
+                                                                
+                                                                rdfs:label "Change log entry"@en ;
+                                                                
+                                                                rdfs:comment "Change log entry associated to a change log. The change log enry groups one or more change log items."@en .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#ChangeLogItem
+
+<http://www.smartdeveloperhub.org/vocabulary/it#ChangeLogItem> rdf:type owl:Class ;
+                                                               
+                                                               rdfs:label "Change log item"@en ;
+                                                               
+                                                               rdfs:comment "Change log item associated to a change log entry. The change log item represents one single change made over one specific property value."@en .
 
 
 
@@ -336,10 +552,35 @@ This ontology is part of the Smart Developer Hub ontology network."""@en ;
 
 <http://www.smartdeveloperhub.org/vocabulary/it#ITHarvester> rdf:type owl:Class ;
                                                              
-                                                             rdfs:label "Application that extracts information from an external issue tracker system and makes it public as Linked Data defined according to a vocabulary by using LDP."@en ,
-                                                                        "Issue Tracker Harvester"@en ;
+                                                             rdfs:label "Issue Tracker Harvester"@en ;
                                                              
-                                                             rdfs:subClassOf platform:Harvester .
+                                                             rdfs:subClassOf platform:Harvester ,
+                                                                             [ rdf:type owl:Restriction ;
+                                                                               owl:onProperty platform:providesDomain ;
+                                                                               owl:hasValue <http://www.smartdeveloperhub.org/vocabulary/it#ITDomain>
+                                                                             ] ,
+                                                                             [ rdf:type owl:Restriction ;
+                                                                               owl:onProperty platform:vocabulary ;
+                                                                               owl:someValuesFrom <http://www.smartdeveloperhub.org/vocabulary/it#ITVocabulary>
+                                                                             ] ;
+                                                             
+                                                             rdfs:comment "Application that extracts information from an external issue tracker system and makes it public as Linked Data defined according to a vocabulary by using LDP."@en .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#ITVocabulary
+
+<http://www.smartdeveloperhub.org/vocabulary/it#ITVocabulary> rdf:type owl:Class ;
+                                                              
+                                                              rdfs:label "IT vocabulary"@en ;
+                                                              
+                                                              rdfs:subClassOf platform:Vocabulary ,
+                                                                              [ rdf:type owl:Restriction ;
+                                                                                owl:onProperty platform:implements ;
+                                                                                owl:hasValue <http://www.smartdeveloperhub.org/vocabulary/it#ITDomain>
+                                                                              ] ;
+                                                              
+                                                              rdfs:comment "Vocabulary describing the Issue Tracker domain"@en .
 
 
 
@@ -375,8 +616,8 @@ This ontology is part of the Smart Developer Hub ontology network."""@en ;
                                                        
                                                        rdfs:comment "In computing, the term issue is a unit of work to accomplish an improvement in a system.[citation needed] An issue could be a bug, a requested feature, task, missing documentation, and so forth."@en .
 [ rdf:type owl:Axiom ;
-  rdfs:seeAlso "https://en.wikipedia.org/wiki/Software_project_management#Issue" ;
   owl:annotatedTarget "In computing, the term issue is a unit of work to accomplish an improvement in a system.[citation needed] An issue could be a bug, a requested feature, task, missing documentation, and so forth."@en ;
+  rdfs:seeAlso "https://en.wikipedia.org/wiki/Software_project_management#Issue" ;
   owl:annotatedSource <http://www.smartdeveloperhub.org/vocabulary/it#Issue> ;
   owl:annotatedProperty rdfs:comment
 ] .
@@ -431,6 +672,12 @@ This ontology is part of the Smart Developer Hub ontology network."""@en ;
 
 
 
+###  http://www.smartdeveloperhub.org/vocabulary/platform#Domain
+
+platform:Domain rdf:type owl:Class .
+
+
+
 ###  http://www.smartdeveloperhub.org/vocabulary/platform#Harvester
 
 platform:Harvester rdf:type owl:Class ;
@@ -438,6 +685,46 @@ platform:Harvester rdf:type owl:Class ;
                    rdfs:label "Harvester"@en ;
                    
                    rdfs:comment "Application that extracts information from an external system and makes it public as Linked Data defined according to a vocabulary by using LDP."@en .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/platform#Vocabulary
+
+platform:Vocabulary rdf:type owl:Class .
+
+
+
+###  http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+
+rdf:Property rdf:type owl:Class .
+
+
+
+###  http://www.w3.org/2000/01/rdf-schema#Resource
+
+rdfs:Resource rdf:type owl:Class .
+
+
+
+
+
+#################################################################
+#
+#    Individuals
+#
+#################################################################
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#ITDomain
+
+<http://www.smartdeveloperhub.org/vocabulary/it#ITDomain> rdf:type platform:Domain ,
+                                                                   owl:NamedIndividual ;
+                                                          
+                                                          platform:description "Issue Tracker" ;
+                                                          
+                                                          platform:title "Issue Tracker" ;
+                                                          
+                                                          platform:identifier "IT" .
 
 
 
