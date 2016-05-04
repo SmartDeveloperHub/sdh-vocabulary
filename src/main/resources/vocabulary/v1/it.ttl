@@ -25,31 +25,30 @@
 # #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
 #
 
-@prefix oslc_asset: <http://open-services.net/ns/asset#> .
-@prefix org: <http://www.smartdeveloperhub.org/vocabulary/organization#> .
-@prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
-@prefix oslc_config: <http://open-services.net/ns/config#> .
-@prefix oslc: <http://open-services.net/ns/core#> .
-@prefix scm: <http://www.smartdeveloperhub.org/vocabulary/scm#> .
-@prefix ci: <http://www.smartdeveloperhub.org/vocabulary/ci#> .
-@prefix oslc_auto: <http://open-services.net/ns/auto#> .
-@prefix platform: <http://www.smartdeveloperhub.org/vocabulary/platform#> .
-@prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix xml: <http://www.w3.org/XML/1998/namespace> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix doap: <http://usefulinc.com/ns/doap#> .
-@prefix wot: <http://xmlns.com/wot/0.1/> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix sdh: <http://www.smartdeveloperhub.org/vocabulary/sdh#> .
-@prefix prov: <http://www.w3.org/ns/prov#> .
-@prefix metrics: <http://www.smartdeveloperhub.org/vocabulary/metrics#> .
 @prefix : <http://www.semanticweb.org/owl/owlapi/turtle#> .
-@prefix rddl: <http://www.rddl.org/> .
+@prefix ci: <http://www.smartdeveloperhub.org/vocabulary/ci#> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix org: <http://www.smartdeveloperhub.org/vocabulary/organization#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix scm: <http://www.smartdeveloperhub.org/vocabulary/scm#> .
+@prefix sdh: <http://www.smartdeveloperhub.org/vocabulary/sdh#> .
+@prefix wot: <http://xmlns.com/wot/0.1/> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix oslc: <http://open-services.net/ns/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rddl: <http://www.rddl.org/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix it: <http://www.smartdeveloperhub.org/vocabulary/it> .
+@prefix metrics: <http://www.smartdeveloperhub.org/vocabulary/metrics#> .
+@prefix platform: <http://www.smartdeveloperhub.org/vocabulary/platform#> .
+@prefix oslc_auto: <http://open-services.net/ns/auto#> .
+@prefix oslc_asset: <http://open-services.net/ns/asset#> .
+@prefix oslc_config: <http://open-services.net/ns/config#> .
 @base <http://www.smartdeveloperhub.org/vocabulary/it> .
 
 <http://www.smartdeveloperhub.org/vocabulary/it> rdf:type owl:Ontology ;
@@ -63,9 +62,9 @@
                                                  rdfs:comment """This ontology models a part of the concepts involved in a Issue Tracker (IT) system.
 This ontology is part of the Smart Developer Hub ontology network."""@en ;
                                                  
-                                                 dcterms:license <http://www.apache.org/licenses/LICENSE-2.0> ;
-                                                 
                                                  dc:publisher <http://www.smartdeveloperhub.org/> ;
+                                                 
+                                                 owl:imports <http://www.smartdeveloperhub.org/vocabulary/platform> ;
                                                  
                                                  owl:versionIRI <http://www.smartdeveloperhub.org/vocabulary/v1/it> .
 
@@ -77,21 +76,16 @@ This ontology is part of the Smart Developer Hub ontology network."""@en ;
 #################################################################
 
 
-dcterms:rightsHolder rdf:type owl:AnnotationProperty .
-
-
+###  http://purl.org/dc/terms/dateCopyrighted
 
 dcterms:dateCopyrighted rdf:type owl:AnnotationProperty .
 
 
 
+###  http://purl.org/dc/terms/rightsHolder
 
+dcterms:rightsHolder rdf:type owl:AnnotationProperty .
 
-#################################################################
-#
-#    Datatypes
-#
-#################################################################
 
 
 
@@ -248,9 +242,9 @@ This property allows asking for the change items that composed a change log skip
                                                                    
                                                                    rdfs:comment "issues that compose a composed issue"@en ;
                                                                    
-                                                                   rdfs:range <http://www.smartdeveloperhub.org/vocabulary/it#Issue> ;
+                                                                   rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#Issue> ;
                                                                    
-                                                                   rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#Issue> .
+                                                                   rdfs:range <http://www.smartdeveloperhub.org/vocabulary/it#Issue> .
 
 
 
@@ -402,6 +396,20 @@ platform:vocabulary rdf:type owl:ObjectProperty .
 #################################################################
 
 
+###  http://www.smartdeveloperhub.org/vocabulary/it#description
+
+<http://www.smartdeveloperhub.org/vocabulary/it#description> rdf:type owl:DatatypeProperty ;
+                                                             
+                                                             rdfs:label "description"@en ;
+                                                             
+                                                             rdfs:comment "descritption of the issue"@en ;
+                                                             
+                                                             rdfs:subPropertyOf dcterms:description ;
+                                                             
+                                                             rdfs:range xsd:string .
+
+
+
 ###  http://www.smartdeveloperhub.org/vocabulary/it#entryTimeStamp
 
 <http://www.smartdeveloperhub.org/vocabulary/it#entryTimeStamp> rdf:type owl:DatatypeProperty ;
@@ -413,6 +421,20 @@ platform:vocabulary rdf:type owl:ObjectProperty .
                                                                 rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#ChangeLogEntry> ;
                                                                 
                                                                 rdfs:range xsd:dateTime .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#identifier
+
+<http://www.smartdeveloperhub.org/vocabulary/it#identifier> rdf:type owl:DatatypeProperty ;
+                                                            
+                                                            rdfs:label "issue identifier"@en ;
+                                                            
+                                                            rdfs:comment "identifier of the issue"@en ;
+                                                            
+                                                            rdfs:subPropertyOf dcterms:identifier ;
+                                                            
+                                                            rdfs:range xsd:string .
 
 
 
@@ -482,8 +504,8 @@ platform:title rdf:type owl:DatatypeProperty .
                                                      
                                                      rdfs:comment "A software bug is an error, flaw, failure or fault in a computer program or system that causes it to produce an incorrect or unexpected result, or to behave in unintended ways."@en .
 [ rdf:type owl:Axiom ;
-  owl:annotatedTarget "A software bug is an error, flaw, failure or fault in a computer program or system that causes it to produce an incorrect or unexpected result, or to behave in unintended ways."@en ;
   rdfs:seeAlso "https://en.wikipedia.org/wiki/Software_bug" ;
+  owl:annotatedTarget "A software bug is an error, flaw, failure or fault in a computer program or system that causes it to produce an incorrect or unexpected result, or to behave in unintended ways."@en ;
   owl:annotatedSource <http://www.smartdeveloperhub.org/vocabulary/it#Bug> ;
   owl:annotatedProperty rdfs:comment
 ] .
@@ -622,8 +644,8 @@ platform:title rdf:type owl:DatatypeProperty .
                                                              
                                                              rdfs:comment "A proposed or newly added software feature"@en .
 [ rdf:type owl:Axiom ;
-  rdfs:seeAlso "https://en.wikipedia.org/wiki/Enhancement" ;
   owl:annotatedTarget "A proposed or newly added software feature"@en ;
+  rdfs:seeAlso "https://en.wikipedia.org/wiki/Enhancement" ;
   owl:annotatedSource <http://www.smartdeveloperhub.org/vocabulary/it#Improvement> ;
   owl:annotatedProperty rdfs:comment
 ] .
@@ -643,8 +665,8 @@ platform:title rdf:type owl:DatatypeProperty .
                                                        
                                                        rdfs:comment "In computing, the term issue is a unit of work to accomplish an improvement in a system.[citation needed] An issue could be a bug, a requested feature, task, missing documentation, and so forth."@en .
 [ rdf:type owl:Axiom ;
-  owl:annotatedTarget "In computing, the term issue is a unit of work to accomplish an improvement in a system.[citation needed] An issue could be a bug, a requested feature, task, missing documentation, and so forth."@en ;
   rdfs:seeAlso "https://en.wikipedia.org/wiki/Software_project_management#Issue" ;
+  owl:annotatedTarget "In computing, the term issue is a unit of work to accomplish an improvement in a system.[citation needed] An issue could be a bug, a requested feature, task, missing documentation, and so forth."@en ;
   owl:annotatedSource <http://www.smartdeveloperhub.org/vocabulary/it#Issue> ;
   owl:annotatedProperty rdfs:comment
 ] .
@@ -742,19 +764,33 @@ rdfs:Resource rdf:type owl:Class .
 #################################################################
 
 
+###  http://www.apache.org/licenses/LICENSE-2.0
+
+<http://www.apache.org/licenses/LICENSE-2.0> rdf:type owl:NamedIndividual .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it
+
+<http://www.smartdeveloperhub.org/vocabulary/it> rdf:type owl:NamedIndividual ;
+                                                 
+                                                 dcterms:license <http://www.apache.org/licenses/LICENSE-2.0> .
+
+
+
 ###  http://www.smartdeveloperhub.org/vocabulary/it#ITDomain
 
 <http://www.smartdeveloperhub.org/vocabulary/it#ITDomain> rdf:type platform:Domain ,
                                                                    owl:NamedIndividual ;
                                                           
-                                                          platform:description "Issue Tracker" ;
+                                                          platform:identifier "IT" ;
                                                           
                                                           platform:title "Issue Tracker" ;
                                                           
-                                                          platform:identifier "IT" .
+                                                          platform:description "Issue Tracker" .
 
 
 
 
-###  Generated by the OWL API (version 3.2.3.1824) http://owlapi.sourceforge.net
+###  Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net
 
