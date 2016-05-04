@@ -22,6 +22,7 @@
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix it: <http://www.smartdeveloperhub.org/vocabulary/it> .
 @base <http://www.smartdeveloperhub.org/vocabulary/it> .
 
 <http://www.smartdeveloperhub.org/vocabulary/it> rdf:type owl:Ontology ;
