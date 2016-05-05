@@ -26,15 +26,33 @@
  */
 package org.smartdeveloperhub.vocabulary.util;
 
+import java.net.URI;
+import java.net.URL;
 import java.util.Set;
 
+import javax.xml.namespace.QName;
+
+import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Sets;
 
-final class Namespace {
+public final class Namespace implements Comparable<Namespace> {
 
-	enum Type {
-		HASH,
-		SLASH,
+	public enum Type {
+		HASH() {
+			@Override
+			protected String canonical(final String uri) {
+				return
+					uri.endsWith("#")?
+						uri.substring(0,uri.length()-1):
+						uri;
+			}
+		},
+		SLASH() {
+			@Override
+			protected String canonical(final String uri) {
+				return uri;
+			}
+		},
 		;
 		private static Namespace.Type fromURI(final String uri) {
 			if(uri.endsWith("/")) {
@@ -42,25 +60,33 @@ final class Namespace {
 			}
 			return Type.HASH;
 		}
+
+		protected abstract String canonical(final String uri);
 	}
 
 	private final String uri;
-	private final Namespace.Type type;
+	private final Type type;
+	private final String canonicalForm;
 
-	Namespace(final String uri) {
+	private Namespace(final String uri) {
 		this.uri = uri;
 		this.type=Type.fromURI(uri);
+		this.canonicalForm=this.type.canonical(uri);
 	}
 
-	String uri() {
+	public String canonicalForm() {
+		return this.canonicalForm;
+	}
+
+	public String uri() {
 		return this.uri;
 	}
 
-	Namespace.Type type() {
+	public Type type() {
 		return this.type;
 	}
 
-	Set<String> covariants() {
+	public Set<String> variants() {
 		final Set<String> result=Sets.newHashSet(this.uri);
 		if(Type.HASH.equals(this.type)) {
 			if(this.uri.endsWith("#")) {
@@ -74,16 +100,47 @@ final class Namespace {
 
 	@Override
 	public int hashCode() {
-		return covariants().hashCode();
+		return this.canonicalForm.hashCode();
 	}
 	@Override
 	public boolean equals(final Object obj) {
-		return covariants().equals(obj);
+		boolean result=false;
+		if(obj instanceof Namespace) {
+			final Namespace that = (Namespace)obj;
+			result=this.canonicalForm.equals(that.canonicalForm);
+		}
+		return result;
 	}
 
 	@Override
 	public String toString() {
 		return this.uri;
+	}
+
+	@Override
+	public int compareTo(final Namespace that) {
+		return
+			ComparisonChain.
+				start().
+					compare(this.canonicalForm,that.canonicalForm).
+					compare(this.uri,that.uri).
+					result();
+	}
+
+	public static Namespace create(final String uri) {
+		return new Namespace(uri);
+	}
+
+	public static Namespace create(final URI uri) {
+		return create(uri.toString());
+	}
+
+	public static Namespace create(final URL uri) {
+		return create(uri.toString());
+	}
+
+	public static Namespace create(final QName uri) {
+		return create(uri.getNamespaceURI()+uri.getLocalPart());
 	}
 
 }

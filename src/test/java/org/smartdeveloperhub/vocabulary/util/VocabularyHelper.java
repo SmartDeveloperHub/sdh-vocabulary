@@ -72,10 +72,10 @@ final class VocabularyHelper {
 	}
 
 	Set<String> prefixes() {
-		final Namespace namespace = new Namespace(this.module.ontology());
+		final Namespace namespace = Namespace.create(this.module.ontology());
 		final Multimap<String, String> prefixes = namespacePrefixes();
 		final SortedSet<String> nsPrefixes=Sets.newTreeSet();
-		for(final String ns:namespace.covariants()) {
+		for(final String ns:namespace.variants()) {
 			final Collection<String> collection = prefixes.get(ns);
 			if(collection!=null) {
 				nsPrefixes.addAll(collection);

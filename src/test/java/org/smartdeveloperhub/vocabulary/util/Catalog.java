@@ -118,17 +118,17 @@ public final class Catalog {
 			this.externalModuleImplementationIndex.put(this.context.getImplementationPath(module.location()), size);
 		} else {
 			final boolean canonical = module.isCanonical();
-			for(final String covariant:Modules.getOntologyNamespace(module).covariants()) {
+			for(final String variant:Modules.getOntologyNamespace(module).variants()) {
 				if(canonical) {
-					this.canonicalModuleIndex.put(getBase().relativize(URI.create(covariant)).toString(),size);
+					this.canonicalModuleIndex.put(getBase().relativize(URI.create(variant)).toString(),size);
 				} else {
-					this.ontologyModuleIndex.put(getBase().relativize(URI.create(covariant)).toString(),size);
+					this.ontologyModuleIndex.put(getBase().relativize(URI.create(variant)).toString(),size);
 				}
 			}
 			if(module.isCanonicalVersion()) {
 				final Namespace namespace=Modules.getVersionNamespace(module);
-				for(final String covariant:namespace.covariants()) {
-					this.ontologyModuleIndex.put(getBase().relativize(URI.create(covariant)).toString(),size);
+				for(final String variant:namespace.variants()) {
+					this.ontologyModuleIndex.put(getBase().relativize(URI.create(variant)).toString(),size);
 				}
 			}
 		}
@@ -183,8 +183,7 @@ public final class Catalog {
 		}
 	}
 
-	private void populateBackwardCompatibleVersions(final ModuleHelper helper, final Result<Module> report,
-			final Module module, final Resource resource) {
+	private void populateBackwardCompatibleVersions(final ModuleHelper helper, final Result<Module> report, final Module module, final Resource resource) {
 		final List<String> backwardCompatibleWithVersions = helper.getPropertyValues(resource, owl("backwardCompatibleWith"),new UriFilter(report));
 		if(!module.isVersion() && !backwardCompatibleWithVersions.isEmpty()) {
 			report.warn("Only ontology versions can be compatible with previous versions (%s)", Joiner.on(", ").join(backwardCompatibleWithVersions));
@@ -338,7 +337,8 @@ public final class Catalog {
 					add("modules",this.modules).
 					add("moduleIndex",this.moduleIndex).
 					add("canonicalModuleIndex",this.canonicalModuleIndex).
-					add("externalModuleIndex",this.externalModuleNamespaceIndex).
+					add("externalModuleNamespaceIndex",this.externalModuleNamespaceIndex).
+					add("externalModuleImplementationIndex",this.externalModuleImplementationIndex).
 					add("ontologyModuleIndex",this.ontologyModuleIndex).
 					toString();
 	}

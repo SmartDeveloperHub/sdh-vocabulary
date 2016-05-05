@@ -48,13 +48,13 @@ final class Modules {
 	static Namespace getOntologyNamespace(final Module module) {
 		Preconditions.checkNotNull(module,"Module cannot be null");
 		Preconditions.checkArgument(module.isLocal(),"Module should be local");
-		return new Namespace(module.ontology());
+		return Namespace.create(module.ontology());
 	}
 
 	static Namespace getVersionNamespace(final Module module) {
 		Preconditions.checkNotNull(module,"Module cannot be null");
 		Preconditions.checkArgument(module.isCanonicalVersion(),"Module should be a local version");
-		return new Namespace(module.versionIRI());
+		return Namespace.create(module.versionIRI());
 	}
 
 	private static URI getExpectedCanonicalLocation(final Module module) {
