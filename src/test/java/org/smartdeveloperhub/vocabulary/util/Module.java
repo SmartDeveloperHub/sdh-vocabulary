@@ -44,15 +44,17 @@ import com.google.common.collect.Sets;
 public final class Module {
 
 	public enum Format {
-		TURTLE(RDFLanguages.TURTLE),
-		RDF_XML(RDFLanguages.RDFXML),
-		JSON_LD(RDFLanguages.JSONLD),
+		TURTLE(RDFLanguages.TURTLE,"ttl"),
+		RDF_XML(RDFLanguages.RDFXML,"rdf"),
+		JSON_LD(RDFLanguages.JSONLD,"jsonld"),
 		;
 
 		final Lang lang;
+		private final String extension;
 
-		private Format(final Lang extension) {
-			this.lang = extension;
+		private Format(final Lang lang,final String extension) {
+			this.lang = lang;
+			this.extension = extension;
 		}
 
 		public String getName() {
@@ -89,6 +91,10 @@ public final class Module {
 		public String contentType(final Charset charset) {
 			final ContentType contentType = this.lang.getContentType();
 			return String.format("%s/%s; charset=\"%s\"",contentType.getType(),contentType.getSubType(),charset.name());
+		}
+
+		public String fileExtension() {
+			return this.extension;
 		}
 	}
 
@@ -192,7 +198,7 @@ public final class Module {
 	}
 
 	/**
-	 * TODO: Should we allow haven versionIRI but not ontology IRI?
+	 * TODO: Should we allow having versionIRI but not ontology IRI?
 	 */
 	public String implementationIRI() {
 		String implementationIRI=this.versionIRI;
@@ -216,7 +222,7 @@ public final class Module {
 			this.context.includesNamespace(this.ontology) &&
 			(isVersion()?
 				this.context.includesNamespace(this.versionIRI):
-					true);
+				true);
 	}
 
 	public boolean isExternal() {
