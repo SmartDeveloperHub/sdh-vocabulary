@@ -78,44 +78,44 @@ final class CatalogRepresentionGenerator implements HttpHandler {
 		meta.getAuthors().add("Miguel Esteban Guti&eacute;rrez");
 		meta.getKeywords().addAll(Arrays.asList("Smart Developer Hub","SDH","ALM","Linked Data"));
 
-
-		final ImmutableMap<String, Object> ontology = ImmutableMap.<String,Object>builder().
-			put("id","www.smartdeveloperhub.org.sdh").
-			put("uri","http://www.smartdeveloperhub.org/sdh").
-			put("title","Smart Developer Hub Ontology").
-			put("domains",
-				Lists.
-					newArrayList(
-						"ALM",
-						"Application Lifecycle Management",
-						"Software Engineering",
-						"Linked Data")).
-			put("summary",
-				HtmlEscapers.
-					htmlEscaper().
-						escape("Abbreviated description of the 'Smart Developer Hub vocabulary'")).
-			put("description",
-				HtmlEscapers.
-					htmlEscaper().
-						escape("Quite a long description of the 'Smart Developer Hub vocabulary'")).
-			put("licenses",
-				Lists.
-					newArrayList(
-						ImmutableMap.<String,Object>builder().
-							put("uri","http://purl.org/NET/rdflicense/cc-by-nc-sa2.0").
-							put("label","CC-BY-NC-SA").
-							build()
-					)).
-			put("languages",
-				Lists.
-					newArrayList(
-						ImmutableMap.<String,Object>builder().
-							put("uri","http://lexvo.org/id/iso639-3/eng").
-							put("label","en").
-							put("name","English").
-							build()
-					)).
-			build();
+		final ImmutableMap<String, Object> ontology =
+			ImmutableMap.<String,Object>builder().
+				put("id","www.smartdeveloperhub.org.sdh").
+				put("uri","http://www.smartdeveloperhub.org/sdh").
+				put("title","Smart Developer Hub Ontology").
+				put("domains",
+					Lists.
+						newArrayList(
+							"ALM",
+							"Application Lifecycle Management",
+							"Software Engineering",
+							"Linked Data")).
+				put("summary",
+					HtmlEscapers.
+						htmlEscaper().
+							escape("Abbreviated description of the 'Smart Developer Hub vocabulary'")).
+				put("description",
+					HtmlEscapers.
+						htmlEscaper().
+							escape("Quite a long description of the 'Smart Developer Hub vocabulary'")).
+				put("licenses",
+					Lists.
+						newArrayList(
+							ImmutableMap.<String,Object>builder().
+								put("uri","http://purl.org/NET/rdflicense/cc-by-nc-sa2.0").
+								put("label","CC-BY-NC-SA").
+								build()
+						)).
+				put("languages",
+					Lists.
+						newArrayList(
+							ImmutableMap.<String,Object>builder().
+								put("uri","http://lexvo.org/id/iso639-3/eng").
+								put("label","en").
+								put("name","English").
+								build()
+						)).
+				build();
 		final ImmutableMap<String, Object> context=
 			ImmutableMap.<String,Object>builder().
 				put("publication",

@@ -32,6 +32,7 @@ import org.ldp4j.http.Variant;
 import org.smartdeveloperhub.vocabulary.publisher.handlers.Attachments;
 import org.smartdeveloperhub.vocabulary.publisher.handlers.ProxyResolution;
 import org.smartdeveloperhub.vocabulary.util.Module;
+import org.smartdeveloperhub.vocabulary.util.Namespace;
 
 import com.google.common.base.Strings;
 
@@ -86,14 +87,7 @@ final class ModuleRepresentionGenerator implements HttpHandler {
 	}
 
 	private String implementationIRI(final ProxyResolution resolution) {
-		return normalize(resolution.target().implementationIRI());
-	}
-
-	private String normalize(final String implementationIRI) {
-		return
-			implementationIRI.endsWith("#")?
-				implementationIRI.substring(0,implementationIRI.length()-1):
-				implementationIRI;
+		return Namespace.create(resolution.target().implementationIRI()).canonicalForm();
 	}
 
 }
