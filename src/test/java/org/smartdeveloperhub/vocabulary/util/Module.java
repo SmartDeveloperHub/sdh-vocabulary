@@ -170,7 +170,7 @@ public final class Module {
 	 * the ontology URI matches the versionIRI
 	 */
 	boolean isCanonicalVersion() {
-		return isLocal() && isVersion() && !this.ontology.equals(this.versionIRI);
+		return isLocal() && isVersion() && !Namespace.create(this.ontology).equals(Namespace.create(this.versionIRI));
 	}
 
 	public Context context() {
