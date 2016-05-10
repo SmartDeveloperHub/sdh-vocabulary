@@ -26,40 +26,46 @@
  */
 package org.smartdeveloperhub.vocabulary.util;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
+import java.nio.file.StandardOpenOption;
 
-import org.smartdeveloperhub.vocabulary.util.Module.Format;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 
-public final class Serializations {
+final class IOUtil {
 
-	private Serializations() {
+	private static final Logger LOGGER=LoggerFactory.getLogger(IOUtil.class);
+
+	private IOUtil() {
 	}
 
-	public static List<Path> generate(final Module module, final Path where) throws IOException {
-		final SerializationManager manager = SerializationManager.create(module, where);
-		final Builder<Path> builder=ImmutableList.builder();
-		collectModuleSerializations(builder,manager,module);
-		return builder.build();
-	}
-
-	public static List<Path> generate(final Catalog catalog, final Path where) throws IOException {
-		final SerializationManager manager = SerializationManager.create(catalog, where);
-		final Builder<Path> builder=ImmutableList.builder();
-		for(final String moduleId:catalog.modules()) {
-			collectModuleSerializations(builder,manager,catalog.get(moduleId));
+	static void transcode(final Path source, final Charset sourceCharset, final Path target, final Charset targetCharset) throws IOException {
+		try(BufferedReader in=
+				new BufferedReader(
+					new InputStreamReader(
+						Files.newInputStream(source,StandardOpenOption.READ),
+						sourceCharset))) {
+			try(BufferedWriter out=
+					new BufferedWriter(
+						new OutputStreamWriter(
+							Files.newOutputStream(target,StandardOpenOption.CREATE_NEW,StandardOpenOption.WRITE),
+							targetCharset))) {
+				final char[] buffer=new char[16384];
+				int len=-1;
+				while((len=in.read(buffer))>=0) {
+					out.write(buffer,0,len);
+				}
+			}
 		}
-		return builder.build();
-	}
-
-	private static void collectModuleSerializations(final Builder<Path> builder, final SerializationManager manager, final Module module) {
-		for(final Format format:Format.values()) {
-			builder.add(manager.getSerialization(module, format));
-		}
+		LOGGER.trace("Transcoding completed. Original size [{}]: {}, New size [{}]: {}",sourceCharset,Files.size(source),targetCharset,Files.size(target));
 	}
 
 }
