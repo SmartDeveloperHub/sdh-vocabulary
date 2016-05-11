@@ -177,44 +177,51 @@ public class VocabularyPublisher {
 		}
 	}
 
-	private static void publish(final Catalog catalog,final String basePath) {
+	private static void publish(final Catalog catalog,final String basePath) throws IOException {
 		System.out.println("* Publishing vocabularies under "+basePath);
 		final String assetsPath = "assets/";
-		final PathHandler pathHandler=
-			path().
-				addPrefixPath(
-					basePath+assetsPath,
-					new AssetProvider(assetsPath)
-				).
-				addExactPath(
-					basePath,
-					catalogReverseProxy(
-						catalog,
-						methodController(
-							contentNegotiation(
-								new CatalogRepresentionGenerator(),
-								htmlContent())
-							).
-							allow(Methods.GET))).
-				addPrefixPath(
-					basePath,
-					moduleReverseProxy(
-						catalog,
-						methodController(
-							contentNegotiation(
-								new ModuleRepresentionGenerator(),
-								negotiableModuleContent())
-							).
-							allow(Methods.GET)
-					)
-				);
+		final PathHandler pathHandler=path();
+
+		// Module serializations
+		final SerializationManager manager = deploySerializations(catalog,pathHandler,".cache");
+		// Canonical namespaces
+		pathHandler.
+			addPrefixPath(
+				basePath,
+				moduleReverseProxy(
+					catalog,
+					methodController(
+						contentNegotiation(
+							new ModuleRepresentionGenerator(manager),
+							negotiableModuleContent())
+						).
+						allow(Methods.GET)
+				)
+			);
+		// Catalog documentation
 		final DocumentationDeployer deployer=
 			DocumentationDeployer.
 				create(
 					new DefaultDocumentationDeploymentFactory(),
 					new DefaultDocumentationProviderFactory());
 		deployer.deploy(catalog,pathHandler);
-		deploySerializations(catalog, pathHandler, ".cache");
+
+		// Vocab site
+		pathHandler.
+			addPrefixPath(
+				basePath+assetsPath,
+				new AssetProvider(assetsPath)
+			).
+			addExactPath(
+				basePath,
+				catalogReverseProxy(
+					catalog,
+					methodController(
+						contentNegotiation(
+							new CatalogRepresentionGenerator(),
+							htmlContent())
+						).
+						allow(Methods.GET)));
 		final Undertow server =
 			Undertow.
 				builder().
@@ -226,15 +233,15 @@ public class VocabularyPublisher {
 		server.stop();
 	}
 
-	private static void deploySerializations(final Catalog catalog, final PathHandler pathHandler, final String cachePath) {
-		try {
+	private static SerializationManager deploySerializations(final Catalog catalog, final PathHandler pathHandler, final String cachePath) throws IOException {
 			final SerializationManager manager=SerializationManager.create(catalog,Paths.get(cachePath));
 			for(final String moduleId:catalog.modules()) {
 				final Module module=catalog.get(moduleId);
+				System.out.printf("- Module (%s):%n",module.implementationIRI(),module.location());
 				for(final Format format:Format.values()) {
 					final String rpath=module.relativePath()+"."+format.fileExtension();
 					final URI location=catalog.getBase().resolve(rpath);
-					System.out.println("Published "+format.getName()+" serialization of module "+module.implementationIRI()+" at "+location.getPath());
+					System.out.printf("  + %s : %s --> %s (%s)%n",format.getName(),location,location.getPath(),manager.getSerialization(module, format).toAbsolutePath());
 					pathHandler.
 						addExactPath(
 							location.getPath(),
@@ -252,10 +259,7 @@ public class VocabularyPublisher {
 						);
 				}
 			}
-		} catch (final IOException e) {
-			System.err.printf("Could not create serialization manager at '%s'. Full statcktrace follow:%n",cachePath);
-			e.printStackTrace(System.err);
-		}
+			return manager;
 	}
 
 	private static NegotiableContent negotiableModuleContent() {

@@ -26,13 +26,13 @@
  */
 package org.smartdeveloperhub.vocabulary.publisher;
 
-import java.nio.ByteBuffer;
-
 import org.ldp4j.http.Variant;
 import org.smartdeveloperhub.vocabulary.publisher.handlers.Attachments;
 import org.smartdeveloperhub.vocabulary.publisher.handlers.ProxyResolution;
 import org.smartdeveloperhub.vocabulary.util.Module;
+import org.smartdeveloperhub.vocabulary.util.Module.Format;
 import org.smartdeveloperhub.vocabulary.util.Namespace;
+import org.smartdeveloperhub.vocabulary.util.SerializationManager;
 
 import com.google.common.base.Strings;
 
@@ -43,8 +43,10 @@ import io.undertow.util.StatusCodes;
 
 final class ModuleRepresentionGenerator implements HttpHandler {
 
-	ModuleRepresentionGenerator() {
-		// Package-private
+	private final SerializationManager manager;
+
+	ModuleRepresentionGenerator(final SerializationManager manager) {
+		this.manager = manager;
 	}
 
 	@Override
@@ -61,13 +63,9 @@ final class ModuleRepresentionGenerator implements HttpHandler {
 				exchange.getResponseHeaders().add(Headers.CONTENT_LOCATION,contentLocation);
 			}
 			final Module module=resolution.target();
-			final String representation=
-				module.
-					transform(
-						module.context().base().resolve(module.relativePath()),
-						Formats.fromMediaType(variant.type()));
-			exchange.setStatusCode(StatusCodes.OK);
-			exchange.getResponseSender().send(ByteBuffer.wrap(representation.getBytes(variant.charset().charset())));
+			final Format format = Formats.fromMediaType(variant.type());
+			final SerializationHandler next = new SerializationHandler(this.manager, module, format);
+			next.handleRequest(exchange);
 		}
 	}
 
