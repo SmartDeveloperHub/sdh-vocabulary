@@ -43,7 +43,6 @@ import org.ldp4j.http.MediaType;
 import org.ldp4j.http.Negotiable;
 import org.ldp4j.http.NegotiationResult;
 import org.ldp4j.http.Variant;
-import org.smartdeveloperhub.vocabulary.util.Module.Format;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
@@ -157,24 +156,10 @@ final class ContentNegotiationHandler implements HttpHandler {
 	private List<Failure> addAcceptanceRequirements(final HttpServerExchange exchange, final ContentNegotiator negotiator) {
 		final List<Failure> failures=Lists.newLinkedList();
 		final HeaderMap headers = exchange.getRequestHeaders();
-		useExtensionForNegotiation(negotiator,exchange);
 		addAcceptHeaders(negotiator, failures, headers);
 		addAcceptCharsetHeaders(negotiator, failures, headers);
 		addAcceptLanguageHeaders(negotiator, failures, headers);
 		return failures;
-	}
-
-	private void useExtensionForNegotiation(final ContentNegotiator negotiator,final HttpServerExchange exchange) {
-		final HeaderValues accepts = exchange.getRequestHeaders().get(Headers.ACCEPT);
-		if(accepts!=null && !accepts.isEmpty()) {
-			return;
-		}
-		final String extension = HandlerUtil.getExtension(exchange.getRelativePath());
-		final Format format = Format.fromExtension(extension);
-		if(format!=null) {
-			System.out.println("No media types specified: using extension ."+extension+" as hint --> "+format.mime());
-			negotiator.accept(format.mime());
-		}
 	}
 
 	private void addAcceptLanguageHeaders(final ContentNegotiator negotiator, final List<Failure> failures, final HeaderMap headers) {

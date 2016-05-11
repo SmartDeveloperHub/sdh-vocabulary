@@ -108,20 +108,7 @@ final class ModuleReverseProxyHandler implements HttpHandler {
 	}
 
 	private URI canonicalURI(final HttpServerExchange exchange) {
-		return resolve(moduleName(exchange));
-	}
-
-	private String moduleName(final HttpServerExchange exchange) {
-		final String normalizedRelativePath=exchange.getRelativePath().substring(1);
-		final String extension=HandlerUtil.getExtension(normalizedRelativePath);
-		return
-			normalizedRelativePath.
-				substring(
-					0,
-					normalizedRelativePath.length()-
-					(extension.isEmpty()?
-						0:
-						extension.length()+1));
+		return resolve(exchange.getRelativePath().substring(1));
 	}
 
 	private String getTerm(final HttpServerExchange exchange) {
