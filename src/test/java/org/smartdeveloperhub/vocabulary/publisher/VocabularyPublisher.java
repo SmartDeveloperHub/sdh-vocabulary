@@ -58,6 +58,7 @@ import org.smartdeveloperhub.vocabulary.util.Catalogs;
 import org.smartdeveloperhub.vocabulary.util.Module;
 import org.smartdeveloperhub.vocabulary.util.Module.Format;
 import org.smartdeveloperhub.vocabulary.util.Result;
+import org.smartdeveloperhub.vocabulary.util.SerializationManager;
 
 import com.google.common.collect.Lists;
 
@@ -212,7 +213,8 @@ public class VocabularyPublisher {
 				create(
 					new DefaultDocumentationDeploymentFactory(),
 					new DefaultDocumentationProviderFactory());
-		deployer.deploy(catalog,pathHandler);;
+		deployer.deploy(catalog,pathHandler);
+		deploySerializations(catalog, pathHandler, ".cache");
 		final Undertow server =
 			Undertow.
 				builder().
@@ -222,6 +224,38 @@ public class VocabularyPublisher {
 		server.start();
 		awaitTerminationRequest();
 		server.stop();
+	}
+
+	private static void deploySerializations(final Catalog catalog, final PathHandler pathHandler, final String cachePath) {
+		try {
+			final SerializationManager manager=SerializationManager.create(catalog,Paths.get(cachePath));
+			for(final String moduleId:catalog.modules()) {
+				final Module module=catalog.get(moduleId);
+				for(final Format format:Format.values()) {
+					final String rpath=module.relativePath()+"."+format.fileExtension();
+					final URI location=catalog.getBase().resolve(rpath);
+					System.out.println("Published "+format.getName()+" serialization of module "+module.implementationIRI()+" at "+location.getPath());
+					pathHandler.
+						addExactPath(
+							location.getPath(),
+							methodController(
+								contentNegotiation(
+									new SerializationHandler(manager,module,format),
+									NegotiableContent.
+										newInstance().
+											support(Formats.toMediaType(format)).
+											support(CharacterEncodings.of(StandardCharsets.UTF_8)).
+											support(CharacterEncodings.of(StandardCharsets.ISO_8859_1)).
+											support(CharacterEncodings.of(StandardCharsets.US_ASCII)))
+							).
+							allow(Methods.GET)
+						);
+				}
+			}
+		} catch (final IOException e) {
+			System.err.printf("Could not create serialization manager at '%s'. Full statcktrace follow:%n",cachePath);
+			e.printStackTrace(System.err);
+		}
 	}
 
 	private static NegotiableContent negotiableModuleContent() {
