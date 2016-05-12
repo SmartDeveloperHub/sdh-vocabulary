@@ -101,7 +101,13 @@ public class VocabularyPublisher {
 				final Catalog catalog = result.get();
 				showCatalog(catalog);
 				try {
-					publish(catalog,base.getPath());
+					publish(
+						catalog,
+						base.getPath(),
+						"assets/",
+						".cache",
+						8080,
+						"localhost");
 				} catch(final RuntimeException e) {
 					e.printStackTrace(System.err);
 				} finally {
@@ -177,13 +183,12 @@ public class VocabularyPublisher {
 		}
 	}
 
-	private static void publish(final Catalog catalog,final String basePath) throws IOException {
+	private static void publish(final Catalog catalog,final String basePath, final String vocabAssetsPath, final String serializationCachePath, final int port, final String host) throws IOException {
 		System.out.println("* Publishing vocabularies under "+basePath);
-		final String assetsPath = "assets/";
 		final PathHandler pathHandler=path();
 
 		// Module serializations
-		final SerializationManager manager = deploySerializations(catalog,pathHandler,".cache");
+		final SerializationManager manager=deploySerializations(catalog,pathHandler,serializationCachePath);
 		// Canonical namespaces
 		pathHandler.
 			addPrefixPath(
@@ -209,8 +214,8 @@ public class VocabularyPublisher {
 		// Vocab site
 		pathHandler.
 			addPrefixPath(
-				basePath+assetsPath,
-				new AssetProvider(assetsPath)
+				basePath+vocabAssetsPath,
+				new AssetProvider(vocabAssetsPath)
 			).
 			addExactPath(
 				basePath,
@@ -225,7 +230,7 @@ public class VocabularyPublisher {
 		final Undertow server =
 			Undertow.
 				builder().
-					addHttpListener(8080,"localhost").
+					addHttpListener(port,host).
 					setHandler(pathHandler).
 					build();
 		server.start();
