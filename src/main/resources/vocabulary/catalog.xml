@@ -44,9 +44,10 @@
 	<uri name="http://www.smartdeveloperhub.org/vocabulary/v1/organization" uri="v1/organization.ttl"/>
 	<uri name="http://www.smartdeveloperhub.org/vocabulary/v1/metrics"      uri="v1/metrics.ttl"/>
 	<uri name="http://www.smartdeveloperhub.org/vocabulary/v1/views"        uri="v1/views.ttl"/>
-	<uri name="http://www.smartdeveloperhub.org/vocabulary/v1/curator"      uri="v1/curator.ttl"/>
+	<uri name="http://www.smartdeveloperhub.org/vocabulary/v1/stoa"         uri="v1/stoa.ttl"/>
 	<uri name="http://www.smartdeveloperhub.org/vocabulary/v1/amqp"         uri="v1/amqp.ttl"/>
 	<uri name="http://www.smartdeveloperhub.org/vocabulary/v1/types"        uri="v1/types.ttl"/>
+	<uri name="http://www.smartdeveloperhub.org/vocabulary/v1/curator"      uri="v1/curator.ttl"/>
 
 	<!--                                                   -->
 	<!-- Implementatons of third party vocabularies reused -->

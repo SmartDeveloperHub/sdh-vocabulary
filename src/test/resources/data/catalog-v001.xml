@@ -32,5 +32,5 @@
 	xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="urn:oasis:names:tc:entity:xmlns:xml:catalog Catalog.xsd">
-	<nextCatalog id="default" catalog="../../../resources/vocabulary/catalog.xml"/>
+	<nextCatalog id="default" catalog="../../../main/resources/vocabulary/catalog.xml"/>
 </catalog>
