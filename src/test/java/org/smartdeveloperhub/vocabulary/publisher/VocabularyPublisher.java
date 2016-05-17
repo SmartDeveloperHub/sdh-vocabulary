@@ -35,7 +35,6 @@ import static org.smartdeveloperhub.vocabulary.publisher.handlers.MoreHandlers.m
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
@@ -46,6 +45,8 @@ import java.util.Scanner;
 import org.ldp4j.http.CharacterEncodings;
 import org.ldp4j.http.MediaType;
 import org.ldp4j.http.MediaTypes;
+import org.smartdeveloperhub.vocabulary.config.ConfigurationFactory;
+import org.smartdeveloperhub.vocabulary.publisher.config.PublisherConfig;
 import org.smartdeveloperhub.vocabulary.publisher.handlers.NegotiableContent;
 import org.smartdeveloperhub.vocabulary.publisher.spi.DocumentationDeployment;
 import org.smartdeveloperhub.vocabulary.publisher.spi.DocumentationDeploymentFactory;
@@ -61,6 +62,7 @@ import org.smartdeveloperhub.vocabulary.util.Result;
 import org.smartdeveloperhub.vocabulary.util.SerializationManager;
 
 import com.google.common.collect.Lists;
+import com.google.common.io.Resources;
 
 import io.undertow.Undertow;
 import io.undertow.server.handlers.PathHandler;
@@ -85,47 +87,53 @@ public class VocabularyPublisher {
 	private static final MediaType HTML = MediaTypes.of("text","html");
 
 	public static void main(final String... args) throws FileNotFoundException, IOException {
-		if(args.length!=2) {
-			System.err.printf("Invalid argument number: 2 arguments required (%d)%n", args.length);
-			System.err.printf("USAGE: %s <path-to-ontologies> <base-namespace>%n",AppAssembler.applicationName(VocabularyPublisher.class));
-			System.err.printf(" <path-to-ontologies> : Path where the ontologies to publish are available.%n");
-			System.err.printf(" <base-namespace>     : Base namespace of the ontologies to publish.%n");
+		if(args.length!=1) {
+			System.err.printf("Invalid argument number: 1 argument required (%d)%n", args.length);
+			System.err.printf("USAGE: %s <path-to-config-file>%n",AppAssembler.applicationName(VocabularyPublisher.class));
+			System.err.printf("  <path-to-config-file> : Path Vocabulary Publisher configuration file is available.%n");
 			Application.logContext(args);
 			System.exit(-1);
 		}
 		try {
-			final Path root = Paths.get(args[0]);
-			final URI base = new URI(args[1]);
-			final Result<Catalog> result = Catalogs.loadFrom(root, base);
-			if(result.isAvailable()) {
-				final Catalog catalog = result.get();
-				showCatalog(catalog);
-				try {
-					publish(
-						catalog,
-						base.getPath(),
-						"assets/",
-						".cache",
-						8080,
-						"localhost");
-				} catch(final RuntimeException e) {
-					e.printStackTrace(System.err);
-				} finally {
-					System.out.println("Publisher terminated.");
-				}
-			} else {
-				System.err.println("Could not prepare catalog:\n"+result);
-				System.exit(-5);
-			}
+			final Path configFile = Paths.get(args[0]);
+			final PublisherConfig config =
+				ConfigurationFactory.
+					load(
+						Resources.toString(configFile.toUri().toURL(), StandardCharsets.UTF_8),
+						PublisherConfig.class);
+			setup(config);
 		} catch (final InvalidPathException e) {
 			System.err.printf("%s is not a valid root path (%s)%n", args[0],e.getMessage());
 			System.exit(-2);
-		} catch (final URISyntaxException e) {
-			System.err.printf("%s is not a valid base URI (%s)%n", args[1],e.getMessage());
-			System.exit(-3);
 		} catch (final IOException e) {
 			System.err.printf("Could not explore modules (%s)%n", e.getMessage());
+			System.exit(-3);
+		} catch (final RuntimeException e) {
+			System.err.println("Unexpected publisher failure\n. Full stacktrace follows");
+			e.printStackTrace(System.err);
 			System.exit(-4);
+		}
+	}
+
+	private static void setup(final PublisherConfig config) throws IOException {
+		final Result<Catalog> result = Catalogs.loadFrom(config.getRoot(), config.getBase());
+		if(result.isAvailable()) {
+			final Catalog catalog = result.get();
+			showCatalog(catalog);
+			try {
+				publish(
+					catalog,
+					config.getBase().getPath(),
+					"assets/",
+					".cache",
+					config.getServer().getPort(),
+					config.getServer().getHost());
+			} finally {
+				System.out.println("Publisher terminated.");
+			}
+		} else {
+			System.err.println("Could not prepare catalog:\n"+result);
+			System.exit(-5);
 		}
 	}
 

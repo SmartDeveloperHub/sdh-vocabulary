@@ -63,7 +63,7 @@
 		<sesame.version>2.7.16</sesame.version>
 		<jena.version>2.13.0</jena.version>
 		<undertow.version>1.3.17.Final</undertow.version>
-		<jackson.version>2.7.3</jackson.version>
+		<jackson.version>2.7.4</jackson.version>
 		<app.publisher.main>org.smartdeveloperhub.vocabulary.publisher.VocabularyPublisher</app.publisher.main>
 		<app.explorer.main>org.smartdeveloperhub.vocabulary.util.VocabularyExplorer</app.explorer.main>
 	</properties>
