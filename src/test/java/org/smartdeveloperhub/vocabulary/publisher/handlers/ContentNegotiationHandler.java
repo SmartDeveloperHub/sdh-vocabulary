@@ -55,20 +55,38 @@ import io.undertow.util.Headers;
 import io.undertow.util.HttpString;
 import io.undertow.util.StatusCodes;
 
-final class ContentNegotiationHandler implements HttpHandler {
+public final class ContentNegotiationHandler implements HttpHandler {
 
-	private final HttpHandler next;
-	private final NegotiableContent content;
+	private static final class Scenario {
 
-	private ContentNegotiationHandler(final HttpHandler next, final NegotiableContent content) {
-		this.next = next;
-		this.content = content;
+		private final HttpHandler next;
+		private final NegotiableContent content;
+
+		private Scenario(final HttpHandler next, final NegotiableContent content) {
+			this.next = next;
+			this.content = content;
+		}
+
 	}
 
+	private final List<Scenario> scenarios;
+
+	private ContentNegotiationHandler() {
+		this.scenarios=Lists.newLinkedList();
+	}
+
+	public ContentNegotiationHandler negotiate(final NegotiableContent aContent,final HttpHandler aHandler) {
+		this.scenarios.add(new Scenario(aHandler,aContent));
+		return this;
+	}
+
+	// TODO: Check that there are scenarios defined, otherwise fail (IllegalStateException)
+	// TODO: Check that there is at least one satisfactory scenario (a media type is defined)
+	// TODO: Check that the scenarios defined do not clash (media types) (IllegalStateException)
 	@Override
 	public void handleRequest(final HttpServerExchange exchange) throws Exception {
-		final ContentNegotiator negotiator = defaultNegotiator();
 		System.out.println("Starting content negotiation...");
+		final ContentNegotiator negotiator = defaultNegotiator(this.scenarios);
 		final List<Failure> failures = addAcceptanceRequirements(exchange, negotiator);
 		if(!failures.isEmpty()) {
 			abortNegotation(exchange, failures);
@@ -77,18 +95,33 @@ final class ContentNegotiationHandler implements HttpHandler {
 			if(!negotiation.isAcceptable()) {
 				failNegotiation(exchange, negotiation);
 			} else {
-				forwardRequestHandling(exchange, negotiation);
+				final Variant variant = negotiation.variant();
+				for(final Scenario scenario:this.scenarios) {
+					if(scenario.content.isAccepted(variant)) {
+						forwardRequestHandling(exchange, negotiation, scenario.next);
+						return;
+					}
+				}
+				failDispatch(exchange, variant);
 			}
 		}
 	}
 
-	private void forwardRequestHandling(final HttpServerExchange exchange, final NegotiationResult negotiation) throws Exception {
-		if(this.next!=null) {
+	private void failDispatch(final HttpServerExchange exchange, final Variant variant) {
+		exchange.setStatusCode(StatusCodes.INTERNAL_SERVER_ERROR);
+		exchange.getResponseHeaders().put(Headers.CONTENT_TYPE,"text/plain; charset=\"UTF-8\"");
+		final String message="Could not dispatch variant "+variant;
+		exchange.getResponseSender().send(ByteBuffer.wrap(message.getBytes(StandardCharsets.UTF_8)));
+		System.out.println(message);
+	}
+
+	private void forwardRequestHandling(final HttpServerExchange exchange, final NegotiationResult negotiation, final HttpHandler next) throws Exception {
+		if(next!=null) {
 			final Variant variant = negotiation.variant();
 			Attachments.setVariant(exchange, variant);
 			logAcceptance(variant);
 			addContentNegotiationHeaders(exchange,negotiation,true);
-			this.next.handleRequest(exchange);
+			next.handleRequest(exchange);
 		}
 	}
 
@@ -125,16 +158,19 @@ final class ContentNegotiationHandler implements HttpHandler {
 		System.out.println(message);
 	}
 
-	private ContentNegotiator defaultNegotiator() {
+	private ContentNegotiator defaultNegotiator(final List<Scenario> scenarios) {
 		ContentNegotiator negotiator=ContentNegotiator.newInstance();
-		for(final MediaType value:this.content.mediaTypes()) {
-			negotiator=negotiator.support(value);
-		}
-		for(final CharacterEncoding value:this.content.characterEncodings()) {
-			negotiator=negotiator.support(value);
-		}
-		for(final Language value:this.content.languages()) {
-			negotiator=negotiator.support(value);
+		for(final Scenario scenario:this.scenarios) {
+			final NegotiableContent content=scenario.content;
+			for(final MediaType value:content.mediaTypes()) {
+				negotiator=negotiator.support(value);
+			}
+			for(final CharacterEncoding value:content.characterEncodings()) {
+				negotiator=negotiator.support(value);
+			}
+			for(final Language value:content.languages()) {
+				negotiator=negotiator.support(value);
+			}
 		}
 		return negotiator;
 	}
@@ -218,7 +254,7 @@ final class ContentNegotiationHandler implements HttpHandler {
 		return builder.toString();
 	}
 
-	static ContentNegotiationHandler create(final HttpHandler aHandler, final NegotiableContent aContent) {
-		return new ContentNegotiationHandler(aHandler,aContent);
+	static ContentNegotiationHandler newInstance() {
+		return new ContentNegotiationHandler();
 	}
 }

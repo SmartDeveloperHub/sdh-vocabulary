@@ -31,7 +31,9 @@ import java.util.List;
 import org.ldp4j.http.CharacterEncoding;
 import org.ldp4j.http.Language;
 import org.ldp4j.http.MediaType;
+import org.ldp4j.http.MediaTypes;
 import org.ldp4j.http.Negotiable;
+import org.ldp4j.http.Variant;
 
 import com.google.common.collect.Lists;
 
@@ -59,9 +61,21 @@ public final class NegotiableContent {
 		return addNegotiable(language,this.languages);
 	}
 
-	private <T extends Negotiable> NegotiableContent addNegotiable(final T mediaType, final List<? super T> collection) {
-		if(mediaType!=null) {
-			collection.add(mediaType);
+	boolean isAccepted(final Variant variant) {
+		final MediaType type=variant.type();
+		if(type!=null) {
+			for(final MediaType supported:this.mediaTypes) {
+				if(MediaTypes.includes(supported,type)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private <T extends Negotiable> NegotiableContent addNegotiable(final T negotiable, final List<? super T> collection) {
+		if(negotiable!=null) {
+			collection.add(negotiable);
 		}
 		return this;
 	}

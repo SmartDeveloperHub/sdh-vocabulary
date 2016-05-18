@@ -197,6 +197,7 @@ public class VocabularyPublisher {
 
 		// Module serializations
 		final SerializationManager manager=deploySerializations(catalog,pathHandler,serializationCachePath);
+
 		// Canonical namespaces
 		pathHandler.
 			addPrefixPath(
@@ -204,13 +205,14 @@ public class VocabularyPublisher {
 				moduleReverseProxy(
 					catalog,
 					methodController(
-						contentNegotiation(
-							new ModuleRepresentionGenerator(manager),
-							negotiableModuleContent())
-						).
+						contentNegotiation().
+							negotiate(
+								negotiableModuleContent(),
+								new ModuleRepresentionGenerator(manager))).
 						allow(Methods.GET)
 				)
 			);
+
 		// Catalog documentation
 		final DocumentationDeployer deployer=
 			DocumentationDeployer.
@@ -230,10 +232,10 @@ public class VocabularyPublisher {
 				catalogReverseProxy(
 					catalog,
 					methodController(
-						contentNegotiation(
-							new CatalogRepresentionGenerator(),
-							htmlContent())
-						).
+						contentNegotiation().
+							negotiate(
+								htmlContent(),
+								new CatalogRepresentionGenerator())).
 						allow(Methods.GET)));
 		final Undertow server =
 			Undertow.
@@ -259,15 +261,15 @@ public class VocabularyPublisher {
 						addExactPath(
 							location.getPath(),
 							methodController(
-								contentNegotiation(
-									new SerializationHandler(manager,module,format),
-									NegotiableContent.
-										newInstance().
-											support(Formats.toMediaType(format)).
-											support(CharacterEncodings.of(StandardCharsets.UTF_8)).
-											support(CharacterEncodings.of(StandardCharsets.ISO_8859_1)).
-											support(CharacterEncodings.of(StandardCharsets.US_ASCII)))
-							).
+								contentNegotiation().
+									negotiate(
+										NegotiableContent.
+											newInstance().
+												support(Formats.toMediaType(format)).
+												support(CharacterEncodings.of(StandardCharsets.UTF_8)).
+												support(CharacterEncodings.of(StandardCharsets.ISO_8859_1)).
+												support(CharacterEncodings.of(StandardCharsets.US_ASCII)),
+										new SerializationHandler(manager,module,format))).
 							allow(Methods.GET)
 						);
 				}

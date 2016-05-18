@@ -71,8 +71,8 @@ public final class MoreHandlers {
 		return new ModuleReverseProxyHandler(catalog,aHandler);
 	}
 
-	public static HttpHandler contentNegotiation(final HttpHandler aHandler, final NegotiableContent aContent) {
-		return ContentNegotiationHandler.create(aHandler, aContent);
+	public static ContentNegotiationHandler contentNegotiation() {
+		return ContentNegotiationHandler.newInstance();
 	}
 
 	public static HttpHandler probe(final HttpHandler aHandler) {

@@ -75,10 +75,10 @@ final class DocumentationDeployer {
 				addExactPath(
 					deployment.implementationLandingPage().getPath(),
 					methodController(
-						contentNegotiation(
-							new ModuleLandingPage(deployment,provider,false),
-							negotiableContent())
-						).
+						contentNegotiation().
+							negotiate(
+								negotiableContent(),
+								new ModuleLandingPage(deployment,provider,false))).
 						allow(Methods.GET)
 				).
 				addPrefixPath(
@@ -127,9 +127,10 @@ final class DocumentationDeployer {
 			return
 				new HttpHandler() {
 					private final HttpHandler contentHandler=
-						contentNegotiation(
-							new ModuleLandingPage(deployment,provider,true),
-							negotiableContent());
+						contentNegotiation().
+							negotiate(
+								negotiableContent(),
+								new ModuleLandingPage(deployment,provider,true));
 					@Override
 					public void handleRequest(final HttpServerExchange exchange) throws Exception {
 						if(exchange.getRelativePath().equals("/")) {
@@ -145,12 +146,13 @@ final class DocumentationDeployer {
 	}
 
 	private NegotiableContent negotiableContent() {
-		return NegotiableContent.
-			newInstance().
-				support(MediaTypes.of("text","html")).
-				support(CharacterEncodings.of(StandardCharsets.UTF_8)).
-				support(CharacterEncodings.of(StandardCharsets.ISO_8859_1)).
-				support(CharacterEncodings.of(StandardCharsets.US_ASCII));
+		return
+			NegotiableContent.
+				newInstance().
+					support(MediaTypes.of("text","html")).
+					support(CharacterEncodings.of(StandardCharsets.UTF_8)).
+					support(CharacterEncodings.of(StandardCharsets.ISO_8859_1)).
+					support(CharacterEncodings.of(StandardCharsets.US_ASCII));
 	}
 
 	static DocumentationDeployer create(final DocumentationDeploymentFactory deploymentFactory,final DocumentationProviderFactory providerFactory) {
