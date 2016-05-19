@@ -27,10 +27,11 @@
 package org.smartdeveloperhub.vocabulary.publisher.handlers;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import org.ldp4j.xml.XMLUtils;
 import org.smartdeveloperhub.vocabulary.publisher.handlers.ProxyResolution.Builder;
+import org.smartdeveloperhub.vocabulary.publisher.util.Location;
+import org.smartdeveloperhub.vocabulary.publisher.util.Tracing;
 import org.smartdeveloperhub.vocabulary.util.Catalog;
 import org.smartdeveloperhub.vocabulary.util.Module;
 
@@ -55,19 +56,15 @@ final class ModuleReverseProxyHandler implements HttpHandler {
 			System.out.printf("Accessing %s --> NOT FOUND%n",exchange.getRelativePath());
 			exchange.setStatusCode(StatusCodes.NOT_FOUND);
 			exchange.endExchange();
+		} else if(resolution.target().isExternal()){
+			System.out.printf("Accessing %s --> %s [%s] --> NOT FOUND%n",exchange.getRelativePath(),Tracing.describe(resolution),Tracing.catalogEntry(resolution.target()));
+			exchange.setStatusCode(StatusCodes.NOT_FOUND);
+			exchange.endExchange();
 		} else {
-			System.out.printf("Accessing %s --> %s [%s]%n",exchange.getRelativePath(),describe(resolution),catalogEntry(resolution.target()));
+			System.out.printf("Accessing %s --> %s [%s]%n",exchange.getRelativePath(),Tracing.describe(resolution),Tracing.catalogEntry(resolution.target()));
 			Attachments.setResolution(exchange,resolution);
 			Attachments.setBase(exchange,this.catalog.getBase());
 			this.next.handleRequest(exchange);
-		}
-	}
-
-	private String describe(final ProxyResolution resolution) {
-		if(resolution.isFragment()) {
-			return "Term '"+resolution.fragment()+"' of "+resolution.resolvedURI();
-		} else {
-			return resolution.resolvedURI().toString();
 		}
 	}
 
@@ -117,27 +114,12 @@ final class ModuleReverseProxyHandler implements HttpHandler {
 		return parentURI.relativize(targetURI).toString();
 	}
 
-	private String catalogEntry(final Module module) {
-		return "catalog:"+this.catalog.getRoot().relativize(module.location()).toString().replace('\\', '/');
-	}
-
 	private URI resolve(final String path) {
 		return this.catalog.getBase().resolve(path);
 	}
 
 	private URI rebase(final URI uri) {
-		final URI base = this.catalog.getBase();
-		try {
-			return
-				new URI(
-					base.getScheme(),
-					base.getAuthority(),
-					uri.getPath(),
-					uri.getQuery(),
-					uri.getFragment());
-		} catch (final URISyntaxException e) {
-			throw new AssertionError("Rebasing of '"+uri+"' according to '"+base.getScheme()+"://"+base.getAuthority()+"' should not fail",e);
-		}
+		return Location.rebase(this.catalog.getBase(), uri);
 	}
 
 }
