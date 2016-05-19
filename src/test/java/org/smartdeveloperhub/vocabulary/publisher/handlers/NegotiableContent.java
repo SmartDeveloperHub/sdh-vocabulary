@@ -61,7 +61,11 @@ public final class NegotiableContent {
 		return addNegotiable(language,this.languages);
 	}
 
-	boolean isAccepted(final Variant variant) {
+	boolean hasTypes() {
+		return !this.mediaTypes.isEmpty();
+	}
+
+	boolean isAcceptable(final Variant variant) {
 		final MediaType type=variant.type();
 		if(type!=null) {
 			for(final MediaType supported:this.mediaTypes) {
@@ -73,15 +77,25 @@ public final class NegotiableContent {
 		return false;
 	}
 
-	private <T extends Negotiable> NegotiableContent addNegotiable(final T negotiable, final List<? super T> collection) {
-		if(negotiable!=null) {
-			collection.add(negotiable);
-		}
-		return this;
+	NegotiableContent merge(final NegotiableContent that) {
+		final NegotiableContent result=new NegotiableContent();
+		combine(result.mediaTypes,this.mediaTypes,that.mediaTypes);
+		combine(result.characterEncodings,this.characterEncodings,that.characterEncodings);
+		combine(result.languages,this.languages,that.languages);
+		return result;
 	}
 
-	public static NegotiableContent newInstance() {
-		return new NegotiableContent();
+	@SafeVarargs
+	private static <T extends Negotiable> void combine(final List<T> target, final List<T>... sources) {
+		for(final List<T> source:sources) {
+			target.addAll(source);
+		}
+	}
+
+	List<MediaType> clashingMediaTypes(final NegotiableContent that) {
+		final List<MediaType> result=Lists.newArrayList(this.mediaTypes);
+		result.retainAll(that.mediaTypes);
+		return result;
 	}
 
 	List<MediaType> mediaTypes() {
@@ -94,6 +108,17 @@ public final class NegotiableContent {
 
 	List<Language> languages() {
 		return this.languages;
+	}
+
+	private <T extends Negotiable> NegotiableContent addNegotiable(final T negotiable, final List<? super T> collection) {
+		if(negotiable!=null && !collection.contains(negotiable)) {
+			collection.add(negotiable);
+		}
+		return this;
+	}
+
+	public static NegotiableContent newInstance() {
+		return new NegotiableContent();
 	}
 
 }
