@@ -65,6 +65,7 @@ import com.google.common.collect.Lists;
 import com.google.common.io.Resources;
 
 import io.undertow.Undertow;
+import io.undertow.server.handlers.CanonicalPathHandler;
 import io.undertow.server.handlers.PathHandler;
 import io.undertow.util.Methods;
 
@@ -199,6 +200,7 @@ public class VocabularyPublisher {
 		final SerializationManager manager=deploySerializations(catalog,pathHandler,serializationCachePath);
 
 		// Canonical namespaces
+		final DocumentationDeploymentFactory deploymentFactory = new DefaultDocumentationDeploymentFactory();
 		pathHandler.
 			addPrefixPath(
 				basePath,
@@ -208,7 +210,10 @@ public class VocabularyPublisher {
 						contentNegotiation().
 							negotiate(
 								negotiableModuleContent(),
-								new ModuleRepresentionGenerator(manager))).
+								new ModuleRepresentionGenerator(manager)).
+							negotiate(
+								NegotiableContent.newInstance().support(HTML),
+								new ModuleDocumentationRedirector(deploymentFactory))).
 						allow(Methods.GET)
 				)
 			);
@@ -217,7 +222,7 @@ public class VocabularyPublisher {
 		final DocumentationDeployer deployer=
 			DocumentationDeployer.
 				create(
-					new DefaultDocumentationDeploymentFactory(),
+					deploymentFactory,
 					new DefaultDocumentationProviderFactory());
 		deployer.deploy(catalog,pathHandler);
 
@@ -241,7 +246,7 @@ public class VocabularyPublisher {
 			Undertow.
 				builder().
 					addHttpListener(port,host).
-					setHandler(pathHandler).
+					setHandler(new CanonicalPathHandler(pathHandler)).
 					build();
 		server.start();
 		awaitTerminationRequest();
@@ -254,8 +259,8 @@ public class VocabularyPublisher {
 				final Module module=catalog.get(moduleId);
 				System.out.printf("- Module (%s):%n",module.implementationIRI(),module.location());
 				for(final Format format:Format.values()) {
-					final String rpath=module.relativePath()+"."+format.fileExtension();
-					final URI location=catalog.getBase().resolve(rpath);
+					final String resourceName = module.relativePath()+"."+format.fileExtension();
+					final URI location=catalog.getBase().resolve(resourceName);
 					System.out.printf("  + %s : %s --> %s (%s)%n",format.getName(),location,location.getPath(),manager.getSerialization(module, format).toAbsolutePath());
 					pathHandler.
 						addExactPath(
@@ -270,8 +275,7 @@ public class VocabularyPublisher {
 												support(CharacterEncodings.of(StandardCharsets.ISO_8859_1)).
 												support(CharacterEncodings.of(StandardCharsets.US_ASCII)),
 										new SerializationHandler(manager,module,format))).
-							allow(Methods.GET)
-						);
+							allow(Methods.GET));
 				}
 			}
 			return manager;
