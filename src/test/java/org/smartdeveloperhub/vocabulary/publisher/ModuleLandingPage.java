@@ -28,6 +28,7 @@ package org.smartdeveloperhub.vocabulary.publisher;
 
 import java.io.File;
 import java.io.FileReader;
+import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.List;
 
@@ -36,6 +37,7 @@ import org.ldp4j.http.Variant;
 import org.smartdeveloperhub.vocabulary.publisher.handlers.Attachments;
 import org.smartdeveloperhub.vocabulary.publisher.spi.DocumentationDeployment;
 import org.smartdeveloperhub.vocabulary.publisher.spi.DocumentationProvider;
+import org.smartdeveloperhub.vocabulary.publisher.util.Location;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
@@ -75,7 +77,12 @@ final class ModuleLandingPage implements HttpHandler {
 				representation=defaultLandingPage(variant);
 			}
 			if(this.reference) {
-				exchange.getResponseHeaders().add(Headers.CONTENT_LOCATION,this.doc.implementationLandingPage().toString());
+				final URI target =
+					Location.relativize(
+						this.doc.module().context().base(),
+						URI.create(exchange.getRequestURI()),
+						this.doc.implementationLandingPage());
+				exchange.getResponseHeaders().add(Headers.CONTENT_LOCATION,target.toString());
 			}
 			exchange.setStatusCode(StatusCodes.OK);
 			exchange.getResponseSender().send(ByteBuffer.wrap(representation.getBytes(variant.charset().charset())));

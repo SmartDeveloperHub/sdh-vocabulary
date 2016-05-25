@@ -26,6 +26,8 @@
  */
 package org.smartdeveloperhub.vocabulary.publisher.util;
 
+import static org.ldp4j.net.URI.wrap;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -46,6 +48,11 @@ public final class Location {
 		} catch (final URISyntaxException e) {
 			throw new AssertionError("Rebasing of '"+uri+"' according to '"+base.getScheme()+"://"+base.getAuthority()+"' should not fail",e);
 		}
+	}
+
+	public static URI relativize(final URI base, final URI source, final URI target) throws AssertionError {
+		final URI rebased=rebase(base,source);
+		return wrap(rebased).relativize(wrap(target)).unwrap();
 	}
 
 }

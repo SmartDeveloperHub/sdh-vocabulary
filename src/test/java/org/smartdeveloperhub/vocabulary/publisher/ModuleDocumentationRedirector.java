@@ -26,8 +26,6 @@
  */
 package org.smartdeveloperhub.vocabulary.publisher;
 
-import static org.ldp4j.net.URI.wrap;
-
 import java.net.URI;
 
 import org.smartdeveloperhub.vocabulary.publisher.handlers.Attachments;
@@ -77,13 +75,11 @@ final class ModuleDocumentationRedirector implements HttpHandler {
 
 	private URI relativize(final HttpServerExchange exchange, final URI location) {
 		final ProxyResolution resolution = Attachments.getResolution(exchange);
-		final Module module=resolution.target();
-		final URI rebased=
-			Location.
-				rebase(
-					module.context().base(),
-					URI.create(exchange.getRequestURI()));
-		URI result = wrap(rebased).relativize(wrap(location)).unwrap();
+		URI result =
+			Location.relativize(
+				resolution.target().context().base(),
+				URI.create(exchange.getRequestURI()),
+				location);
 		if(resolution.isFragment()) {
 			result=result.resolve("#"+resolution.fragment());
 		}

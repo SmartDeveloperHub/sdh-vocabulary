@@ -40,6 +40,7 @@ import org.smartdeveloperhub.vocabulary.publisher.spi.DocumentationDeployment;
 import org.smartdeveloperhub.vocabulary.publisher.spi.DocumentationDeploymentFactory;
 import org.smartdeveloperhub.vocabulary.publisher.spi.DocumentationProvider;
 import org.smartdeveloperhub.vocabulary.publisher.spi.DocumentationProviderFactory;
+import org.smartdeveloperhub.vocabulary.publisher.util.Location;
 import org.smartdeveloperhub.vocabulary.util.Catalog;
 import org.smartdeveloperhub.vocabulary.util.Module;
 
@@ -88,17 +89,29 @@ final class DocumentationDeployer {
 						).allow(Methods.GET)
 				);
 			if(module.isVersion()) {
+				final URI r1=
+					Location.
+						relativize(
+							module.context().base(),
+							deployment.canonicalLandingPage(),
+							deployment.implementationLandingPage());
 				pathHandler.
 					addExactPath(
 						deployment.canonicalLandingPage().getPath(),
-						methodController(MoreHandlers.temporaryRedirect(deployment.implementationLandingPage())).allow(Methods.GET)
+						methodController(MoreHandlers.temporaryRedirect(r1)).allow(Methods.GET)
 					);
 				final URI canonicalRoot = deployment.canonicalLandingPage().resolve(".");
 				if(!canonicalRoot.equals(deployment.canonicalLandingPage())) {
+					final URI r2=
+						Location.
+							relativize(
+								module.context().base(),
+								canonicalRoot,
+								deployment.implementationLandingPage());
 					pathHandler.
 						addExactPath(
 							canonicalRoot.getPath(),
-							methodController(MoreHandlers.temporaryRedirect(deployment.implementationLandingPage())).allow(Methods.GET)
+							methodController(MoreHandlers.temporaryRedirect(r2)).allow(Methods.GET)
 						);
 				}
 			}
