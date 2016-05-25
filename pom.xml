@@ -60,6 +60,7 @@
 
 	<properties>
 		<ldp4j.version>0.3.0-SNAPSHOT</ldp4j.version>
+		<vocabularium.version>0.1.0-SNAPSHOT</vocabularium.version>
 		<sesame.version>2.7.16</sesame.version>
 		<jena.version>2.13.0</jena.version>
 		<undertow.version>1.3.17.Final</undertow.version>
@@ -244,6 +245,110 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>appassembler-maven-plugin</artifactId>
+				<version>1.10</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>assemble</goal>
+						</goals>
+						<configuration>
+							<assembleDirectory>${project.build.directory}${file.separator}client</assembleDirectory>
+							<binFileExtensions>
+								<unix>.sh</unix>
+							</binFileExtensions>
+							<repositoryLayout>flat</repositoryLayout>
+							<repositoryName>lib</repositoryName>
+							<endorsedDir>ext</endorsedDir>
+							<programs>
+								<program>
+									<id>publisher</id>
+									<mainClass>${app.publisher.main}</mainClass>
+									<jvmSettings>
+										<extraArguments>
+											<extraArgument>-Dservice.version=${project.version}</extraArgument>
+											<extraArgument>-Dservice.build=${sdh.buildNumber}</extraArgument>
+										</extraArguments>
+									</jvmSettings>
+								</program>
+								<program>
+									<id>explorer</id>
+									<mainClass>${app.explorer.main}</mainClass>
+									<jvmSettings>
+										<extraArguments>
+											<extraArgument>-Dservice.version=${project.version}</extraArgument>
+											<extraArgument>-Dservice.build=${sdh.buildNumber}</extraArgument>
+										</extraArguments>
+									</jvmSettings>
+								</program>
+							</programs>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<configuration>
+					<outputDirectory>${project.build.directory}/client/ext</outputDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<id>copy-application</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>${project.artifactId}</artifactId>
+									<version>${project.version}</version>
+									<type>test-jar</type>
+									<overWrite>true</overWrite>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<includes>io.undertow:undertow-core,org.apache.jena:jena-arq,org.slf4j:slf4j-log4j12,org.ldp4j.commons:ldp4j-commons-http</includes>
+							<excludes>org.ldp4j.commons:ldp4j-commons-testing</excludes>
+							<excludeGroupIds>org.openrdf.sesame,org.jmockit,junit,org.hamcrest,joda-time,org.codehaus.sonar-plugins.java</excludeGroupIds>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>Create Vocabularium Distribution</id>
+						<configuration>
+							<appendAssemblyId>true</appendAssemblyId>
+							<attach>true</attach>
+							<descriptors>
+								<descriptor>src${file.separator}test${file.separator}assembly${file.separator}assembly.xml</descriptor>
+							</descriptors>
+							<delimiters>
+								<delimiter>@</delimiter>
+							</delimiters>
+						</configuration>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -298,88 +403,6 @@
 			<id>client</id>
 			<build>
 				<plugins>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>appassembler-maven-plugin</artifactId>
-						<version>1.10</version>
-						<executions>
-							<execution>
-								<goals>
-									<goal>assemble</goal>
-								</goals>
-								<configuration>
-									<assembleDirectory>${project.build.directory}${file.separator}client</assembleDirectory>
-									<binFileExtensions>
-										<unix>.sh</unix>
-									</binFileExtensions>
-									<repositoryLayout>flat</repositoryLayout>
-									<repositoryName>lib</repositoryName>
-									<endorsedDir>ext</endorsedDir>
-									<programs>
-										<program>
-											<id>publisher</id>
-											<mainClass>${app.publisher.main}</mainClass>
-											<jvmSettings>
-												<extraArguments>
-													<extraArgument>-Dservice.version=${project.version}</extraArgument>
-													<extraArgument>-Dservice.build=${sdh.buildNumber}</extraArgument>
-												</extraArguments>
-											</jvmSettings>
-										</program>
-										<program>
-											<id>explorer</id>
-											<mainClass>${app.explorer.main}</mainClass>
-											<jvmSettings>
-												<extraArguments>
-													<extraArgument>-Dservice.version=${project.version}</extraArgument>
-													<extraArgument>-Dservice.build=${sdh.buildNumber}</extraArgument>
-												</extraArguments>
-											</jvmSettings>
-										</program>
-									</programs>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-dependency-plugin</artifactId>
-						<configuration>
-							<outputDirectory>${project.build.directory}/client/ext</outputDirectory>
-						</configuration>
-						<executions>
-							<execution>
-								<id>copy-application</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>copy</goal>
-								</goals>
-								<configuration>
-									<artifactItems>
-										<artifactItem>
-											<groupId>${project.groupId}</groupId>
-											<artifactId>${project.artifactId}</artifactId>
-											<version>${project.version}</version>
-											<type>test-jar</type>
-											<overWrite>true</overWrite>
-										</artifactItem>
-									</artifactItems>
-								</configuration>
-							</execution>
-							<execution>
-								<id>copy-dependencies</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>copy-dependencies</goal>
-								</goals>
-								<configuration>
-									<includes>io.undertow:undertow-core,org.apache.jena:jena-arq,org.slf4j:slf4j-log4j12,org.ldp4j.commons:ldp4j-commons-http</includes>
-									<excludes>org.ldp4j.commons:ldp4j-commons-testing</excludes>
-									<excludeGroupIds>org.openrdf.sesame,org.jmockit,junit,org.hamcrest,joda-time,org.codehaus.sonar-plugins.java</excludeGroupIds>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
 				</plugins>
 			</build>
 		</profile>
