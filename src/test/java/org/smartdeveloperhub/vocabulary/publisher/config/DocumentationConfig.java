@@ -24,33 +24,33 @@
  *   Bundle      : sdh-vocabulary-0.3.0-SNAPSHOT.jar
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  */
-package org.smartdeveloperhub.vocabulary.publisher;
+package org.smartdeveloperhub.vocabulary.publisher.config;
 
 import java.nio.file.Path;
 
-import org.smartdeveloperhub.vocabulary.publisher.spi.DocumentationProvider;
-import org.smartdeveloperhub.vocabulary.util.Module;
+import org.smartdeveloperhub.vocabulary.config.Configuration;
+import org.smartdeveloperhub.vocabulary.config.ConfigurationExtension;
 
-final class ImmutableDocumentationProvider implements DocumentationProvider {
+@ConfigurationExtension("docs")
+public final class DocumentationConfig extends Configuration {
 
-	private final Path assetsPath;
+	private String relativePath;
+	private Path root;
 
-	public ImmutableDocumentationProvider(final Path assetsPath) {
-		this.assetsPath = assetsPath;
+	public String getRelativePath() {
+		return this.relativePath;
 	}
 
-	@Override
-	public Path assetsPath() {
-		return this.assetsPath;
+	public void setRelativePath(final String relativePath) {
+		this.relativePath = relativePath;
 	}
 
-	static ImmutableDocumentationProvider create(final DocumentationStrategy strategy, final Module module) {
-		final Path path =
-			strategy.
-				assetsPath(
-					module.context().base(),
-					module.implementationIRI());
-		return new ImmutableDocumentationProvider(path);
+	public Path getRoot() {
+		return this.root;
+	}
+
+	public void setRoot(final Path root) {
+		this.root = root;
 	}
 
 }

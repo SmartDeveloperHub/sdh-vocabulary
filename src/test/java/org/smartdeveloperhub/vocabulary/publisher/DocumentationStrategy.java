@@ -27,26 +27,53 @@
 package org.smartdeveloperhub.vocabulary.publisher;
 
 import java.net.URI;
+import java.nio.file.Path;
 
 final class DocumentationStrategy {
 
-	private DocumentationStrategy() {
+	private final Path root;
+	private final String namespace;
+
+	DocumentationStrategy(final Path root, final String namespace) {
+		this.root = root;
+		this.namespace = namespace;
 	}
 
-	static String rootPath(final URI base, final String iri) {
+	String rootPath(final URI base, final String iri) {
 		final String normalizedIRI = normalize(iri);
 		final URI relativePath = base.relativize(URI.create(normalizedIRI));
-		String result = "html/"+relativePath;
+		String result = toDir(this.namespace)+relativePath;
 		if(!result.endsWith("/")) {
 			result+="/";
 		}
 		return result;
 	}
 
+	Path assetsPath(final URI base, final String iri) {
+		final String normalizedIRI = normalize(iri);
+		final URI relativePath = base.relativize(URI.create(normalizedIRI));
+		String result = relativePath.toString();
+		if(!result.endsWith("/")) {
+			result+="/";
+		}
+		return this.root.resolve(result);
+	}
+
 	static String normalize(final String uri) {
 		String normalizedIRI=uri;
 		if(normalizedIRI.endsWith("#")) {
 			normalizedIRI=normalizedIRI.substring(0,normalizedIRI.length()-1);
+		}
+		return normalizedIRI;
+	}
+
+	static String toDir(final String uri) {
+		String normalizedIRI=uri;
+		if(normalizedIRI.endsWith("#")) {
+			normalizedIRI=normalizedIRI.substring(0,normalizedIRI.length()-1);
+		}
+		if(!normalizedIRI.endsWith("/")) {
+			normalizedIRI+="/";
 		}
 		return normalizedIRI;
 	}

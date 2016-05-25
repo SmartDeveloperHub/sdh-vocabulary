@@ -1,0 +1,918 @@
+<!--
+
+    #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+      This file is part of the Smart Developer Hub Project:
+        http://www.smartdeveloperhub.org/
+
+      Center for Open Middleware
+        http://www.centeropenmiddleware.com/
+    #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+      Copyright (C) 2015-2016 Center for Open Middleware.
+    #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+      Licensed under the Apache License, Version 2.0 (the "License");
+      you may not use this file except in compliance with the License.
+      You may obtain a copy of the License at
+
+                http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing, software
+      distributed under the License is distributed on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+      See the License for the specific language governing permissions and
+      limitations under the License.
+    #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+      Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:0.3.0-SNAPSHOT
+      Bundle      : sdh-vocabulary-0.3.0-SNAPSHOT.jar
+    #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+
+-->
+<h2>4. Cross reference for [Ontology Name] classes, properties and dataproperties</h2>
+This section provides details for each class and property defined by [Ontology Name].
+<div id="classes">
+   <h2>Classes</h2>
+   <ul class="hlist">
+      <li>
+         <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#AbortedExecution"
+            title="http://www.smartdeveloperhub.org/vocabulary/ci#AbortedExecution">
+            <span>aborted execution</span>
+         </a>
+      </li>
+      <li>
+         <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#AvailableExecutionResult"
+            title="http://www.smartdeveloperhub.org/vocabulary/ci#AvailableExecutionResult">
+            <span>available execution result</span>
+         </a>
+      </li>
+      <li>
+         <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#Build"
+            title="http://www.smartdeveloperhub.org/vocabulary/ci#Build">
+            <span>build</span>
+         </a>
+      </li>
+      <li>
+         <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#CIHarvester"
+            title="http://www.smartdeveloperhub.org/vocabulary/ci#CIHarvester">
+            <span>c i harvester</span>
+         </a>
+      </li>
+      <li>
+         <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#CIVocabulary"
+            title="http://www.smartdeveloperhub.org/vocabulary/ci#CIVocabulary">
+            <span>c i vocabulary</span>
+         </a>
+      </li>
+      <li>
+         <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#CompositeBuild"
+            title="http://www.smartdeveloperhub.org/vocabulary/ci#CompositeBuild">
+            <span>composite build</span>
+         </a>
+      </li>
+      <li>
+         <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#Execution"
+            title="http://www.smartdeveloperhub.org/vocabulary/ci#Execution">
+            <span>execution</span>
+         </a>
+      </li>
+      <li>
+         <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#ExecutionResult"
+            title="http://www.smartdeveloperhub.org/vocabulary/ci#ExecutionResult">
+            <span>execution result</span>
+         </a>
+      </li>
+      <li>
+         <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#ExecutionState"
+            title="http://www.smartdeveloperhub.org/vocabulary/ci#ExecutionState">
+            <span>execution state</span>
+         </a>
+      </li>
+      <li>
+         <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#ExecutionVerdict"
+            title="http://www.smartdeveloperhub.org/vocabulary/ci#ExecutionVerdict">
+            <span>execution verdict</span>
+         </a>
+      </li>
+      <li>
+         <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#FinishedExecution"
+            title="http://www.smartdeveloperhub.org/vocabulary/ci#FinishedExecution">
+            <span>finished execution</span>
+         </a>
+      </li>
+      <li>
+         <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#RunningExecution"
+            title="http://www.smartdeveloperhub.org/vocabulary/ci#RunningExecution">
+            <span>running execution</span>
+         </a>
+      </li>
+      <li>
+         <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#SubBuild"
+            title="http://www.smartdeveloperhub.org/vocabulary/ci#SubBuild">
+            <span>sub build</span>
+         </a>
+      </li>
+      <li>
+         <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#UnavailableExecutionResult"
+            title="http://www.smartdeveloperhub.org/vocabulary/ci#UnavailableExecutionResult">
+            <span>unavailable execution result</span>
+         </a>
+      </li>
+   </ul>
+   <div class="entity" id="http://www.smartdeveloperhub.org/vocabulary/ci#AbortedExecution">
+      <h3>aborted execution<sup class="type-c" title="class">c</sup>
+         <span class="backlink"> back to <a href="#toc">ToC</a> or <a href="#classes">Class ToC</a>
+         </span>
+      </h3>
+      <p>
+         <strong>IRI:</strong> http://www.smartdeveloperhub.org/vocabulary/ci#AbortedExecution</p>
+      <dl class="description">
+         <dt>has super-classes</dt>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#Execution"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#Execution">execution</a>
+            <sup class="type-c" title="class">c</sup>
+         </dd>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#hasResult"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#hasResult">has result</a>
+            <sup class="type-op" title="object property">op</sup> 
+            <span class="logic">exactly</span> 1 <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#UnavailableExecutionResult"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#UnavailableExecutionResult">unavailable execution result</a>
+            <sup class="type-c" title="class">c</sup>
+         </dd>
+         <dd>
+            <span class="dotted" title="http://open-services.net/ns/auto#state">state</span> 
+            <span class="logic">value</span> 
+            <span class="dotted" title="http://open-services.net/ns/auto#canceled">canceled</span>
+         </dd>
+      </dl>
+   </div>
+   <div class="entity" id="http://www.smartdeveloperhub.org/vocabulary/ci#AvailableExecutionResult">
+      <h3>available execution result<sup class="type-c" title="class">c</sup>
+         <span class="backlink"> back to <a href="#toc">ToC</a> or <a href="#classes">Class ToC</a>
+         </span>
+      </h3>
+      <p>
+         <strong>IRI:</strong> http://www.smartdeveloperhub.org/vocabulary/ci#AvailableExecutionResult</p>
+      <dl class="description">
+         <dt>has super-classes</dt>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#ExecutionResult"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#ExecutionResult">execution result</a>
+            <sup class="type-c" title="class">c</sup>
+         </dd>
+         <dd>
+            <span class="dotted" title="http://open-services.net/ns/auto#state">state</span> 
+            <span class="logic">value</span> 
+            <span class="dotted" title="http://open-services.net/ns/auto#complete">complete</span>
+         </dd>
+         <dd>
+            <span class="dotted" title="http://open-services.net/ns/auto#verdict">verdict</span> 
+            <span class="logic">only</span> { <span class="dotted" title="http://open-services.net/ns/auto#passed">passed</span> , <span class="dotted" title="http://open-services.net/ns/auto#failed">failed</span> , <span class="dotted" title="http://open-services.net/ns/auto#warning">warning</span> }</dd>
+      </dl>
+   </div>
+   <div class="entity" id="http://www.smartdeveloperhub.org/vocabulary/ci#Build">
+      <h3>build<sup class="type-c" title="class">c</sup>
+         <span class="backlink"> back to <a href="#toc">ToC</a> or <a href="#classes">Class ToC</a>
+         </span>
+      </h3>
+      <p>
+         <strong>IRI:</strong> http://www.smartdeveloperhub.org/vocabulary/ci#Build</p>
+      <dl class="description">
+         <dt>has super-classes</dt>
+         <dd>
+            <span class="dotted" title="http://open-services.net/ns/auto#AutomationPlan">automation plan</span>
+         </dd>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#branchSpecifier"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#branchSpecifier">branch specifier</a>
+            <sup class="type-dp" title="data property">dp</sup> 
+            <span class="logic">max</span> 1</dd>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#hasExecution"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#hasExecution">has execution</a>
+            <sup class="type-op" title="object property">op</sup> 
+            <span class="logic">min</span> 0 <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#Execution"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#Execution">execution</a>
+            <sup class="type-c" title="class">c</sup>
+         </dd>
+         <dd>
+            <span class="dotted"
+                  title="http://www.smartdeveloperhub.org/vocabulary/scm#location">location</span> 
+            <span class="logic">max</span> 1</dd>
+         <dt>has sub-classes</dt>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#CompositeBuild"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#CompositeBuild">composite build</a>
+            <sup class="type-c" title="class">c</sup>, <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#SubBuild"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#SubBuild">sub build</a>
+            <sup class="type-c" title="class">c</sup>
+         </dd>
+         <dt>is in domain of</dt>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#branchSpecifier"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#branchSpecifier">branch specifier</a>
+            <sup class="type-dp" title="data property">dp</sup>
+         </dd>
+         <dt>is in range of</dt>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#hasBuild"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#hasBuild">has build</a>
+            <sup class="type-op" title="object property">op</sup>
+         </dd>
+         <dt>is also defined as</dt>
+         <dd>named individual</dd>
+      </dl>
+   </div>
+   <div class="entity" id="http://www.smartdeveloperhub.org/vocabulary/ci#CIHarvester">
+      <h3>c i harvester<sup class="type-c" title="class">c</sup>
+         <span class="backlink"> back to <a href="#toc">ToC</a> or <a href="#classes">Class ToC</a>
+         </span>
+      </h3>
+      <p>
+         <strong>IRI:</strong> http://www.smartdeveloperhub.org/vocabulary/ci#CIHarvester</p>
+      <dl class="description">
+         <dt>has super-classes</dt>
+         <dd>
+            <span class="dotted"
+                  title="http://www.smartdeveloperhub.org/vocabulary/platform#Harvester">harvester</span>
+         </dd>
+         <dd>
+            <span class="dotted"
+                  title="http://www.smartdeveloperhub.org/vocabulary/platform#vocabulary">vocabulary</span> 
+            <span class="logic">some</span> 
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#CIVocabulary"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#CIVocabulary">c i vocabulary</a>
+            <sup class="type-c" title="class">c</sup>
+         </dd>
+         <dd>
+            <span class="dotted"
+                  title="http://www.smartdeveloperhub.org/vocabulary/platform#hasResource">has resource</span> 
+            <span class="logic">some</span> 
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#Build"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#Build">build</a>
+            <sup class="type-c" title="class">c</sup>
+         </dd>
+         <dd>
+            <span class="dotted"
+                  title="http://www.smartdeveloperhub.org/vocabulary/platform#hasResourceType">has resource type</span> 
+            <span class="logic">value</span> 
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#Build"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#Build">build</a>
+         </dd>
+         <dd>
+            <span class="dotted"
+                  title="http://www.smartdeveloperhub.org/vocabulary/platform#providesDomain">provides domain</span> 
+            <span class="logic">value</span> 
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#CIDomain"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#CIDomain">c i domain</a>
+         </dd>
+         <dt>is in domain of</dt>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#hasBuild"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#hasBuild">has build</a>
+            <sup class="type-op" title="object property">op</sup>
+         </dd>
+      </dl>
+   </div>
+   <div class="entity" id="http://www.smartdeveloperhub.org/vocabulary/ci#CIVocabulary">
+      <h3>c i vocabulary<sup class="type-c" title="class">c</sup>
+         <span class="backlink"> back to <a href="#toc">ToC</a> or <a href="#classes">Class ToC</a>
+         </span>
+      </h3>
+      <p>
+         <strong>IRI:</strong> http://www.smartdeveloperhub.org/vocabulary/ci#CIVocabulary</p>
+      <dl class="description">
+         <dt>has super-classes</dt>
+         <dd>
+            <span class="dotted"
+                  title="http://www.smartdeveloperhub.org/vocabulary/platform#Vocabulary">vocabulary</span>
+         </dd>
+         <dd>
+            <span class="dotted"
+                  title="http://www.smartdeveloperhub.org/vocabulary/platform#implements">implements</span> 
+            <span class="logic">value</span> 
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#CIDomain"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#CIDomain">c i domain</a>
+         </dd>
+      </dl>
+   </div>
+   <div class="entity" id="http://www.smartdeveloperhub.org/vocabulary/ci#CompositeBuild">
+      <h3>composite build<sup class="type-c" title="class">c</sup>
+         <span class="backlink"> back to <a href="#toc">ToC</a> or <a href="#classes">Class ToC</a>
+         </span>
+      </h3>
+      <p>
+         <strong>IRI:</strong> http://www.smartdeveloperhub.org/vocabulary/ci#CompositeBuild</p>
+      <dl class="description">
+         <dt>has super-classes</dt>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#Build"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#Build">build</a>
+            <sup class="type-c" title="class">c</sup>
+         </dd>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#includesBuild"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#includesBuild">includes build</a>
+            <sup class="type-op" title="object property">op</sup> 
+            <span class="logic">min</span> 1</dd>
+         <dt>is in domain of</dt>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#includesBuild"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#includesBuild">includes build</a>
+            <sup class="type-op" title="object property">op</sup>
+         </dd>
+      </dl>
+   </div>
+   <div class="entity" id="http://www.smartdeveloperhub.org/vocabulary/ci#Execution">
+      <h3>execution<sup class="type-c" title="class">c</sup>
+         <span class="backlink"> back to <a href="#toc">ToC</a> or <a href="#classes">Class ToC</a>
+         </span>
+      </h3>
+      <p>
+         <strong>IRI:</strong> http://www.smartdeveloperhub.org/vocabulary/ci#Execution</p>
+      <dl class="description">
+         <dt>has super-classes</dt>
+         <dd>
+            <span class="dotted"
+                  title="http://open-services.net/ns/auto#AutomationRequest">automation request</span>
+         </dd>
+         <dd>
+            <span class="dotted"
+                  title="http://www.smartdeveloperhub.org/vocabulary/scm#location">location</span> 
+            <span class="logic">max</span> 1</dd>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#hasResult"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#hasResult">has result</a>
+            <sup class="type-op" title="object property">op</sup> 
+            <span class="logic">exactly</span> 1 <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#ExecutionResult"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#ExecutionResult">execution result</a>
+            <sup class="type-c" title="class">c</sup>
+         </dd>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#location"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#location">location</a>
+            <sup class="type-dp" title="data property">dp</sup> 
+            <span class="logic">exactly</span> 1</dd>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#branchId"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#branchId">branch id</a>
+            <sup class="type-dp" title="data property">dp</sup> 
+            <span class="logic">max</span> 1</dd>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#commitId"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#commitId">commit id</a>
+            <sup class="type-dp" title="data property">dp</sup> 
+            <span class="logic">max</span> 1</dd>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#forCommit"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#forCommit">for commit</a>
+            <sup class="type-op" title="object property">op</sup> 
+            <span class="logic">max</span> 1</dd>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#forBranch"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#forBranch">for branch</a>
+            <sup class="type-op" title="object property">op</sup> 
+            <span class="logic">max</span> 1</dd>
+         <dd>
+            <span class="dotted" title="http://open-services.net/ns/auto#state">state</span> 
+            <span class="logic">exactly</span> 1 <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#ExecutionState"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#ExecutionState">execution state</a>
+            <sup class="type-c" title="class">c</sup>
+         </dd>
+         <dt>has sub-classes</dt>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#AbortedExecution"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#AbortedExecution">aborted execution</a>
+            <sup class="type-c" title="class">c</sup>, <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#FinishedExecution"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#FinishedExecution">finished execution</a>
+            <sup class="type-c" title="class">c</sup>, <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#RunningExecution"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#RunningExecution">running execution</a>
+            <sup class="type-c" title="class">c</sup>
+         </dd>
+         <dt>is in domain of</dt>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#branchId"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#branchId">branch id</a>
+            <sup class="type-dp" title="data property">dp</sup>, <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#commitId"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#commitId">commit id</a>
+            <sup class="type-dp" title="data property">dp</sup>, <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#forBranch"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#forBranch">for branch</a>
+            <sup class="type-op" title="object property">op</sup>, <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#forCommit"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#forCommit">for commit</a>
+            <sup class="type-op" title="object property">op</sup>
+         </dd>
+      </dl>
+   </div>
+   <div class="entity" id="http://www.smartdeveloperhub.org/vocabulary/ci#ExecutionResult">
+      <h3>execution result<sup class="type-c" title="class">c</sup>
+         <span class="backlink"> back to <a href="#toc">ToC</a> or <a href="#classes">Class ToC</a>
+         </span>
+      </h3>
+      <p>
+         <strong>IRI:</strong> http://www.smartdeveloperhub.org/vocabulary/ci#ExecutionResult</p>
+      <dl class="description">
+         <dt>has super-classes</dt>
+         <dd>
+            <span class="dotted"
+                  title="http://open-services.net/ns/auto#AutomationResult">automation result</span>
+         </dd>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#location"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#location">location</a>
+            <sup class="type-dp" title="data property">dp</sup> 
+            <span class="logic">exactly</span> 1</dd>
+         <dd>
+            <span class="dotted" title="http://open-services.net/ns/auto#verdict">verdict</span> 
+            <span class="logic">exactly</span> 1 <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#ExecutionVerdict"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#ExecutionVerdict">execution verdict</a>
+            <sup class="type-c" title="class">c</sup>
+         </dd>
+         <dt>has sub-classes</dt>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#AvailableExecutionResult"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#AvailableExecutionResult">available execution result</a>
+            <sup class="type-c" title="class">c</sup>, <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#UnavailableExecutionResult"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#UnavailableExecutionResult">unavailable execution result</a>
+            <sup class="type-c" title="class">c</sup>
+         </dd>
+      </dl>
+   </div>
+   <div class="entity" id="http://www.smartdeveloperhub.org/vocabulary/ci#ExecutionState">
+      <h3>execution state<sup class="type-c" title="class">c</sup>
+         <span class="backlink"> back to <a href="#toc">ToC</a> or <a href="#classes">Class ToC</a>
+         </span>
+      </h3>
+      <p>
+         <strong>IRI:</strong> http://www.smartdeveloperhub.org/vocabulary/ci#ExecutionState</p>
+      <dl class="description">
+         <dt>is equivalent to</dt>
+         <dd>{ <span class="dotted" title="http://open-services.net/ns/auto#complete">complete</span> , <span class="dotted" title="http://open-services.net/ns/auto#inProgress">in progress</span> , <span class="dotted" title="http://open-services.net/ns/auto#canceled">canceled</span> }</dd>
+      </dl>
+   </div>
+   <div class="entity" id="http://www.smartdeveloperhub.org/vocabulary/ci#ExecutionVerdict">
+      <h3>execution verdict<sup class="type-c" title="class">c</sup>
+         <span class="backlink"> back to <a href="#toc">ToC</a> or <a href="#classes">Class ToC</a>
+         </span>
+      </h3>
+      <p>
+         <strong>IRI:</strong> http://www.smartdeveloperhub.org/vocabulary/ci#ExecutionVerdict</p>
+      <dl class="description">
+         <dt>is equivalent to</dt>
+         <dd>{ <span class="dotted" title="http://open-services.net/ns/auto#passed">passed</span> , <span class="dotted" title="http://open-services.net/ns/auto#failed">failed</span> , <span class="dotted" title="http://open-services.net/ns/auto#error">error</span> , <span class="dotted" title="http://open-services.net/ns/auto#unavailable">unavailable</span> , <span class="dotted" title="http://open-services.net/ns/auto#warning">warning</span> }</dd>
+      </dl>
+   </div>
+   <div class="entity" id="http://www.smartdeveloperhub.org/vocabulary/ci#FinishedExecution">
+      <h3>finished execution<sup class="type-c" title="class">c</sup>
+         <span class="backlink"> back to <a href="#toc">ToC</a> or <a href="#classes">Class ToC</a>
+         </span>
+      </h3>
+      <p>
+         <strong>IRI:</strong> http://www.smartdeveloperhub.org/vocabulary/ci#FinishedExecution</p>
+      <dl class="description">
+         <dt>has super-classes</dt>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#Execution"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#Execution">execution</a>
+            <sup class="type-c" title="class">c</sup>
+         </dd>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#hasResult"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#hasResult">has result</a>
+            <sup class="type-op" title="object property">op</sup> 
+            <span class="logic">exactly</span> 1 <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#AvailableExecutionResult"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#AvailableExecutionResult">available execution result</a>
+            <sup class="type-c" title="class">c</sup>
+         </dd>
+         <dd>
+            <span class="dotted" title="http://open-services.net/ns/auto#state">state</span> 
+            <span class="logic">exactly</span> 1 <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#ExecutionState"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#ExecutionState">execution state</a>
+            <sup class="type-c" title="class">c</sup>
+         </dd>
+         <dd>
+            <span class="dotted" title="http://open-services.net/ns/auto#state">state</span> 
+            <span class="logic">value</span> 
+            <span class="dotted" title="http://open-services.net/ns/auto#complete">complete</span>
+         </dd>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#finished"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#finished">finished</a>
+            <sup class="type-dp" title="data property">dp</sup> 
+            <span class="logic">exactly</span> 1</dd>
+      </dl>
+   </div>
+   <div class="entity" id="http://www.smartdeveloperhub.org/vocabulary/ci#RunningExecution">
+      <h3>running execution<sup class="type-c" title="class">c</sup>
+         <span class="backlink"> back to <a href="#toc">ToC</a> or <a href="#classes">Class ToC</a>
+         </span>
+      </h3>
+      <p>
+         <strong>IRI:</strong> http://www.smartdeveloperhub.org/vocabulary/ci#RunningExecution</p>
+      <dl class="description">
+         <dt>has super-classes</dt>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#Execution"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#Execution">execution</a>
+            <sup class="type-c" title="class">c</sup>
+         </dd>
+         <dd>
+            <span class="dotted" title="http://open-services.net/ns/auto#state">state</span> 
+            <span class="logic">value</span> 
+            <span class="dotted" title="http://open-services.net/ns/auto#inProgress">in progress</span>
+         </dd>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#hasResult"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#hasResult">has result</a>
+            <sup class="type-op" title="object property">op</sup> 
+            <span class="logic">exactly</span> 1 <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#UnavailableExecutionResult"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#UnavailableExecutionResult">unavailable execution result</a>
+            <sup class="type-c" title="class">c</sup>
+         </dd>
+      </dl>
+   </div>
+   <div class="entity" id="http://www.smartdeveloperhub.org/vocabulary/ci#SubBuild">
+      <h3>sub build<sup class="type-c" title="class">c</sup>
+         <span class="backlink"> back to <a href="#toc">ToC</a> or <a href="#classes">Class ToC</a>
+         </span>
+      </h3>
+      <p>
+         <strong>IRI:</strong> http://www.smartdeveloperhub.org/vocabulary/ci#SubBuild</p>
+      <dl class="description">
+         <dt>has super-classes</dt>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#Build"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#Build">build</a>
+            <sup class="type-c" title="class">c</sup>
+         </dd>
+         <dt>is in range of</dt>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#includesBuild"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#includesBuild">includes build</a>
+            <sup class="type-op" title="object property">op</sup>
+         </dd>
+      </dl>
+   </div>
+   <div class="entity" id="http://www.smartdeveloperhub.org/vocabulary/ci#UnavailableExecutionResult">
+      <h3>unavailable execution result<sup class="type-c" title="class">c</sup>
+         <span class="backlink"> back to <a href="#toc">ToC</a> or <a href="#classes">Class ToC</a>
+         </span>
+      </h3>
+      <p>
+         <strong>IRI:</strong> http://www.smartdeveloperhub.org/vocabulary/ci#UnavailableExecutionResult</p>
+      <dl class="description">
+         <dt>has super-classes</dt>
+         <dd>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#ExecutionResult"
+               title="http://www.smartdeveloperhub.org/vocabulary/ci#ExecutionResult">execution result</a>
+            <sup class="type-c" title="class">c</sup>
+         </dd>
+         <dd>
+            <span class="dotted" title="http://open-services.net/ns/auto#state">state</span> 
+            <span class="logic">only</span> { <span class="dotted" title="http://open-services.net/ns/auto#inProgress">in progress</span> , <span class="dotted" title="http://open-services.net/ns/auto#canceled">canceled</span> }</dd>
+         <dd>
+            <span class="dotted" title="http://open-services.net/ns/auto#verdict">verdict</span> 
+            <span class="logic">value</span> 
+            <span class="dotted" title="http://open-services.net/ns/auto#unavailable">unavailable</span>
+         </dd>
+      </dl>
+   </div>
+</div><div id="objectproperties">
+   <h2>Object Properties</h2>
+   <ul class="hlist">
+      <li>
+         <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#forBranch"
+            title="http://www.smartdeveloperhub.org/vocabulary/ci#forBranch">
+            <span>for branch</span>
+         </a>
+      </li>
+      <li>
+         <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#forCommit"
+            title="http://www.smartdeveloperhub.org/vocabulary/ci#forCommit">
+            <span>for commit</span>
+         </a>
+      </li>
+      <li>
+         <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#hasBuild"
+            title="http://www.smartdeveloperhub.org/vocabulary/ci#hasBuild">
+            <span>has build</span>
+         </a>
+      </li>
+      <li>
+         <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#hasExecution"
+            title="http://www.smartdeveloperhub.org/vocabulary/ci#hasExecution">
+            <span>has execution</span>
+         </a>
+      </li>
+      <li>
+         <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#hasResult"
+            title="http://www.smartdeveloperhub.org/vocabulary/ci#hasResult">
+            <span>has result</span>
+         </a>
+      </li>
+      <li>
+         <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#includesBuild"
+            title="http://www.smartdeveloperhub.org/vocabulary/ci#includesBuild">
+            <span>includes build</span>
+         </a>
+      </li>
+   </ul>
+   <div class="entity" id="http://www.smartdeveloperhub.org/vocabulary/ci#forBranch">
+      <h3>for branch<sup class="type-op" title="object property">op</sup>
+         <span class="backlink"> back to <a href="#toc">ToC</a> or <a href="#objectproperties">Object Property ToC</a>
+         </span>
+      </h3>
+      <p>
+         <strong>IRI:</strong> http://www.smartdeveloperhub.org/vocabulary/ci#forBranch</p>
+      <div class="description">
+         <dl>
+            <dt>has domain</dt>
+            <dd>
+               <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#Execution"
+                  title="http://www.smartdeveloperhub.org/vocabulary/ci#Execution">execution</a>
+               <sup class="type-c" title="class">c</sup>
+            </dd>
+            <dt>has range</dt>
+            <dd>
+               <span class="dotted"
+                     title="http://www.smartdeveloperhub.org/vocabulary/scm#Branch">branch</span>
+            </dd>
+         </dl>
+      </div>
+   </div>
+   <div class="entity" id="http://www.smartdeveloperhub.org/vocabulary/ci#forCommit">
+      <h3>for commit<sup class="type-op" title="object property">op</sup>
+         <span class="backlink"> back to <a href="#toc">ToC</a> or <a href="#objectproperties">Object Property ToC</a>
+         </span>
+      </h3>
+      <p>
+         <strong>IRI:</strong> http://www.smartdeveloperhub.org/vocabulary/ci#forCommit</p>
+      <div class="description">
+         <dl>
+            <dt>has domain</dt>
+            <dd>
+               <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#Execution"
+                  title="http://www.smartdeveloperhub.org/vocabulary/ci#Execution">execution</a>
+               <sup class="type-c" title="class">c</sup>
+            </dd>
+            <dt>has range</dt>
+            <dd>
+               <span class="dotted"
+                     title="http://www.smartdeveloperhub.org/vocabulary/scm#Commit">commit</span>
+            </dd>
+         </dl>
+      </div>
+   </div>
+   <div class="entity" id="http://www.smartdeveloperhub.org/vocabulary/ci#hasBuild">
+      <h3>has build<sup class="type-op" title="object property">op</sup>
+         <span class="backlink"> back to <a href="#toc">ToC</a> or <a href="#objectproperties">Object Property ToC</a>
+         </span>
+      </h3>
+      <p>
+         <strong>IRI:</strong> http://www.smartdeveloperhub.org/vocabulary/ci#hasBuild</p>
+      <div class="description">
+         <p>
+            <strong>has characteristics:</strong> inverse functional</p>
+         <dl>
+            <dt>has super-properties</dt>
+            <dd>
+               <span class="dotted"
+                     title="http://www.smartdeveloperhub.org/vocabulary/platform#hasResource">has resource</span>
+            </dd>
+            <dt>has domain</dt>
+            <dd>
+               <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#CIHarvester"
+                  title="http://www.smartdeveloperhub.org/vocabulary/ci#CIHarvester">c i harvester</a>
+               <sup class="type-c" title="class">c</sup>
+            </dd>
+            <dt>has range</dt>
+            <dd>
+               <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#Build"
+                  title="http://www.smartdeveloperhub.org/vocabulary/ci#Build">build</a>
+               <sup class="type-c" title="class">c</sup>
+            </dd>
+         </dl>
+      </div>
+   </div>
+   <div class="entity" id="http://www.smartdeveloperhub.org/vocabulary/ci#hasExecution">
+      <h3>has execution<sup class="type-op" title="object property">op</sup>
+         <span class="backlink"> back to <a href="#toc">ToC</a> or <a href="#objectproperties">Object Property ToC</a>
+         </span>
+      </h3>
+      <p>
+         <strong>IRI:</strong> http://www.smartdeveloperhub.org/vocabulary/ci#hasExecution</p>
+      <div class="description">
+         <p>
+            <strong>has characteristics:</strong> inverse functional</p>
+         <dl>
+            <dt>is inverse of</dt>
+            <dd>
+               <span class="dotted"
+                     title="http://open-services.net/ns/auto#executesAutomationPlan">executes automation plan</span>
+            </dd>
+         </dl>
+      </div>
+   </div>
+   <div class="entity" id="http://www.smartdeveloperhub.org/vocabulary/ci#hasResult">
+      <h3>has result<sup class="type-op" title="object property">op</sup>
+         <span class="backlink"> back to <a href="#toc">ToC</a> or <a href="#objectproperties">Object Property ToC</a>
+         </span>
+      </h3>
+      <p>
+         <strong>IRI:</strong> http://www.smartdeveloperhub.org/vocabulary/ci#hasResult</p>
+      <div class="description">
+         <p>
+            <strong>has characteristics:</strong> functional, inverse functional</p>
+         <dl>
+            <dt>is inverse of</dt>
+            <dd>
+               <span class="dotted"
+                     title="http://open-services.net/ns/auto#producedByAutomationRequest">produced by automation request</span>
+            </dd>
+         </dl>
+      </div>
+   </div>
+   <div class="entity" id="http://www.smartdeveloperhub.org/vocabulary/ci#includesBuild">
+      <h3>includes build<sup class="type-op" title="object property">op</sup>
+         <span class="backlink"> back to <a href="#toc">ToC</a> or <a href="#objectproperties">Object Property ToC</a>
+         </span>
+      </h3>
+      <p>
+         <strong>IRI:</strong> http://www.smartdeveloperhub.org/vocabulary/ci#includesBuild</p>
+      <div class="description">
+         <p>
+            <strong>has characteristics:</strong> inverse functional</p>
+         <dl>
+            <dt>has domain</dt>
+            <dd>
+               <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#CompositeBuild"
+                  title="http://www.smartdeveloperhub.org/vocabulary/ci#CompositeBuild">composite build</a>
+               <sup class="type-c" title="class">c</sup>
+            </dd>
+            <dt>has range</dt>
+            <dd>
+               <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#SubBuild"
+                  title="http://www.smartdeveloperhub.org/vocabulary/ci#SubBuild">sub build</a>
+               <sup class="type-c" title="class">c</sup>
+            </dd>
+         </dl>
+      </div>
+   </div>
+</div><div id="dataproperties">
+   <h2>Data Properties</h2>
+   <ul class="hlist">
+      <li>
+         <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#branchId"
+            title="http://www.smartdeveloperhub.org/vocabulary/ci#branchId">
+            <span>branch id</span>
+         </a>
+      </li>
+      <li>
+         <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#branchSpecifier"
+            title="http://www.smartdeveloperhub.org/vocabulary/ci#branchSpecifier">
+            <span>branch specifier</span>
+         </a>
+      </li>
+      <li>
+         <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#commitId"
+            title="http://www.smartdeveloperhub.org/vocabulary/ci#commitId">
+            <span>commit id</span>
+         </a>
+      </li>
+      <li>
+         <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#finished"
+            title="http://www.smartdeveloperhub.org/vocabulary/ci#finished">
+            <span>finished</span>
+         </a>
+      </li>
+      <li>
+         <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#location"
+            title="http://www.smartdeveloperhub.org/vocabulary/ci#location">
+            <span>location</span>
+         </a>
+      </li>
+   </ul>
+   <div class="entity" id="http://www.smartdeveloperhub.org/vocabulary/ci#branchId">
+      <h3>branch id<sup class="type-dp" title="data property">dp</sup>
+         <span class="backlink"> back to <a href="#toc">ToC</a> or <a href="#dataproperties">Data Property ToC</a>
+         </span>
+      </h3>
+      <p>
+         <strong>IRI:</strong> http://www.smartdeveloperhub.org/vocabulary/ci#branchId</p>
+      <div class="description">
+         <dl>
+            <dt>has domain</dt>
+            <dd>
+               <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#Execution"
+                  title="http://www.smartdeveloperhub.org/vocabulary/ci#Execution">execution</a>
+               <sup class="type-c" title="class">c</sup>
+            </dd>
+            <dt>has range</dt>
+            <dd>
+               <span class="dotted" title="http://www.w3.org/2001/XMLSchema#string">string</span>
+            </dd>
+         </dl>
+      </div>
+   </div>
+   <div class="entity" id="http://www.smartdeveloperhub.org/vocabulary/ci#branchSpecifier">
+      <h3>branch specifier<sup class="type-dp" title="data property">dp</sup>
+         <span class="backlink"> back to <a href="#toc">ToC</a> or <a href="#dataproperties">Data Property ToC</a>
+         </span>
+      </h3>
+      <p>
+         <strong>IRI:</strong> http://www.smartdeveloperhub.org/vocabulary/ci#branchSpecifier</p>
+      <div class="description">
+         <dl>
+            <dt>has domain</dt>
+            <dd>
+               <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#Build"
+                  title="http://www.smartdeveloperhub.org/vocabulary/ci#Build">build</a>
+               <sup class="type-c" title="class">c</sup>
+            </dd>
+            <dt>has range</dt>
+            <dd>
+               <span class="dotted" title="http://www.w3.org/2001/XMLSchema#string">string</span>
+            </dd>
+         </dl>
+      </div>
+   </div>
+   <div class="entity" id="http://www.smartdeveloperhub.org/vocabulary/ci#commitId">
+      <h3>commit id<sup class="type-dp" title="data property">dp</sup>
+         <span class="backlink"> back to <a href="#toc">ToC</a> or <a href="#dataproperties">Data Property ToC</a>
+         </span>
+      </h3>
+      <p>
+         <strong>IRI:</strong> http://www.smartdeveloperhub.org/vocabulary/ci#commitId</p>
+      <div class="description">
+         <dl>
+            <dt>has domain</dt>
+            <dd>
+               <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#Execution"
+                  title="http://www.smartdeveloperhub.org/vocabulary/ci#Execution">execution</a>
+               <sup class="type-c" title="class">c</sup>
+            </dd>
+            <dt>has range</dt>
+            <dd>
+               <span class="dotted" title="http://www.w3.org/2001/XMLSchema#string">string</span>
+            </dd>
+         </dl>
+      </div>
+   </div>
+   <div class="entity" id="http://www.smartdeveloperhub.org/vocabulary/ci#finished">
+      <h3>finished<sup class="type-dp" title="data property">dp</sup>
+         <span class="backlink"> back to <a href="#toc">ToC</a> or <a href="#dataproperties">Data Property ToC</a>
+         </span>
+      </h3>
+      <p>
+         <strong>IRI:</strong> http://www.smartdeveloperhub.org/vocabulary/ci#finished</p>
+      <div class="description">
+         <dl>
+            <dt>has range</dt>
+            <dd>
+               <span class="dotted" title="http://www.w3.org/2001/XMLSchema#dateTime">date time</span>
+            </dd>
+         </dl>
+      </div>
+   </div>
+   <div class="entity" id="http://www.smartdeveloperhub.org/vocabulary/ci#location">
+      <h3>location<sup class="type-dp" title="data property">dp</sup>
+         <span class="backlink"> back to <a href="#toc">ToC</a> or <a href="#dataproperties">Data Property ToC</a>
+         </span>
+      </h3>
+      <p>
+         <strong>IRI:</strong> http://www.smartdeveloperhub.org/vocabulary/ci#location</p>
+      <div class="description">
+         <p>
+            <strong>has characteristics:</strong> functional</p>
+         <dl>
+            <dt>has range</dt>
+            <dd>
+               <span class="dotted" title="http://www.w3.org/2001/XMLSchema#anyURI">any u r i</span>
+            </dd>
+         </dl>
+      </div>
+   </div>
+</div><div id="namedindividuals">
+   <h2>Named Individuals</h2>
+   <ul class="hlist">
+      <li>
+         <a href="#http://www.smartdeveloperhub.org/vocabulary/ci#CIDomain"
+            title="http://www.smartdeveloperhub.org/vocabulary/ci#CIDomain">
+            <span>c i domain</span>
+         </a>
+      </li>
+   </ul>
+   <div class="entity" id="http://www.smartdeveloperhub.org/vocabulary/ci#CIDomain">
+      <h3>c i domain<sup class="type-ni" title="named individual">ni</sup>
+         <span class="backlink"> back to <a href="#toc">ToC</a> or <a href="#namedindividuals">Named Individual ToC</a>
+         </span>
+      </h3>
+      <p>
+         <strong>IRI:</strong> http://www.smartdeveloperhub.org/vocabulary/ci#CIDomain</p>
+      <dl class="description">
+         <dt>belongs to</dt>
+         <dd>
+            <span class="dotted"
+                  title="http://www.smartdeveloperhub.org/vocabulary/platform#Domain">domain</span>
+         </dd>
+      </dl>
+   </div>
+</div>

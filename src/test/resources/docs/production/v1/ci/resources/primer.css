@@ -24,33 +24,55 @@
  *   Bundle      : sdh-vocabulary-0.3.0-SNAPSHOT.jar
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  */
-package org.smartdeveloperhub.vocabulary.publisher;
+/* define a class "noprint" for sections which don't get printed */  
+.noprint { display: none; }
 
-import java.nio.file.Path;
-
-import org.smartdeveloperhub.vocabulary.publisher.spi.DocumentationProvider;
-import org.smartdeveloperhub.vocabulary.util.Module;
-
-final class ImmutableDocumentationProvider implements DocumentationProvider {
-
-	private final Path assetsPath;
-
-	public ImmutableDocumentationProvider(final Path assetsPath) {
-		this.assetsPath = assetsPath;
-	}
-
-	@Override
-	public Path assetsPath() {
-		return this.assetsPath;
-	}
-
-	static ImmutableDocumentationProvider create(final DocumentationStrategy strategy, final Module module) {
-		final Path path =
-			strategy.
-				assetsPath(
-					module.context().base(),
-					module.implementationIRI());
-		return new ImmutableDocumentationProvider(path);
-	}
-
+/* our syntax menu for switching */
+div.syntaxmenu {
+  border: 1px dotted black;
+  padding:0.5em;
+  margin: 1em; 
 }
+
+.container {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+@media print {
+   div.syntaxmenu { display:none; }
+}
+
+/* use tab-like headers for syntax examples */
+div.exampleheader {
+  font-size: 90%;
+  float: left;
+  background: #F9F9F9;
+  color: #2F6FAB;
+  border: 1px dashed #2F6FAB;
+  border-bottom: 0px;
+  padding-top: 2px;
+}
+
+div.exampleheader span.exampleheader {
+  background: #F9F9F9;
+  padding-top: 0px;
+  padding-right: 10px;
+  padding-left: 10px;
+  padding-bottom: 3px;
+  padding-top: 0px;
+}
+
+/* Also copy MediaWiki style here, so it will not look different when exported */
+div.fssyntax pre, div.rdfxml pre, div.owlxml pre, div.turtle pre, div.manchester pre  {
+  background-color: #F9F9F9;
+  border: 1px dashed #2F6FAB;
+  color: black;
+  line-height: 1.1em;
+  padding: 1em;
+  clear: both;
+  margin-left: 0em;
+}
+/* (further styles directly embedded in header template) */

@@ -30,3 +30,6 @@ root: src\test\resources\failures
 server:
   host: localhost
   port: 8080
+docs:
+  root: src\test\resources\docs\failures
+  relativePath: docs

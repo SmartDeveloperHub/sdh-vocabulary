@@ -46,6 +46,7 @@ import org.ldp4j.http.CharacterEncodings;
 import org.ldp4j.http.MediaType;
 import org.ldp4j.http.MediaTypes;
 import org.smartdeveloperhub.vocabulary.config.ConfigurationFactory;
+import org.smartdeveloperhub.vocabulary.publisher.config.DocumentationConfig;
 import org.smartdeveloperhub.vocabulary.publisher.config.PublisherConfig;
 import org.smartdeveloperhub.vocabulary.publisher.handlers.NegotiableContent;
 import org.smartdeveloperhub.vocabulary.publisher.spi.DocumentationDeployment;
@@ -72,17 +73,33 @@ import io.undertow.util.Methods;
 public class VocabularyPublisher {
 
 	private static final class DefaultDocumentationProviderFactory implements DocumentationProviderFactory {
+
+		private final DocumentationStrategy strategy;
+
+		private DefaultDocumentationProviderFactory(final DocumentationStrategy strategy) {
+			this.strategy = strategy;
+		}
+
 		@Override
 		public DocumentationProvider create(final Module module) {
-			return ImmutableDocumentationProvider.create(module);
+			return ImmutableDocumentationProvider.create(this.strategy,module);
 		}
+
 	}
 
 	private static final class DefaultDocumentationDeploymentFactory implements DocumentationDeploymentFactory {
+
+		private final DocumentationStrategy strategy;
+
+		private DefaultDocumentationDeploymentFactory(final DocumentationStrategy strategy) {
+			this.strategy = strategy;
+		}
+
 		@Override
 		public DocumentationDeployment create(final Module module) {
-			return ImmutableDocumentationDeployment.create(module);
+			return ImmutableDocumentationDeployment.create(this.strategy,module);
 		}
+
 	}
 
 	private static final MediaType HTML = MediaTypes.of("text","html");
@@ -128,7 +145,8 @@ public class VocabularyPublisher {
 					"assets/",
 					".cache",
 					config.getServer().getPort(),
-					config.getServer().getHost());
+					config.getServer().getHost(),
+					creteDocumentationStrategy(config));
 			} finally {
 				System.out.println("Publisher terminated.");
 			}
@@ -136,6 +154,19 @@ public class VocabularyPublisher {
 			System.err.println("Could not prepare catalog:\n"+result);
 			System.exit(-5);
 		}
+	}
+
+	private static DocumentationStrategy creteDocumentationStrategy(final PublisherConfig config) {
+		final DocumentationConfig docConfig = config.extension(DocumentationConfig.class);
+		Path docRootPath = docConfig==null?null:docConfig.getRoot();
+		if(docRootPath==null) {
+			docRootPath=config.getRoot().getParent().resolve("docs/");
+		}
+		String docRelativePath = docConfig==null?null:docConfig.getRelativePath();
+		if(docRelativePath==null) {
+			docRelativePath="html";
+		}
+		return new DocumentationStrategy(docRootPath,docRelativePath);
 	}
 
 	private static void showCatalog(final Catalog catalog) {
@@ -192,7 +223,7 @@ public class VocabularyPublisher {
 		}
 	}
 
-	private static void publish(final Catalog catalog,final String basePath, final String vocabAssetsPath, final String serializationCachePath, final int port, final String host) throws IOException {
+	private static void publish(final Catalog catalog,final String basePath, final String vocabAssetsPath, final String serializationCachePath, final int port, final String host, final DocumentationStrategy strategy) throws IOException {
 		System.out.println("* Publishing vocabularies under "+basePath);
 		final PathHandler pathHandler=path();
 
@@ -200,7 +231,7 @@ public class VocabularyPublisher {
 		final SerializationManager manager=deploySerializations(catalog,pathHandler,serializationCachePath);
 
 		// Canonical namespaces
-		final DocumentationDeploymentFactory deploymentFactory = new DefaultDocumentationDeploymentFactory();
+		final DocumentationDeploymentFactory deploymentFactory = new DefaultDocumentationDeploymentFactory(strategy);
 		pathHandler.
 			addPrefixPath(
 				basePath,
@@ -223,7 +254,7 @@ public class VocabularyPublisher {
 			DocumentationDeployer.
 				create(
 					deploymentFactory,
-					new DefaultDocumentationProviderFactory());
+					new DefaultDocumentationProviderFactory(strategy));
 		deployer.deploy(catalog,pathHandler);
 
 		// Vocab site

@@ -30,3 +30,6 @@ root: src\main\resources\vocabulary
 server:
   host: localhost
   port: 8080
+docs:
+  root: src\test\resources\docs\production
+  relativePath: docs

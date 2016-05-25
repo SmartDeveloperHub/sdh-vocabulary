@@ -38,10 +38,8 @@ class ImmutableDocumentationDeployment implements DocumentationDeployment {
 	private final URI implementationLandingPage;
 	private final URI canonicalLandingPage;
 
-	public ImmutableDocumentationDeployment(final Module module, final String landingPage) {
+	private ImmutableDocumentationDeployment(final Module module, final String moduleDocumentationRoot,final String canonicalDocumentationRoot, final String landingPage) {
 		final URI base=module.context().base();
-		final String moduleDocumentationRoot=DocumentationStrategy.rootPath(base,module.implementationIRI());
-		final String canonicalDocumentationRoot=DocumentationStrategy.rootPath(base,module.ontology());
 		this.module=module;
 		this.implementationRoot=base.resolve(moduleDocumentationRoot);
 		this.implementationLandingPage=base.resolve(moduleDocumentationRoot+landingPage);
@@ -68,8 +66,11 @@ class ImmutableDocumentationDeployment implements DocumentationDeployment {
 		return this.canonicalLandingPage;
 	}
 
-	static ImmutableDocumentationDeployment create(final Module module) {
-		return new ImmutableDocumentationDeployment(module,"index.html");
+	static ImmutableDocumentationDeployment create(final DocumentationStrategy strategy, final Module module) {
+		final URI base=module.context().base();
+		final String moduleDocumentationRoot=strategy.rootPath(base,module.implementationIRI());
+		final String canonicalDocumentationRoot=strategy.rootPath(base,module.ontology());
+		return new ImmutableDocumentationDeployment(module,moduleDocumentationRoot,canonicalDocumentationRoot,"index.html");
 	}
 
 }
