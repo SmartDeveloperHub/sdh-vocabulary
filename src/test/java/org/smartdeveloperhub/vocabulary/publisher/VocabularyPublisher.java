@@ -48,6 +48,7 @@ import org.ldp4j.http.MediaTypes;
 import org.smartdeveloperhub.vocabulary.config.ConfigurationFactory;
 import org.smartdeveloperhub.vocabulary.publisher.config.DocumentationConfig;
 import org.smartdeveloperhub.vocabulary.publisher.config.PublisherConfig;
+import org.smartdeveloperhub.vocabulary.publisher.handlers.ContentNegotiationHandler;
 import org.smartdeveloperhub.vocabulary.publisher.handlers.NegotiableContent;
 import org.smartdeveloperhub.vocabulary.publisher.spi.DocumentationDeployment;
 import org.smartdeveloperhub.vocabulary.publisher.spi.DocumentationDeploymentFactory;
@@ -146,7 +147,7 @@ public class VocabularyPublisher {
 					".cache",
 					config.getServer().getPort(),
 					config.getServer().getHost(),
-					creteDocumentationStrategy(config));
+					getDocumentationStrategy(config));
 			} finally {
 				System.out.println("Publisher terminated.");
 			}
@@ -154,19 +155,6 @@ public class VocabularyPublisher {
 			System.err.println("Could not prepare catalog:\n"+result);
 			System.exit(-5);
 		}
-	}
-
-	private static DocumentationStrategy creteDocumentationStrategy(final PublisherConfig config) {
-		final DocumentationConfig docConfig = config.extension(DocumentationConfig.class);
-		Path docRootPath = docConfig==null?null:docConfig.getRoot();
-		if(docRootPath==null) {
-			docRootPath=config.getRoot().getParent().resolve("docs/");
-		}
-		String docRelativePath = docConfig==null?null:docConfig.getRelativePath();
-		if(docRelativePath==null) {
-			docRelativePath="html";
-		}
-		return new DocumentationStrategy(docRootPath,docRelativePath);
 	}
 
 	private static void showCatalog(final Catalog catalog) {
@@ -226,38 +214,26 @@ public class VocabularyPublisher {
 	private static void publish(final Catalog catalog,final String basePath, final String vocabAssetsPath, final String serializationCachePath, final int port, final String host, final DocumentationStrategy strategy) throws IOException {
 		System.out.println("* Publishing vocabularies under "+basePath);
 		final PathHandler pathHandler=path();
-
 		// Module serializations
-		final SerializationManager manager=deploySerializations(catalog,pathHandler,serializationCachePath);
-
-		// Canonical namespaces
-		final DocumentationDeploymentFactory deploymentFactory = new DefaultDocumentationDeploymentFactory(strategy);
-		pathHandler.
-			addPrefixPath(
-				basePath,
-				moduleReverseProxy(
-					catalog,
-					methodController(
-						contentNegotiation().
-							negotiate(
-								negotiableModuleContent(),
-								new ModuleRepresentionGenerator(manager)).
-							negotiate(
-								NegotiableContent.newInstance().support(HTML),
-								new ModuleDocumentationRedirector(deploymentFactory))).
-						allow(Methods.GET)
-				)
-			);
-
+		final SerializationManager manager=publishSerializations(catalog,pathHandler,serializationCachePath);
 		// Catalog documentation
-		final DocumentationDeployer deployer=
-			DocumentationDeployer.
-				create(
-					deploymentFactory,
-					new DefaultDocumentationProviderFactory(strategy));
-		deployer.deploy(catalog,pathHandler);
-
+		final DocumentationDeploymentFactory factory = publishDocumentation(catalog,pathHandler,strategy);
+		// Canonical namespaces
+		publishCanonicalNamespace(catalog, basePath, pathHandler, manager, factory);
 		// Vocab site
+		publishVocabSite(catalog, pathHandler, basePath, vocabAssetsPath);
+		final Undertow server =
+			Undertow.
+				builder().
+					addHttpListener(port,host).
+					setHandler(new CanonicalPathHandler(pathHandler)).
+					build();
+		server.start();
+		awaitTerminationRequest();
+		server.stop();
+	}
+
+	private static void publishVocabSite(final Catalog catalog, final PathHandler pathHandler, final String basePath, final String vocabAssetsPath) {
 		pathHandler.
 			addPrefixPath(
 				basePath+vocabAssetsPath,
@@ -273,18 +249,46 @@ public class VocabularyPublisher {
 								htmlContent(),
 								new CatalogRepresentionGenerator())).
 						allow(Methods.GET)));
-		final Undertow server =
-			Undertow.
-				builder().
-					addHttpListener(port,host).
-					setHandler(new CanonicalPathHandler(pathHandler)).
-					build();
-		server.start();
-		awaitTerminationRequest();
-		server.stop();
 	}
 
-	private static SerializationManager deploySerializations(final Catalog catalog, final PathHandler pathHandler, final String cachePath) throws IOException {
+	private static void publishCanonicalNamespace(final Catalog catalog, final String basePath, final PathHandler pathHandler, final SerializationManager manager, final DocumentationDeploymentFactory factory) {
+		final ContentNegotiationHandler contentNegotiation = contentNegotiation().
+			negotiate(
+				negotiableModuleContent(),
+				new ModuleRepresentionGenerator(manager));
+		if(factory!=null) {
+			contentNegotiation.
+				negotiate(
+					NegotiableContent.newInstance().support(HTML),
+					new ModuleDocumentationRedirector(factory));
+		}
+		pathHandler.
+			addPrefixPath(
+				basePath,
+				moduleReverseProxy(
+					catalog,
+					methodController(
+						contentNegotiation).
+						allow(Methods.GET)
+				)
+			);
+	}
+
+	private static DocumentationDeploymentFactory publishDocumentation(final Catalog catalog, final PathHandler pathHandler, final DocumentationStrategy strategy) {
+		if(strategy==null) {
+			return null;
+		}
+		final DocumentationDeploymentFactory deploymentFactory=new DefaultDocumentationDeploymentFactory(strategy);
+		final DocumentationDeployer deployer=
+			DocumentationDeployer.
+				create(
+					deploymentFactory,
+					new DefaultDocumentationProviderFactory(strategy));
+		deployer.deploy(catalog,pathHandler);
+		return deploymentFactory;
+	}
+
+	private static SerializationManager publishSerializations(final Catalog catalog, final PathHandler pathHandler, final String cachePath) throws IOException {
 			final SerializationManager manager=SerializationManager.create(catalog,Paths.get(cachePath));
 			for(final String moduleId:catalog.modules()) {
 				final Module module=catalog.get(moduleId);
@@ -310,6 +314,22 @@ public class VocabularyPublisher {
 				}
 			}
 			return manager;
+	}
+
+	private static DocumentationStrategy getDocumentationStrategy(final PublisherConfig config) {
+		final DocumentationConfig docConfig = config.extension(DocumentationConfig.class);
+		if(docConfig==null) {
+			return null;
+		}
+		Path docRootPath=docConfig.getRoot();
+		if(docRootPath==null) {
+			docRootPath=config.getRoot().getParent().resolve("docs/");
+		}
+		String docRelativePath=docConfig.getRelativePath();
+		if(docRelativePath==null) {
+			docRelativePath="html";
+		}
+		return new DocumentationStrategy(docRootPath,docRelativePath);
 	}
 
 	private static NegotiableContent negotiableModuleContent() {
