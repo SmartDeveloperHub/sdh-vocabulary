@@ -44,7 +44,7 @@ function loadHash() {
       $("#introduction").load("sections/introduction-en.html"); 
       $("#overview").load("sections/overview-en.html"); 
       $("#description").load("sections/description-en.html"); 
-      $("#references").load("sections/references-en.html"); 
+      $("#crossref").load("sections/crossref-en.html", null, loadHash); 
     });
     </script> 
   </head> 
@@ -59,7 +59,7 @@ function loadHash() {
 <dl><dt>Imported Ontologies:</dt>
 <dd><a property="owl:imports schema:mentions" resource="http://www.smartdeveloperhub.org/vocabulary/platform" href="http://www.smartdeveloperhub.org/vocabulary/platform">http://www.smartdeveloperhub.org/vocabulary/platform</a></dd></dl>
 
-<dl><dt>Download serialization:</dt><dd><a href="http://www.smartdeveloperhub.org/vocabulary/v1/it.ttl">TURTLE</a></dd></dl><dl>This work is licensed under a license: <a rel="license" href="http://www.apache.org/licenses/LICENSE-2.0">license name goes here</a>.</dl>
+<dl><dt>Download serialization:</dt><dd><a href="ontology.owl">TURTLE</a></dd></dl><dl>This work is licensed under a license: <a rel="license" href="http://www.apache.org/licenses/LICENSE-2.0">Apache License Version 2.0</a>.</dl>
 <span property="dc:license" resource="http://www.apache.org/licenses/LICENSE-2.0"></span>
 <hr/>
 </div>
@@ -88,7 +88,6 @@ function loadHash() {
      <div id="overview"></div>
      <div id="description"></div>
      <div id="crossref"></div>
-     <div id="references"></div>
 <div id="acknowledgements">
 <h2>5. Acknowledgements <span class="backlink"> back to <a href="#toc">ToC</a></span></h2>
 <p>The authors would like to thank <a href="http://www.essepuntato.it/">Silvio Peroni</a> for developing <a href="http://www.essepuntato.it/lode">LODE</a>, a Live OWL Documentation Environment, which is used for representing the Cross Referencing Section of this document and <a href="http://purl.org/net/dgarijo/">Daniel Garijo</a> for developing <a href="https://github.com/dgarijo/Widoco">Widoco</a>, the program used to create the document template used in this documentation.</p>

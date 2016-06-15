@@ -54,7 +54,7 @@
 <http://www.smartdeveloperhub.org/vocabulary/it> rdf:type owl:Ontology ;
                                                  
                                                  dcterms:dateCopyrighted "2015-2016"^^rdfs:Literal ;
-                                                                                                  
+                                                 
                                                  <http://purl.org/vocab/vann/preferredNamespacePrefix> "it" ;
                                                  
                                                  dc:title "Issue Tracker ontology"@en ;
@@ -518,6 +518,20 @@ This property allows asking for the change items that composed a change log skip
 
 
 
+###  http://www.smartdeveloperhub.org/vocabulary/it#versionName
+
+<http://www.smartdeveloperhub.org/vocabulary/it#versionName> rdf:type owl:ObjectProperty ;
+                                                             
+                                                             rdfs:label "version name"@en ;
+                                                             
+                                                             rdfs:comment "name of a given version"@en ;
+                                                             
+                                                             rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#Version> ;
+                                                             
+                                                             rdfs:subPropertyOf platform:name .
+
+
+
 ###  http://www.smartdeveloperhub.org/vocabulary/platform#hasResourceType
 
 platform:hasResourceType rdf:type owl:ObjectProperty .
@@ -622,7 +636,11 @@ platform:vocabulary rdf:type owl:ObjectProperty .
                                                                 
                                                                 rdfs:comment "title of a given component"@en ;
                                                                 
-                                                                rdfs:subPropertyOf dcterms:title .
+                                                                rdfs:subPropertyOf dcterms:title ;
+                                                                
+                                                                rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#Component> ;
+                                                                
+                                                                rdfs:range xsd:string .
 
 
 
@@ -698,6 +716,8 @@ platform:vocabulary rdf:type owl:ObjectProperty .
                                                              rdfs:label "issue description"@en ;
                                                              
                                                              rdfs:comment "descritption of the issue"@en ;
+                                                             
+                                                             rdfs:subPropertyOf dcterms:description ;
                                                              
                                                              rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#Issue> ;
                                                              
@@ -801,7 +821,11 @@ platform:vocabulary rdf:type owl:ObjectProperty .
                                                             
                                                             rdfs:comment "title of a given issue"@en ;
                                                             
-                                                            rdfs:subPropertyOf dcterms:title .
+                                                            rdfs:subPropertyOf dcterms:title ;
+                                                            
+                                                            rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#Issue> ;
+                                                            
+                                                            rdfs:range xsd:string .
 
 
 
@@ -843,7 +867,11 @@ platform:vocabulary rdf:type owl:ObjectProperty .
                                                               
                                                               rdfs:comment "title of a given project"@en ;
                                                               
-                                                              rdfs:subPropertyOf dcterms:title .
+                                                              rdfs:subPropertyOf dcterms:title ;
+                                                              
+                                                              rdfs:domain <http://www.smartdeveloperhub.org/vocabulary/it#Project> ;
+                                                              
+                                                              rdfs:range xsd:string .
 
 
 
@@ -875,6 +903,18 @@ platform:vocabulary rdf:type owl:ObjectProperty .
                                                            rdfs:subPropertyOf <http://www.smartdeveloperhub.org/vocabulary/it#id> ;
                                                            
                                                            rdfs:range xsd:string .
+
+
+
+###  http://www.smartdeveloperhub.org/vocabulary/it#versionName
+
+<http://www.smartdeveloperhub.org/vocabulary/it#versionName> rdf:type owl:DatatypeProperty ;
+                                                             
+                                                             rdfs:label "version name"@en ;
+                                                             
+                                                             rdfs:comment "name of a given version"@en ;
+                                                             
+                                                             rdfs:range xsd:string .
 
 
 
@@ -1034,9 +1074,9 @@ platform:title rdf:type owl:DatatypeProperty .
                                                         rdfs:label "Commit"@en ;
                                                         
                                                         rdfs:subClassOf [ rdf:type owl:Restriction ;
-                                                                          owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/it#hash> ;
+                                                                          owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/it#repository> ;
                                                                           owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                                                                          owl:onDataRange xsd:string
+                                                                          owl:onDataRange xsd:anyURI
                                                                         ] ,
                                                                         [ rdf:type owl:Restriction ;
                                                                           owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/it#commitId> ;
@@ -1044,9 +1084,9 @@ platform:title rdf:type owl:DatatypeProperty .
                                                                           owl:onDataRange xsd:string
                                                                         ] ,
                                                                         [ rdf:type owl:Restriction ;
-                                                                          owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/it#repository> ;
+                                                                          owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/it#hash> ;
                                                                           owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                                                                          owl:onDataRange xsd:anyURI
+                                                                          owl:onDataRange xsd:string
                                                                         ] ,
                                                                         [ rdf:type owl:Restriction ;
                                                                           owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/it#branch> ;
@@ -1067,20 +1107,20 @@ A commit has to have one and only one hash, repository and branch."""@en .
                                                            rdfs:label "Component"@en ;
                                                            
                                                            rdfs:subClassOf [ rdf:type owl:Restriction ;
-                                                                             owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/it#componentId> ;
+                                                                             owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/it#componentTitle> ;
                                                                              owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                                                              owl:onDataRange xsd:string
                                                                            ] ,
                                                                            [ rdf:type owl:Restriction ;
-                                                                             owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/it#componentTitle> ;
+                                                                             owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/it#componentId> ;
                                                                              owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                                                              owl:onDataRange xsd:string
                                                                            ] ;
                                                            
                                                            rdfs:comment "An individual software component is a software package, a web service, a web resource, or a module that encapsulates a set of related functions (or data). "@en .
 [ rdf:type owl:Axiom ;
-  owl:annotatedTarget "An individual software component is a software package, a web service, a web resource, or a module that encapsulates a set of related functions (or data). "@en ;
   rdfs:seeAlso "https://en.wikipedia.org/wiki/Component-based_software_engineering#Definition_and_characteristics_of_components" ;
+  owl:annotatedTarget "An individual software component is a software package, a web service, a web resource, or a module that encapsulates a set of related functions (or data). "@en ;
   owl:annotatedSource <http://www.smartdeveloperhub.org/vocabulary/it#Component> ;
   owl:annotatedProperty rdfs:comment
 ] .
@@ -1181,20 +1221,20 @@ A commit has to have one and only one hash, repository and branch."""@en .
                                                              
                                                              rdfs:subClassOf platform:Harvester ,
                                                                              [ rdf:type owl:Restriction ;
-                                                                               owl:onProperty platform:vocabulary ;
-                                                                               owl:someValuesFrom <http://www.smartdeveloperhub.org/vocabulary/it#ITVocabulary>
-                                                                             ] ,
-                                                                             [ rdf:type owl:Restriction ;
-                                                                               owl:onProperty platform:hasResource ;
-                                                                               owl:someValuesFrom <http://www.smartdeveloperhub.org/vocabulary/it#Project>
-                                                                             ] ,
-                                                                             [ rdf:type owl:Restriction ;
                                                                                owl:onProperty platform:hasResourceType ;
                                                                                owl:hasValue <http://www.smartdeveloperhub.org/vocabulary/it#Project>
                                                                              ] ,
                                                                              [ rdf:type owl:Restriction ;
                                                                                owl:onProperty platform:providesDomain ;
                                                                                owl:hasValue <http://www.smartdeveloperhub.org/vocabulary/it#ITDomain>
+                                                                             ] ,
+                                                                             [ rdf:type owl:Restriction ;
+                                                                               owl:onProperty platform:vocabulary ;
+                                                                               owl:someValuesFrom <http://www.smartdeveloperhub.org/vocabulary/it#ITVocabulary>
+                                                                             ] ,
+                                                                             [ rdf:type owl:Restriction ;
+                                                                               owl:onProperty platform:hasResource ;
+                                                                               owl:someValuesFrom <http://www.smartdeveloperhub.org/vocabulary/it#Project>
                                                                              ] ;
                                                              
                                                              rdfs:comment "Application that extracts information from an external issue tracker system and makes it public as Linked Data defined according to a vocabulary by using LDP."@en .
@@ -1228,8 +1268,8 @@ A commit has to have one and only one hash, repository and branch."""@en .
                                                              
                                                              rdfs:comment "A proposed or newly added software feature"@en .
 [ rdf:type owl:Axiom ;
-  owl:annotatedTarget "A proposed or newly added software feature"@en ;
   rdfs:seeAlso "https://en.wikipedia.org/wiki/Enhancement" ;
+  owl:annotatedTarget "A proposed or newly added software feature"@en ;
   owl:annotatedSource <http://www.smartdeveloperhub.org/vocabulary/it#Improvement> ;
   owl:annotatedProperty rdfs:comment
 ] .
@@ -1255,34 +1295,9 @@ A commit has to have one and only one hash, repository and branch."""@en .
                                                        rdfs:label "Issue"@en ;
                                                        
                                                        rdfs:subClassOf [ rdf:type owl:Restriction ;
-                                                                         owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/it#dateClosed> ;
-                                                                         owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                                                                         owl:onDataRange xsd:string
-                                                                       ] ,
-                                                                       [ rdf:type owl:Restriction ;
-                                                                         owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/issueId> ;
-                                                                         owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                                                                         owl:onDataRange xsd:string
-                                                                       ] ,
-                                                                       [ rdf:type owl:Restriction ;
-                                                                         owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/it#dateOpen> ;
-                                                                         owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                                                                         owl:onDataRange xsd:string
-                                                                       ] ,
-                                                                       [ rdf:type owl:Restriction ;
                                                                          owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/it#dueTo> ;
                                                                          owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                                                          owl:onDataRange xsd:string
-                                                                       ] ,
-                                                                       [ rdf:type owl:Restriction ;
-                                                                         owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/it#dateCreation> ;
-                                                                         owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                                                                         owl:onDataRange xsd:string
-                                                                       ] ,
-                                                                       [ rdf:type owl:Restriction ;
-                                                                         owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/it#estimatedTime> ;
-                                                                         owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                                                                         owl:onDataRange xsd:duration
                                                                        ] ,
                                                                        [ rdf:type owl:Restriction ;
                                                                          owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/it#description> ;
@@ -1297,6 +1312,31 @@ A commit has to have one and only one hash, repository and branch."""@en .
                                                                        [ rdf:type owl:Restriction ;
                                                                          owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/it#isReportedBy> ;
                                                                          owl:cardinality "1"^^xsd:nonNegativeInteger
+                                                                       ] ,
+                                                                       [ rdf:type owl:Restriction ;
+                                                                         owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/it#dateCreation> ;
+                                                                         owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                                         owl:onDataRange xsd:string
+                                                                       ] ,
+                                                                       [ rdf:type owl:Restriction ;
+                                                                         owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/it#dateOpen> ;
+                                                                         owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                                         owl:onDataRange xsd:string
+                                                                       ] ,
+                                                                       [ rdf:type owl:Restriction ;
+                                                                         owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/issueId> ;
+                                                                         owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                                         owl:onDataRange xsd:string
+                                                                       ] ,
+                                                                       [ rdf:type owl:Restriction ;
+                                                                         owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/it#dateClosed> ;
+                                                                         owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                                         owl:onDataRange xsd:string
+                                                                       ] ,
+                                                                       [ rdf:type owl:Restriction ;
+                                                                         owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/it#estimatedTime> ;
+                                                                         owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                                         owl:onDataRange xsd:duration
                                                                        ] ;
                                                        
                                                        rdfs:comment "In computing, the term issue is a unit of work to accomplish an improvement in a system.[citation needed] An issue could be a bug, a requested feature, task, missing documentation, and so forth."@en .
@@ -1380,12 +1420,12 @@ A commit has to have one and only one hash, repository and branch."""@en .
                                                          rdfs:label "Project"@en ;
                                                          
                                                          rdfs:subClassOf [ rdf:type owl:Restriction ;
-                                                                           owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/it#projectTitle> ;
+                                                                           owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/it#projectId> ;
                                                                            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                                                            owl:onDataRange xsd:string
                                                                          ] ,
                                                                          [ rdf:type owl:Restriction ;
-                                                                           owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/it#projectId> ;
+                                                                           owl:onProperty <http://www.smartdeveloperhub.org/vocabulary/it#projectTitle> ;
                                                                            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                                                            owl:onDataRange xsd:string
                                                                          ] ;
@@ -1436,8 +1476,8 @@ A commit has to have one and only one hash, repository and branch."""@en .
                                                       
                                                       rdfs:comment "An activity that needs to be accomplished within a defined period of time or by a deadline"@en .
 [ rdf:type owl:Axiom ;
-  owl:annotatedTarget "An activity that needs to be accomplished within a defined period of time or by a deadline"@en ;
   rdfs:seeAlso "https://en.wikipedia.org/wiki/Task_%28project_management%29" ;
+  owl:annotatedTarget "An activity that needs to be accomplished within a defined period of time or by a deadline"@en ;
   owl:annotatedSource <http://www.smartdeveloperhub.org/vocabulary/it#Task> ;
   owl:annotatedProperty rdfs:comment
 ] .
