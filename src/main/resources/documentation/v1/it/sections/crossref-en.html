@@ -445,13 +445,13 @@ A commit has to have one and only one hash, repository and branch.</span>
             <sup class="type-dp" title="data property">dp</sup> 
             <span class="logic">exactly</span> 1</dd>
          <dd>
-            <a href="#hash"
-               title="http://www.smartdeveloperhub.org/vocabulary/it#hash">hash</a>
+            <a href="#commitId"
+               title="http://www.smartdeveloperhub.org/vocabulary/it#commitId">commit identifier</a>
             <sup class="type-dp" title="data property">dp</sup> 
             <span class="logic">exactly</span> 1</dd>
          <dd>
-            <a href="#commitId"
-               title="http://www.smartdeveloperhub.org/vocabulary/it#commitId">commit identifier</a>
+            <a href="#hash"
+               title="http://www.smartdeveloperhub.org/vocabulary/it#hash">hash</a>
             <sup class="type-dp" title="data property">dp</sup> 
             <span class="logic">exactly</span> 1</dd>
          <dd>
@@ -492,13 +492,13 @@ A commit has to have one and only one hash, repository and branch.</span>
       <dl class="description">
          <dt>has super-classes</dt>
          <dd>
-            <a href="#componentTitle"
-               title="http://www.smartdeveloperhub.org/vocabulary/it#componentTitle">component title</a>
+            <a href="#componentId"
+               title="http://www.smartdeveloperhub.org/vocabulary/it#componentId">component identifier</a>
             <sup class="type-dp" title="data property">dp</sup> 
             <span class="logic">exactly</span> 1</dd>
          <dd>
-            <a href="#componentId"
-               title="http://www.smartdeveloperhub.org/vocabulary/it#componentId">component identifier</a>
+            <a href="#componentTitle"
+               title="http://www.smartdeveloperhub.org/vocabulary/it#componentTitle">component title</a>
             <sup class="type-dp" title="data property">dp</sup> 
             <span class="logic">exactly</span> 1</dd>
          <dt>is in domain of</dt>
@@ -561,10 +561,17 @@ A commit has to have one and only one hash, repository and branch.</span>
                title="http://www.smartdeveloperhub.org/vocabulary/it#contributorId">contributor identifier</a>
             <sup class="type-dp" title="data property">dp</sup> 
             <span class="logic">exactly</span> 1</dd>
+         <dd>
+            <a href="#contributorName"
+               title="http://www.smartdeveloperhub.org/vocabulary/it#contributorName">contributor name</a>
+            <sup class="type-dp" title="data property">dp</sup> 
+            <span class="logic">exactly</span> 1</dd>
          <dt>is in domain of</dt>
          <dd>
             <a href="#contributorId"
                title="http://www.smartdeveloperhub.org/vocabulary/it#contributorId">contributor identifier</a>
+            <sup class="type-dp" title="data property">dp</sup>, <a href="#contributorName"
+               title="http://www.smartdeveloperhub.org/vocabulary/it#contributorName">contributor name</a>
             <sup class="type-dp" title="data property">dp</sup>
          </dd>
          <dt>is in range of</dt>
@@ -761,18 +768,13 @@ A commit has to have one and only one hash, repository and branch.</span>
       <dl class="description">
          <dt>has super-classes</dt>
          <dd>
-            <a href="#http://www.smartdeveloperhub.org/vocabulary/issueId"
-               title="http://www.smartdeveloperhub.org/vocabulary/issueId">issue identifier</a>
-            <sup class="type-dp" title="data property">dp</sup> 
-            <span class="logic">exactly</span> 1</dd>
-         <dd>
             <a href="#isReportedBy"
                title="http://www.smartdeveloperhub.org/vocabulary/it#isReportedBy">is reported by</a>
             <sup class="type-op" title="object property">op</sup> 
             <span class="logic">exactly</span> 1</dd>
          <dd>
-            <a href="#dateCreation"
-               title="http://www.smartdeveloperhub.org/vocabulary/it#dateCreation">date creation</a>
+            <a href="#http://www.smartdeveloperhub.org/vocabulary/issueId"
+               title="http://www.smartdeveloperhub.org/vocabulary/issueId">issue identifier</a>
             <sup class="type-dp" title="data property">dp</sup> 
             <span class="logic">exactly</span> 1</dd>
          <dd>
@@ -786,10 +788,10 @@ A commit has to have one and only one hash, repository and branch.</span>
             <sup class="type-dp" title="data property">dp</sup> 
             <span class="logic">max</span> 1</dd>
          <dd>
-            <a href="#issueTitle"
-               title="http://www.smartdeveloperhub.org/vocabulary/it#issueTitle">issue title</a>
+            <a href="#description"
+               title="http://www.smartdeveloperhub.org/vocabulary/it#description">issue description</a>
             <sup class="type-dp" title="data property">dp</sup> 
-            <span class="logic">exactly</span> 1</dd>
+            <span class="logic">max</span> 1</dd>
          <dd>
             <a href="#estimatedTime"
                title="http://www.smartdeveloperhub.org/vocabulary/it#estimatedTime">estimated time</a>
@@ -801,10 +803,15 @@ A commit has to have one and only one hash, repository and branch.</span>
             <sup class="type-dp" title="data property">dp</sup> 
             <span class="logic">exactly</span> 1</dd>
          <dd>
-            <a href="#description"
-               title="http://www.smartdeveloperhub.org/vocabulary/it#description">issue description</a>
+            <a href="#dateCreation"
+               title="http://www.smartdeveloperhub.org/vocabulary/it#dateCreation">date creation</a>
             <sup class="type-dp" title="data property">dp</sup> 
-            <span class="logic">max</span> 1</dd>
+            <span class="logic">exactly</span> 1</dd>
+         <dd>
+            <a href="#issueTitle"
+               title="http://www.smartdeveloperhub.org/vocabulary/it#issueTitle">issue title</a>
+            <sup class="type-dp" title="data property">dp</sup> 
+            <span class="logic">exactly</span> 1</dd>
          <dt>has sub-classes</dt>
          <dd>
             <a href="#Bug"
@@ -942,19 +949,19 @@ A commit has to have one and only one hash, repository and branch.</span>
          </dd>
          <dd>
             <span class="dotted"
-                  title="http://www.smartdeveloperhub.org/vocabulary/platform#hasResourceType">has resource type</span>
-            <sup class="type-op" title="object property">op</sup> 
-            <span class="logic">value</span> 
-            <a href="#Project"
-               title="http://www.smartdeveloperhub.org/vocabulary/it#Project">Project</a>
-         </dd>
-         <dd>
-            <span class="dotted"
                   title="http://www.smartdeveloperhub.org/vocabulary/platform#providesDomain">provides domain</span>
             <sup class="type-op" title="object property">op</sup> 
             <span class="logic">value</span> 
             <a href="#ITDomain"
                title="http://www.smartdeveloperhub.org/vocabulary/it#ITDomain">i t domain</a>
+         </dd>
+         <dd>
+            <span class="dotted"
+                  title="http://www.smartdeveloperhub.org/vocabulary/platform#hasResourceType">has resource type</span>
+            <sup class="type-op" title="object property">op</sup> 
+            <span class="logic">value</span> 
+            <a href="#Project"
+               title="http://www.smartdeveloperhub.org/vocabulary/it#Project">Project</a>
          </dd>
       </dl>
    </div>
@@ -1129,13 +1136,13 @@ A commit has to have one and only one hash, repository and branch.</span>
       <dl class="description">
          <dt>has super-classes</dt>
          <dd>
-            <a href="#projectId"
-               title="http://www.smartdeveloperhub.org/vocabulary/it#projectId">project identifier</a>
+            <a href="#projectTitle"
+               title="http://www.smartdeveloperhub.org/vocabulary/it#projectTitle">project title</a>
             <sup class="type-dp" title="data property">dp</sup> 
             <span class="logic">exactly</span> 1</dd>
          <dd>
-            <a href="#projectTitle"
-               title="http://www.smartdeveloperhub.org/vocabulary/it#projectTitle">project title</a>
+            <a href="#projectId"
+               title="http://www.smartdeveloperhub.org/vocabulary/it#projectId">project identifier</a>
             <sup class="type-dp" title="data property">dp</sup> 
             <span class="logic">exactly</span> 1</dd>
          <dt>is in domain of</dt>
@@ -2227,6 +2234,10 @@ This property allows asking for the change items that composed a change log skip
             title="http://www.smartdeveloperhub.org/vocabulary/it#contributorId">contributor identifier</a>
       </li>
       <li>
+         <a href="#contributorName"
+            title="http://www.smartdeveloperhub.org/vocabulary/it#contributorName">contributor name</a>
+      </li>
+      <li>
          <a href="#dateClosed"
             title="http://www.smartdeveloperhub.org/vocabulary/it#dateClosed">date close</a>
       </li>
@@ -2435,6 +2446,31 @@ This property allows asking for the change items that composed a change log skip
                   title="http://www.smartdeveloperhub.org/vocabulary/it#id">resource identifier</a>
                <sup class="type-dp" title="data property">dp</sup>
             </dd>
+            <dt>has domain</dt>
+            <dd>
+               <a href="#Contributor"
+                  title="http://www.smartdeveloperhub.org/vocabulary/it#Contributor">Contributor</a>
+               <sup class="type-c" title="class">c</sup>
+            </dd>
+            <dt>has range</dt>
+            <dd>
+               <span class="dotted" title="http://www.w3.org/2001/XMLSchema#string">string</span>
+            </dd>
+         </dl>
+      </div>
+   </div>
+   <div class="entity" id="contributorName">
+      <h3>contributor name<sup class="type-dp" title="data property">dp</sup>
+         <span class="backlink"> back to <a href="#toc">ToC</a> or <a href="#dataproperties">Data Property ToC</a>
+         </span>
+      </h3>
+      <p>
+         <strong>IRI:</strong> http://www.smartdeveloperhub.org/vocabulary/it#contributorName</p>
+      <div class="comment">
+         <span class="markdown">name of a given contributor</span>
+      </div>
+      <div class="description">
+         <dl>
             <dt>has domain</dt>
             <dd>
                <a href="#Contributor"
@@ -3004,11 +3040,6 @@ This property allows asking for the change items that composed a change log skip
          </a>
       </li>
       <li>
-         <a href="#http://www.smartdeveloperhub.org/vocabulary/it" title="http://www.smartdeveloperhub.org/vocabulary/it">
-            <span>it</span>
-         </a>
-      </li>
-      <li>
          <a href="#lowPriority"
             title="http://www.smartdeveloperhub.org/vocabulary/it#lowPriority">
             <span>low priority</span>
@@ -3175,14 +3206,6 @@ This property allows asking for the change items that composed a change log skip
             <sup class="type-c" title="class">c</sup>
          </dd>
       </dl>
-   </div>
-   <div class="entity" id="http://www.smartdeveloperhub.org/vocabulary/it">
-      <h3>it<sup class="type-ni" title="named individual">ni</sup>
-         <span class="backlink"> back to <a href="#toc">ToC</a> or <a href="#namedindividuals">Named Individual ToC</a>
-         </span>
-      </h3>
-      <p>
-         <strong>IRI:</strong> http://www.smartdeveloperhub.org/vocabulary/it</p>
    </div>
    <div class="entity" id="lowPriority">
       <h3>low priority<sup class="type-ni" title="named individual">ni</sup>
