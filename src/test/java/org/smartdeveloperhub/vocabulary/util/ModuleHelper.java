@@ -51,13 +51,13 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 
-final class ModuleHelper {
+public final class ModuleHelper {
 
 	private final Path file;
 	private Model model;
 	private Format format;
 
-	ModuleHelper(final Path file) {
+	public ModuleHelper(final Path file) {
 		this.file = file;
 	}
 
@@ -69,7 +69,7 @@ final class ModuleHelper {
 		return this.model!=null;
 	}
 
-	ModuleHelper load(final URI base,final Format format) throws IOException {
+	public ModuleHelper load(final URI base,final Format format) throws IOException {
 		final String data=
 			new String(
 				Files.readAllBytes(this.file),
@@ -97,7 +97,7 @@ final class ModuleHelper {
 		return writer.toString();
 	}
 
-	Model export() {
+	public Model export() {
 		Preconditions.checkState(this.model!=null);
 		return this.model;
 	}
