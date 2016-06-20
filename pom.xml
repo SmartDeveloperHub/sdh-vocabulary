@@ -151,13 +151,6 @@
 			<scope>test</scope>
 		</dependency>
 		
-		<!-- Licensius Client -->
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<scope>test</scope>
-		</dependency>
-
 		<!-- Default logger -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
