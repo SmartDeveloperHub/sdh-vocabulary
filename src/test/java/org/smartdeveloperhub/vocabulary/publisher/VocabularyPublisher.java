@@ -27,7 +27,6 @@
 package org.smartdeveloperhub.vocabulary.publisher;
 
 import static io.undertow.Handlers.path;
-import static org.smartdeveloperhub.vocabulary.publisher.handlers.MoreHandlers.catalogReverseProxy;
 import static org.smartdeveloperhub.vocabulary.publisher.handlers.MoreHandlers.contentNegotiation;
 import static org.smartdeveloperhub.vocabulary.publisher.handlers.MoreHandlers.methodController;
 import static org.smartdeveloperhub.vocabulary.publisher.handlers.MoreHandlers.moduleReverseProxy;
@@ -143,7 +142,6 @@ public class VocabularyPublisher {
 				publish(
 					catalog,
 					config.getBase().getPath(),
-					"assets/",
 					".cache",
 					config.getServer().getPort(),
 					config.getServer().getHost(),
@@ -211,7 +209,7 @@ public class VocabularyPublisher {
 		}
 	}
 
-	private static void publish(final Catalog catalog,final String basePath, final String vocabAssetsPath, final String serializationCachePath, final int port, final String host, final DocumentationStrategy strategy) throws IOException {
+	private static void publish(final Catalog catalog,final String basePath, final String serializationCachePath, final int port, final String host, final DocumentationStrategy strategy) throws IOException {
 		System.out.println("* Publishing vocabularies under "+basePath);
 		final PathHandler pathHandler=path();
 		// Module serializations
@@ -220,8 +218,6 @@ public class VocabularyPublisher {
 		final DocumentationDeploymentFactory factory = publishDocumentation(catalog,pathHandler,strategy);
 		// Canonical namespaces
 		publishCanonicalNamespace(catalog, basePath, pathHandler, manager, factory);
-		// Vocab site
-		publishVocabSite(catalog, pathHandler, basePath, vocabAssetsPath);
 		final Undertow server =
 			Undertow.
 				builder().
@@ -231,24 +227,6 @@ public class VocabularyPublisher {
 		server.start();
 		awaitTerminationRequest();
 		server.stop();
-	}
-
-	private static void publishVocabSite(final Catalog catalog, final PathHandler pathHandler, final String basePath, final String vocabAssetsPath) {
-		pathHandler.
-			addPrefixPath(
-				basePath+vocabAssetsPath,
-				new AssetProvider(vocabAssetsPath)
-			).
-			addExactPath(
-				basePath,
-				catalogReverseProxy(
-					catalog,
-					methodController(
-						contentNegotiation().
-							negotiate(
-								htmlContent(),
-								new CatalogRepresentionGenerator())).
-						allow(Methods.GET)));
 	}
 
 	private static void publishCanonicalNamespace(final Catalog catalog, final String basePath, final PathHandler pathHandler, final SerializationManager manager, final DocumentationDeploymentFactory factory) {
@@ -343,17 +321,6 @@ public class VocabularyPublisher {
 					support(CharacterEncodings.of(StandardCharsets.ISO_8859_1)).
 					support(CharacterEncodings.of(StandardCharsets.US_ASCII));
 	}
-
-	private static NegotiableContent htmlContent() {
-		return
-			NegotiableContent.
-				newInstance().
-					support(HTML).
-					support(CharacterEncodings.of(StandardCharsets.UTF_8)).
-					support(CharacterEncodings.of(StandardCharsets.ISO_8859_1)).
-					support(CharacterEncodings.of(StandardCharsets.US_ASCII));
-	}
-
 
 	private static void awaitTerminationRequest() {
 		System.out.println("Hit <ENTER> to exit...");

@@ -63,10 +63,6 @@ public final class MoreHandlers {
 		return new MethodControlHandler(aHandler);
 	}
 
-	public static HttpHandler catalogReverseProxy(final Catalog catalog, final HttpHandler aHandler) {
-		return new CatalogReverseProxyHandler(catalog, aHandler);
-	}
-
 	public static HttpHandler moduleReverseProxy(final Catalog catalog, final HttpHandler aHandler) {
 		return new ModuleReverseProxyHandler(catalog,aHandler);
 	}
