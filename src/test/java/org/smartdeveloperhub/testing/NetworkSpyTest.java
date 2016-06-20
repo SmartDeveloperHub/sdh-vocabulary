@@ -33,8 +33,10 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore("To be enabled only if network inspection is necessary")
 public class NetworkSpyTest {
 
 	@Test
