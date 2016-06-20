@@ -32,7 +32,7 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.RDFVisitor;
 import com.hp.hpl.jena.rdf.model.Resource;
 
-final class NodeUtils implements RDFVisitor {
+public final class NodeUtils implements RDFVisitor {
 
 	private NodeUtils() {
 	}
@@ -50,7 +50,7 @@ final class NodeUtils implements RDFVisitor {
 		return id.getLabelString();
 	}
 
-	static String toString(final RDFNode node) {
+	public static String toString(final RDFNode node) {
 		return (String)node.visitWith(new NodeUtils());
 	}
 }

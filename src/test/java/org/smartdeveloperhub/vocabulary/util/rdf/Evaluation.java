@@ -62,7 +62,7 @@ public final class Evaluation<T> {
 		return this.failures;
 	}
 
-	static <T> Evaluation<T> create(final String resource, final String property, final T result, final List<String> failures) {
+	public static <T> Evaluation<T> create(final String resource, final String property, final T result, final List<String> failures) {
 		return new Evaluation<T>(resource, property, result, failures);
 	}
 
