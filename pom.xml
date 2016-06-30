@@ -66,7 +66,6 @@
 		<undertow.version>1.3.17.Final</undertow.version>
 		<jackson.version>2.7.4</jackson.version>
 		<app.publisher.main>org.smartdeveloperhub.vocabulary.publisher.VocabularyPublisher</app.publisher.main>
-		<app.explorer.main>org.smartdeveloperhub.vocabulary.util.VocabularyExplorer</app.explorer.main>
 	</properties>
 
 	<dependencyManagement>
@@ -258,16 +257,6 @@
 										</extraArguments>
 									</jvmSettings>
 								</program>
-								<program>
-									<id>explorer</id>
-									<mainClass>${app.explorer.main}</mainClass>
-									<jvmSettings>
-										<extraArguments>
-											<extraArgument>-Dservice.version=${project.version}</extraArgument>
-											<extraArgument>-Dservice.build=${sdh.buildNumber}</extraArgument>
-										</extraArguments>
-									</jvmSettings>
-								</program>
 							</programs>
 						</configuration>
 					</execution>
@@ -358,36 +347,6 @@
 							</systemProperties>
 						</configuration>
 					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>explorer</id>
-			<build>
-				<defaultGoal>exec:java</defaultGoal>
-				<plugins>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>exec-maven-plugin</artifactId>
-						<version>1.4.0</version>
-						<configuration>
-							<mainClass>${app.explorer.main}</mainClass>
-							<classpathScope>test</classpathScope>
-							<systemProperties>
-								<systemProperty>
-									<key>service.version</key>
-									<value>${project.version}</value>
-								</systemProperty>
-							</systemProperties>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>client</id>
-			<build>
-				<plugins>
 				</plugins>
 			</build>
 		</profile>
