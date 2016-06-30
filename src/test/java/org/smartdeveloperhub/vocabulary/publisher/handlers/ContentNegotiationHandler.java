@@ -43,6 +43,8 @@ import org.ldp4j.http.MediaType;
 import org.ldp4j.http.Negotiable;
 import org.ldp4j.http.NegotiationResult;
 import org.ldp4j.http.Variant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
@@ -70,6 +72,8 @@ public final class ContentNegotiationHandler implements HttpHandler {
 
 	}
 
+	private static final Logger LOGGER=LoggerFactory.getLogger(ContentNegotiationHandler.class);
+
 	private final List<Scenario> scenarios;
 	private NegotiableContent content;
 
@@ -93,7 +97,7 @@ public final class ContentNegotiationHandler implements HttpHandler {
 			failDispatch(exchange,"Cannot handle request: no content negotiation scenarios defined");
 			return;
 		}
-		System.out.println("Starting content negotiation...");
+		LOGGER.debug("Starting content negotiation...");
 		final ContentNegotiator negotiator = defaultNegotiator();
 		final List<Failure> failures = addAcceptanceRequirements(exchange, negotiator);
 		if(!failures.isEmpty()) {
@@ -122,7 +126,7 @@ public final class ContentNegotiationHandler implements HttpHandler {
 		exchange.getResponseHeaders().put(Headers.CONTENT_TYPE,"text/plain; charset=\"UTF-8\"");
 		final String message=String.format(format, args);
 		exchange.getResponseSender().send(ByteBuffer.wrap(message.getBytes(StandardCharsets.UTF_8)));
-		System.out.println(message);
+		LOGGER.debug(message);
 	}
 
 	private void forwardRequestHandling(final HttpServerExchange exchange, final NegotiationResult negotiation, final HttpHandler next) throws Exception {
@@ -136,7 +140,7 @@ public final class ContentNegotiationHandler implements HttpHandler {
 	}
 
 	private void logAcceptance(final Variant variant) {
-		System.out.println("Accepted:");
+		LOGGER.debug("Accepted:");
 		printAttribute("Media type", variant.type());
 		printAttribute("Character encoding", variant.charset());
 		printAttribute("Language", variant.language());
@@ -148,7 +152,7 @@ public final class ContentNegotiationHandler implements HttpHandler {
 		final URI canonicalURI = HandlerUtil.canonicalURI(exchange);
 		final String message = acceptableResources(canonicalURI,negotiation.alternatives());
 		exchange.getResponseSender().send(message);
-		System.out.println("Not acceptable:\n"+message);
+		LOGGER.debug("Not acceptable:\n"+message);
 	}
 
 	private void addContentNegotiationHeaders(final HttpServerExchange exchange, final NegotiationResult negotiation, final boolean accepted) {
@@ -165,7 +169,7 @@ public final class ContentNegotiationHandler implements HttpHandler {
 		exchange.getResponseHeaders().put(Headers.CONTENT_TYPE,"text/plain; charset=\"UTF-8\"");
 		final String message=errorMessage(failures);
 		exchange.getResponseSender().send(ByteBuffer.wrap(message.getBytes(StandardCharsets.UTF_8)));
-		System.out.println(message);
+		LOGGER.debug(message);
 	}
 
 	private ContentNegotiator defaultNegotiator() {
@@ -184,7 +188,7 @@ public final class ContentNegotiationHandler implements HttpHandler {
 
 	private <T extends Negotiable> void printAttribute(final String name, final T attribute) {
 		if(attribute!=null) {
-			System.out.println("- "+name+": "+attribute.toHeader());
+			LOGGER.debug("- {} : {}",name,attribute.toHeader());
 		}
 	}
 
@@ -209,7 +213,7 @@ public final class ContentNegotiationHandler implements HttpHandler {
 		for(final String value:headers(headers,ContentNegotiation.ACCEPT_LANGUAGE)) {
 			try {
 				negotiator.acceptLanguage(value);
-				System.out.println("- Accept-Language: "+value);
+				LOGGER.debug("- Accept-Language: {}",value);
 			} catch(final IllegalArgumentException e) {
 				failures.add(Failure.create(ContentNegotiation.ACCEPT_LANGUAGE,value,e));
 			}
@@ -220,7 +224,7 @@ public final class ContentNegotiationHandler implements HttpHandler {
 		for(final String value:headers(headers,ContentNegotiation.ACCEPT_CHARSET)) {
 			try {
 				negotiator.acceptCharset(value);
-				System.out.println("- Accept-Charset: "+value);
+				LOGGER.debug("- Accept-Charset: {}",value);
 			} catch(final IllegalArgumentException e) {
 				failures.add(Failure.create(ContentNegotiation.ACCEPT_CHARSET,value,e));
 			}
@@ -231,7 +235,7 @@ public final class ContentNegotiationHandler implements HttpHandler {
 		for(final String value:headers(headers,ContentNegotiation.ACCEPT)) {
 			try {
 				negotiator.accept(value);
-				System.out.println("- Accept: "+value);
+				LOGGER.debug("- Accept: {}",value);
 			} catch(final IllegalArgumentException e) {
 				failures.add(Failure.create(ContentNegotiation.ACCEPT,value,e));
 			}
@@ -264,4 +268,5 @@ public final class ContentNegotiationHandler implements HttpHandler {
 	static ContentNegotiationHandler newInstance() {
 		return new ContentNegotiationHandler();
 	}
+
 }

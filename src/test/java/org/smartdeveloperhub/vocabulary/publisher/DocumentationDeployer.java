@@ -34,6 +34,8 @@ import java.nio.charset.StandardCharsets;
 
 import org.ldp4j.http.CharacterEncodings;
 import org.ldp4j.http.MediaTypes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.smartdeveloperhub.vocabulary.publisher.handlers.MoreHandlers;
 import org.smartdeveloperhub.vocabulary.publisher.handlers.NegotiableContent;
 import org.smartdeveloperhub.vocabulary.publisher.spi.DocumentationDeployment;
@@ -50,6 +52,8 @@ import io.undertow.server.handlers.PathHandler;
 import io.undertow.util.Methods;
 
 final class DocumentationDeployer {
+
+	private static final Logger LOGGER=LoggerFactory.getLogger(DocumentationDeployer.class);
 
 	private final DocumentationDeploymentFactory deploymentFactory;
 	private final DocumentationProviderFactory providerFactory;
@@ -119,17 +123,17 @@ final class DocumentationDeployer {
 	}
 
 	private void logModuleDeployment(final Module module, final DocumentationDeployment deployment, final DocumentationProvider provider) {
-		System.out.printf("- Documentation (%s):%n",module.implementationIRI());
-		System.out.printf("  + Root........: %s --> %s (%s)%n",deployment.implementationRoot(),deployment.implementationRoot().getPath(),provider.assetsPath());
-		System.out.printf("  + Landing page: %s --> %s%n",deployment.implementationLandingPage(),deployment.implementationLandingPage().getPath());
+		LOGGER.debug("- Documentation ({}):",module.implementationIRI());
+		LOGGER.debug("  + Root........: {} --> {} ({})",deployment.implementationRoot(),deployment.implementationRoot().getPath(),provider.assetsPath());
+		LOGGER.debug("  + Landing page: {} --> {}",deployment.implementationLandingPage(),deployment.implementationLandingPage().getPath());
 		if(!deployment.implementationRoot().equals(deployment.implementationLandingPage())) {
-			System.out.printf("  + Reference...: %s --> %s%n",deployment.implementationRoot(),deployment.implementationLandingPage().getPath());
+			LOGGER.debug("  + Reference...: {} --> {}",deployment.implementationRoot(),deployment.implementationLandingPage().getPath());
 		}
 		if(module.isVersion()) {
-			System.out.printf("  + Redirection.: %s --> %s%n",deployment.canonicalLandingPage(),deployment.implementationLandingPage().getPath());
+			LOGGER.debug("  + Redirection.: {} --> {}",deployment.canonicalLandingPage(),deployment.implementationLandingPage().getPath());
 			final URI canonicalRoot = deployment.canonicalLandingPage().resolve(".");
 			if(!canonicalRoot.equals(deployment.canonicalLandingPage())) {
-				System.out.printf("  + Redirection.: %s --> %s%n",canonicalRoot,deployment.implementationLandingPage().getPath());
+				LOGGER.debug("  + Redirection.: {} --> {}",canonicalRoot,deployment.implementationLandingPage().getPath());
 			}
 		}
 	}

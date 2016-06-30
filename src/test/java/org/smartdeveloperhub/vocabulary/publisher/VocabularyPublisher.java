@@ -44,6 +44,8 @@ import java.util.Scanner;
 import org.ldp4j.http.CharacterEncodings;
 import org.ldp4j.http.MediaType;
 import org.ldp4j.http.MediaTypes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.smartdeveloperhub.vocabulary.config.ConfigurationFactory;
 import org.smartdeveloperhub.vocabulary.publisher.config.DocumentationConfig;
 import org.smartdeveloperhub.vocabulary.publisher.config.PublisherConfig;
@@ -102,6 +104,8 @@ public class VocabularyPublisher {
 
 	}
 
+	private static final Logger LOGGER=LoggerFactory.getLogger(VocabularyPublisher.class);
+
 	private static final MediaType HTML = MediaTypes.of("text","html");
 
 	public static void main(final String... args) throws FileNotFoundException, IOException {
@@ -112,6 +116,7 @@ public class VocabularyPublisher {
 			Application.logContext(args);
 			System.exit(-1);
 		}
+		System.out.printf("Vocabulary Publisher%s%n",serviceVersion());
 		try {
 			final Path configFile = Paths.get(args[0]);
 			final PublisherConfig config =
@@ -119,6 +124,9 @@ public class VocabularyPublisher {
 					load(
 						Resources.toString(configFile.toUri().toURL(), StandardCharsets.UTF_8),
 						PublisherConfig.class);
+			System.out.printf("- Base URI: %s%n",config.getBase());
+			System.out.printf("- Server..: %s:%s%n",config.getServer().getHost(),config.getServer().getPort());
+			System.out.printf("- Source directory: %s%n",config.getRoot().toAbsolutePath());
 			setup(config);
 		} catch (final InvalidPathException e) {
 			System.err.printf("%s is not a valid root path (%s)%n", args[0],e.getMessage());
@@ -155,8 +163,25 @@ public class VocabularyPublisher {
 		}
 	}
 
+	private static String serviceVersion() {
+		final String build=serviceBuild();
+		final String version=System.getProperty("service.version","");
+		if(version.isEmpty()) {
+			return version;
+		}
+		return " v"+version+build;
+	}
+
+	private static String serviceBuild() {
+		String build = System.getProperty("service.build","");
+		if(!build.isEmpty()) {
+			build="-b"+build;
+		}
+		return build;
+	}
+
 	private static void showCatalog(final Catalog catalog) {
-		System.out.printf("Found %d modules%n",catalog.size());
+		LOGGER.debug("Found {} modules",catalog.size());
 		final List<Module> externals=Lists.newArrayList();
 		for(final String moduleId:catalog.modules()) {
 			final Module module = catalog.get(moduleId);
@@ -186,31 +211,31 @@ public class VocabularyPublisher {
 				builder.append("version '").append(module.versionIRI()).append("' of ");
 			}
 			builder.append("IRI '").append(module.ontology()).append("'");
-			System.out.println(builder);
+			LOGGER.debug(builder.toString());
 		}
 	}
 
 	private static void showModule(final Module module) {
-		System.out.printf("- Module '%s':%n",module.location());
-		System.out.printf("  + Relative path: %s%n",module.relativePath());
-		System.out.printf("  + Format: %s%n",module.format().getName());
+		LOGGER.debug("- Module '{}':",module.location());
+		LOGGER.debug("  + Relative path: {}",module.relativePath());
+		LOGGER.debug("  + Format: {}",module.format().getName());
 		if(module.isOntology()) {
-			System.out.printf("  + Ontology:%n");
-			System.out.printf("    * IRI: %s%n",module.ontology());
+			LOGGER.debug("  + Ontology:");
+			LOGGER.debug("    * IRI: {}",module.ontology());
 			if(module.isVersion()) {
-				System.out.printf("    * VersionIRI: %s%n",module.versionIRI());
+				LOGGER.debug("    * VersionIRI: {}",module.versionIRI());
 			}
 			if(module.hasImports()) {
-				System.out.printf("    * Imports:%n");
+				LOGGER.debug("    * Imports:");
 				for(final String importedModule:module.imports()) {
-					System.out.printf("      - %s%n",importedModule);
+					LOGGER.debug("      - {}",importedModule);
 				}
 			}
 		}
 	}
 
 	private static void publish(final Catalog catalog,final String basePath, final String serializationCachePath, final int port, final String host, final DocumentationStrategy strategy) throws IOException {
-		System.out.println("* Publishing vocabularies under "+basePath);
+		LOGGER.debug("* Publishing vocabularies under {}",basePath);
 		final PathHandler pathHandler=path();
 		// Module serializations
 		final SerializationManager manager=publishSerializations(catalog,pathHandler,serializationCachePath);
@@ -270,11 +295,11 @@ public class VocabularyPublisher {
 			final SerializationManager manager=SerializationManager.create(catalog,Paths.get(cachePath));
 			for(final String moduleId:catalog.modules()) {
 				final Module module=catalog.get(moduleId);
-				System.out.printf("- Module (%s):%n",module.implementationIRI(),module.location());
+				LOGGER.debug("- Module ({}):",module.implementationIRI(),module.location());
 				for(final Format format:Format.values()) {
 					final String resourceName = module.relativePath()+"."+format.fileExtension();
 					final URI location=catalog.getBase().resolve(resourceName);
-					System.out.printf("  + %s : %s --> %s (%s)%n",format.getName(),location,location.getPath(),manager.getSerialization(module, format).toAbsolutePath());
+					LOGGER.debug("  + {} : {} --> {} ({})",format.getName(),location,location.getPath(),manager.getSerialization(module, format).toAbsolutePath());
 					pathHandler.
 						addExactPath(
 							location.getPath(),
@@ -295,19 +320,27 @@ public class VocabularyPublisher {
 	}
 
 	private static DocumentationStrategy getDocumentationStrategy(final PublisherConfig config) {
+		final DocumentationConfig docConfig = getDocumentationConfig(config);
+		if(docConfig==null) {
+			return null;
+		}
+		return new DocumentationStrategy(docConfig.getRoot(),docConfig.getRelativePath());
+	}
+
+	private static DocumentationConfig getDocumentationConfig(final PublisherConfig config) {
 		final DocumentationConfig docConfig = config.extension(DocumentationConfig.class);
 		if(docConfig==null) {
 			return null;
 		}
-		Path docRootPath=docConfig.getRoot();
-		if(docRootPath==null) {
-			docRootPath=config.getRoot().getParent().resolve("docs/");
+		if(docConfig.getRoot()==null) {
+			docConfig.setRoot(config.getRoot().getParent().resolve("docs/"));
 		}
-		String docRelativePath=docConfig.getRelativePath();
-		if(docRelativePath==null) {
-			docRelativePath="html";
+		if(docConfig.getRelativePath()==null) {
+			docConfig.setRelativePath("html");
 		}
-		return new DocumentationStrategy(docRootPath,docRelativePath);
+		System.out.printf("- Documentation directory....: %s%n",docConfig.getRoot().toAbsolutePath());
+		System.out.printf("- Documentation relative path: %s%n",docConfig.getRelativePath());
+		return docConfig;
 	}
 
 	private static NegotiableContent negotiableModuleContent() {

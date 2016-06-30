@@ -29,6 +29,8 @@ package org.smartdeveloperhub.vocabulary.publisher.handlers;
 import java.net.URI;
 
 import org.ldp4j.xml.XMLUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.smartdeveloperhub.vocabulary.publisher.handlers.ProxyResolution.Builder;
 import org.smartdeveloperhub.vocabulary.publisher.util.Location;
 import org.smartdeveloperhub.vocabulary.publisher.util.Tracing;
@@ -40,6 +42,8 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 
 final class ModuleReverseProxyHandler implements HttpHandler {
+
+	private static final Logger LOGGER=LoggerFactory.getLogger(ModuleReverseProxyHandler.class);
 
 	private final Catalog catalog;
 	private final HttpHandler next;
@@ -53,15 +57,15 @@ final class ModuleReverseProxyHandler implements HttpHandler {
 	public void handleRequest(final HttpServerExchange exchange) throws Exception {
 		final ProxyResolution resolution = resolveRequest(exchange);
 		if(resolution==null) {
-			System.out.printf("Accessing %s --> NOT FOUND%n",exchange.getRelativePath());
+			LOGGER.debug("Accessing {} --> NOT FOUND",exchange.getRelativePath());
 			exchange.setStatusCode(StatusCodes.NOT_FOUND);
 			exchange.endExchange();
 		} else if(resolution.target().isExternal()){
-			System.out.printf("Accessing %s --> %s [%s] --> NOT FOUND%n",exchange.getRelativePath(),Tracing.describe(resolution),Tracing.catalogEntry(resolution.target()));
+			LOGGER.debug("Accessing {} --> {} [{}] --> NOT FOUND",exchange.getRelativePath(),Tracing.describe(resolution),Tracing.catalogEntry(resolution.target()));
 			exchange.setStatusCode(StatusCodes.NOT_FOUND);
 			exchange.endExchange();
 		} else {
-			System.out.printf("Accessing %s --> %s [%s]%n",exchange.getRelativePath(),Tracing.describe(resolution),Tracing.catalogEntry(resolution.target()));
+			LOGGER.debug("Accessing {} --> {} [{}]",exchange.getRelativePath(),Tracing.describe(resolution),Tracing.catalogEntry(resolution.target()));
 			Attachments.setResolution(exchange,resolution);
 			Attachments.setBase(exchange,this.catalog.getBase());
 			this.next.handleRequest(exchange);

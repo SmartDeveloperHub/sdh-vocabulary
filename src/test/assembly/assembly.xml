@@ -46,6 +46,14 @@
 
 	<fileSets>
 		<fileSet>
+			<outputDirectory>conf</outputDirectory>
+			<includes>
+				<include>logging.cfg</include>
+			</includes>
+			<directory>${basedir}${file.separator}src${file.separator}test${file.separator}assembly${file.separator}resources${file.separator}</directory>
+			<filtered>false</filtered>
+		</fileSet>
+		<fileSet>
 			<outputDirectory></outputDirectory>
 			<includes>
 				<include>**/*</include>

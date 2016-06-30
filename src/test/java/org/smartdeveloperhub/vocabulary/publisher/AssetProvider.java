@@ -28,11 +28,16 @@ package org.smartdeveloperhub.vocabulary.publisher;
 
 import static io.undertow.Handlers.resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.server.handlers.resource.ClassPathResourceManager;
 
 final class AssetProvider implements HttpHandler {
+
+	private static final Logger LOGGER=LoggerFactory.getLogger(AssetProvider.class);
 
 	private final HttpHandler next;
 	private final String assetPath;
@@ -48,7 +53,7 @@ final class AssetProvider implements HttpHandler {
 
 	@Override
 	public void handleRequest(final HttpServerExchange exchange) throws Exception {
-		System.out.printf("Retrieving asset %s%n",exchange.getRelativePath());
+		LOGGER.debug("Retrieving asset {}",exchange.getRelativePath());
 		this.next.handleRequest(exchange);
 	}
 

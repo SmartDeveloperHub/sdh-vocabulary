@@ -246,14 +246,17 @@
 							<repositoryLayout>flat</repositoryLayout>
 							<repositoryName>lib</repositoryName>
 							<endorsedDir>ext</endorsedDir>
+							<configurationDirectory>conf</configurationDirectory>
+							<includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
 							<programs>
 								<program>
 									<id>publisher</id>
 									<mainClass>${app.publisher.main}</mainClass>
 									<jvmSettings>
 										<extraArguments>
-											<extraArgument>-Dservice.version=${project.version}</extraArgument>
-											<extraArgument>-Dservice.build=${sdh.buildNumber}</extraArgument>
+											<extraArgument>-Dservice.version=${vocabularium.version}</extraArgument>
+											<extraArgument>-Dservice.build=${git.commitsCount} (${git.branch}@${git.buildnumber})</extraArgument>
+											<extraArgument>-Dlog4j.configuration=logging.cfg</extraArgument>
 										</extraArguments>
 									</jvmSettings>
 								</program>

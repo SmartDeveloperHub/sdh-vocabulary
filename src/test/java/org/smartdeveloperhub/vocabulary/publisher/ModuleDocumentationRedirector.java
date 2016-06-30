@@ -28,6 +28,8 @@ package org.smartdeveloperhub.vocabulary.publisher;
 
 import java.net.URI;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.smartdeveloperhub.vocabulary.publisher.handlers.Attachments;
 import org.smartdeveloperhub.vocabulary.publisher.handlers.ProxyResolution;
 import org.smartdeveloperhub.vocabulary.publisher.spi.DocumentationDeploymentFactory;
@@ -43,6 +45,8 @@ import io.undertow.util.Headers;
 import io.undertow.util.StatusCodes;
 
 final class ModuleDocumentationRedirector implements HttpHandler {
+
+	private static final Logger LOGGER=LoggerFactory.getLogger(ModuleDocumentationRedirector.class);
 
 	private final DocumentationDeploymentFactory deploymentFactory;
 
@@ -69,7 +73,7 @@ final class ModuleDocumentationRedirector implements HttpHandler {
 		final ProxyResolution resolution = Attachments.getResolution(exchange);
 		final Module module=resolution.target();
 		final URI result = this.deploymentFactory.create(module).implementationLandingPage();
-		System.out.printf("Redirecting %s (%s) to %s%n",Tracing.describe(resolution),Tracing.catalogEntry(module),result);
+		LOGGER.debug("Redirecting {} ({}) to {}",Tracing.describe(resolution),Tracing.catalogEntry(module),result);
 		return result;
 	}
 
@@ -83,7 +87,7 @@ final class ModuleDocumentationRedirector implements HttpHandler {
 		if(resolution.isFragment()) {
 			result=result.resolve("#"+resolution.fragment());
 		}
-		System.out.printf("Effective path to %s is %s%n",location,result);
+		LOGGER.trace("Effective path to {} is {}",location,result);
 		return result;
 	}
 }

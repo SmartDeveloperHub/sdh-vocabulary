@@ -28,12 +28,17 @@ package org.smartdeveloperhub.vocabulary.publisher.handlers;
 
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Stopwatch;
 
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 
 final class ProbeTracerHandler implements HttpHandler {
+
+	private static final Logger LOGGER=LoggerFactory.getLogger(ProbeTracerHandler.class);
 
 	private final TimeUnit unit;
 	private final HttpHandler next;
@@ -47,7 +52,7 @@ final class ProbeTracerHandler implements HttpHandler {
 	public void handleRequest(final HttpServerExchange exchange) throws Exception {
 		final Stopwatch watch=MoreAttachments.getStopwatch(exchange);
 		watch.stop();
-		System.out.printf("[%s][%s] Processing took %d %s%n",exchange.getRequestPath(),exchange.getRelativePath(),watch.elapsed(this.unit),this.unit.toString());
+		LOGGER.trace("[{}][{}] Processing took {} {}",exchange.getRequestPath(),exchange.getRelativePath(),watch.elapsed(this.unit),this.unit.toString());
 		this.next.handleRequest(exchange);
 	}
 
