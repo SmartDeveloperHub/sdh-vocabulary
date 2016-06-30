@@ -56,6 +56,14 @@
 		<fileSet>
 			<outputDirectory></outputDirectory>
 			<includes>
+				<include>readme.txt</include>
+			</includes>
+			<directory>${basedir}${file.separator}src${file.separator}test${file.separator}assembly${file.separator}resources${file.separator}</directory>
+			<filtered>true</filtered>
+		</fileSet>
+		<fileSet>
+			<outputDirectory></outputDirectory>
+			<includes>
 				<include>**/*</include>
 			</includes>
 			<directory>${basedir}${file.separator}target${file.separator}client${file.separator}</directory>
