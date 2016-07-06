@@ -318,6 +318,7 @@
 							</descriptors>
 							<delimiters>
 								<delimiter>@{*}</delimiter>
+								<delimiter>${*}</delimiter>
 							</delimiters>
 						</configuration>
 						<phase>package</phase>

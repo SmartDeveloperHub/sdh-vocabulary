@@ -64,6 +64,15 @@
 		<fileSet>
 			<outputDirectory></outputDirectory>
 			<includes>
+				<include>LICENSE</include>
+				<include>NOTICE</include>
+			</includes>
+			<directory>${basedir}${file.separator}target${file.separator}config${file.separator}legal${file.separator}</directory>
+			<filtered>true</filtered>
+		</fileSet>
+		<fileSet>
+			<outputDirectory></outputDirectory>
+			<includes>
 				<include>**/*</include>
 			</includes>
 			<directory>${basedir}${file.separator}target${file.separator}client${file.separator}</directory>
