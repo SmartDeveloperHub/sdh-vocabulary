@@ -40,6 +40,7 @@
 	<uri name="http://www.smartdeveloperhub.org/vocabulary/v1/sdh"          uri="v1/sdh.ttl"/>
 	<uri name="http://www.smartdeveloperhub.org/vocabulary/v1/platform"     uri="v1/platform.ttl"/>
 	<uri name="http://www.smartdeveloperhub.org/vocabulary/v1/ci"           uri="v1/ci.ttl"/>
+	<uri name="http://www.smartdeveloperhub.org/vocabulary/v1/it"           uri="v1/it.ttl"/>
 	<uri name="http://www.smartdeveloperhub.org/vocabulary/v1/scm"          uri="v1/scm.ttl"/>
 	<uri name="http://www.smartdeveloperhub.org/vocabulary/v1/organization" uri="v1/organization.ttl"/>
 	<uri name="http://www.smartdeveloperhub.org/vocabulary/v1/metrics"      uri="v1/metrics.ttl"/>
