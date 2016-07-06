@@ -1,0 +1,455 @@
+<!--
+
+    #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+      This file is part of the Smart Developer Hub Project:
+        http://www.smartdeveloperhub.org/
+
+      Center for Open Middleware
+        http://www.centeropenmiddleware.com/
+    #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+      Copyright (C) 2015-2016 Center for Open Middleware.
+    #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+      Licensed under the Apache License, Version 2.0 (the "License");
+      you may not use this file except in compliance with the License.
+      You may obtain a copy of the License at
+
+                http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing, software
+      distributed under the License is distributed on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+      See the License for the specific language governing permissions and
+      limitations under the License.
+    #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+      Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:0.3.0-SNAPSHOT
+      Bundle      : sdh-vocabulary-0.3.0-SNAPSHOT.jar
+    #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+
+-->
+<h2>2. it: Overview <span class="backlink"> back to <a href="#toc">ToC</a></span></h2>
+<h4>Classes</h4>
+<ul class="hlist">
+   <li>
+      <a href="#BlockerSeverity"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#BlockerSeverity">Blocker severity</a>
+   </li>
+   <li>
+      <a href="#Bug"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#Bug">Bug</a>
+   </li>
+   <li>
+      <a href="#ChangeLog"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#ChangeLog">Change log</a>
+   </li>
+   <li>
+      <a href="#ChangeLogEntry"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#ChangeLogEntry">Change log entry</a>
+   </li>
+   <li>
+      <a href="#ChangeLogItem"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#ChangeLogItem">Change log item</a>
+   </li>
+   <li>
+      <a href="#ChangeLogItemAddValue"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#ChangeLogItemAddValue">Change log item add value</a>
+   </li>
+   <li>
+      <a href="#ChangeLogItemDeleteValue"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#ChangeLogItemDeleteValue">Change log item delete value</a>
+   </li>
+   <li>
+      <a href="#ChangeLogItemUpdate"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#ChangeLogItemUpdate">Change log item update</a>
+   </li>
+   <li>
+      <a href="#Closed"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#Closed">Closed</a>
+   </li>
+   <li>
+      <a href="#Commit"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#Commit">Commit</a>
+   </li>
+   <li>
+      <a href="#Component"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#Component">Component</a>
+   </li>
+   <li>
+      <a href="#CompositeIssue"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#CompositeIssue">Composite issue</a>
+   </li>
+   <li>
+      <a href="#Contributor"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#Contributor">Contributor</a>
+   </li>
+   <li>
+      <a href="#CriticalSeverity"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#CriticalSeverity">Critical severity</a>
+   </li>
+   <li>
+      <a href="#DevelopmentTask"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#DevelopmentTask">Development task</a>
+   </li>
+   <li>
+      <a href="#Improvement"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#Improvement">Enhacement</a>
+   </li>
+   <li>
+      <a href="#GraveSeverity"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#GraveSeverity">Grave severity</a>
+   </li>
+   <li>
+      <a href="#http://www.smartdeveloperhub.org/vocabulary/platform#Harvester"
+         title="http://www.smartdeveloperhub.org/vocabulary/platform#Harvester">Harvester</a>
+   </li>
+   <li>
+      <a href="#HighPriority"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#HighPriority">High priority</a>
+   </li>
+   <li>
+      <a href="#InProgress"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#InProgress">In progress</a>
+   </li>
+   <li>
+      <a href="#Issue"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#Issue">Issue</a>
+   </li>
+   <li>
+      <a href="#Status"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#Status">Issue status</a>
+   </li>
+   <li>
+      <a href="#ITHarvester"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#ITHarvester">Issue Tracker Harvester</a>
+   </li>
+   <li>
+      <a href="#ITVocabulary"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#ITVocabulary">IT vocabulary</a>
+   </li>
+   <li>
+      <a href="#LowPriority"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#LowPriority">Low priority</a>
+   </li>
+   <li>
+      <a href="#MediumPriority"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#MediumPriority">Medium priority</a>
+   </li>
+   <li>
+      <a href="#NormalSeverity"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#NormalSeverity">Normal severity</a>
+   </li>
+   <li>
+      <a href="#Open"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#Open">Open</a>
+   </li>
+   <li>
+      <a href="#Priority"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#Priority">Priority</a>
+   </li>
+   <li>
+      <a href="#Project"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#Project">Project</a>
+   </li>
+   <li>
+      <a href="#Severity"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#Severity">Severity</a>
+   </li>
+   <li>
+      <a href="#Task"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#Task">Task</a>
+   </li>
+   <li>
+      <a href="#TrivialSeverity"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#TrivialSeverity">Trivial severity</a>
+   </li>
+   <li>
+      <a href="#Version"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#Version">Version</a>
+   </li>
+   <li>
+      <a href="#VeryHighPriority"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#VeryHighPriority">
+         <span>very high priority</span>
+      </a>
+   </li>
+</ul><h4>Object Properties</h4><ul class="hlist">
+   <li>
+      <a href="#addedValue"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#addedValue">added vallue</a>
+   </li>
+   <li>
+      <a href="#affectsVersion"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#affectsVersion">affects version</a>
+   </li>
+   <li>
+      <a href="#blocksIssue"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#blocksIssue">blocks issue</a>
+   </li>
+   <li>
+      <a href="#deletedValue"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#deletedValue">deleted value</a>
+   </li>
+   <li>
+      <a href="#hasChangeLog"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#hasChangeLog">has change log</a>
+   </li>
+   <li>
+      <a href="#hasChangeLogEntry"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#hasChangeLogEntry">has change log entry</a>
+   </li>
+   <li>
+      <a href="#hasChangeLogItem"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#hasChangeLogItem">has change log item</a>
+   </li>
+   <li>
+      <a href="#hasPriority"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#hasPriority">has priority</a>
+   </li>
+   <li>
+      <a href="#hasProjectIssue"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#hasProjectIssue">has project issue</a>
+   </li>
+   <li>
+      <a href="#hasProjectTopIssue"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#hasProjectTopIssue">has project top issue</a>
+   </li>
+   <li>
+      <a href="#hasSeverity"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#hasSeverity">has severity</a>
+   </li>
+   <li>
+      <a href="#hasStatus"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#hasStatus">has status</a>
+   </li>
+   <li>
+      <a href="#hasVersion"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#hasVersion">has version</a>
+   </li>
+   <li>
+      <a href="#hasComponent"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#hasComponent">hasComponent</a>
+   </li>
+   <li>
+      <a href="#isAssignedTo"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#isAssignedTo">is assigned to</a>
+   </li>
+   <li>
+      <a href="#isComposedByChangeLogItem"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#isComposedByChangeLogItem">is composed by change log item</a>
+   </li>
+   <li>
+      <a href="#isComposedOfIssue"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#isComposedOfIssue">is composed of issue</a>
+   </li>
+   <li>
+      <a href="#associatedToCommit"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#associatedToCommit">is issue associated to commit</a>
+   </li>
+   <li>
+      <a href="#associatedToComponent"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#associatedToComponent">is issue associated to component</a>
+   </li>
+   <li>
+      <a href="#isIssueOfProject"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#isIssueOfProject">is issue of project</a>
+   </li>
+   <li>
+      <a href="#isReportedBy"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#isReportedBy">is reported by</a>
+   </li>
+   <li>
+      <a href="#newValue"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#newValue">new value</a>
+   </li>
+   <li>
+      <a href="#onProperty"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#onProperty">on property</a>
+   </li>
+   <li>
+      <a href="#previousValue"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#previousValue">previous value</a>
+   </li>
+   <li>
+      <a href="#triggeredBy"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#triggeredBy">triggered by </a>
+   </li>
+   <li>
+      <a href="#versionName"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#versionName">version name</a>
+   </li>
+</ul><h4>Data Properties</h4><ul class="hlist">
+   <li>
+      <a href="#branch"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#branch">branch</a>
+   </li>
+   <li>
+      <a href="#commitId"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#commitId">commit identifier</a>
+   </li>
+   <li>
+      <a href="#componentId"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#componentId">component identifier</a>
+   </li>
+   <li>
+      <a href="#componentTitle"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#componentTitle">component title</a>
+   </li>
+   <li>
+      <a href="#contributorId"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#contributorId">contributor identifier</a>
+   </li>
+   <li>
+      <a href="#contributorName"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#contributorName">contributor name</a>
+   </li>
+   <li>
+      <a href="#dateClosed"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#dateClosed">date close</a>
+   </li>
+   <li>
+      <a href="#dateCreation"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#dateCreation">date creation</a>
+   </li>
+   <li>
+      <a href="#dateOpen"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#dateOpen">date open</a>
+   </li>
+   <li>
+      <a href="#entryTimeStamp"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#entryTimeStamp">entry time stamp</a>
+   </li>
+   <li>
+      <a href="#estimatedTime"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#estimatedTime">estimated time</a>
+   </li>
+   <li>
+      <a href="#hash"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#hash">hash</a>
+   </li>
+   <li>
+      <a href="#issueCustomTag"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#issueCustomTag">issue custom tag</a>
+   </li>
+   <li>
+      <a href="#description"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#description">issue description</a>
+   </li>
+   <li>
+      <a href="#dueTo"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#dueTo">issue due to</a>
+   </li>
+   <li>
+      <a href="#http://www.smartdeveloperhub.org/vocabulary/issueId"
+         title="http://www.smartdeveloperhub.org/vocabulary/issueId">issue identifier</a>
+   </li>
+   <li>
+      <a href="#issueTitle"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#issueTitle">issue title</a>
+   </li>
+   <li>
+      <a href="#mbox"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#mbox">mbox</a>
+   </li>
+   <li>
+      <a href="#projectId"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#projectId">project identifier</a>
+   </li>
+   <li>
+      <a href="#projectTitle"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#projectTitle">project title</a>
+   </li>
+   <li>
+      <a href="#repository"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#repository">repository</a>
+   </li>
+   <li>
+      <a href="#id"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#id">resource identifier</a>
+   </li>
+   <li>
+      <a href="#versionId"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#versionId">version identifier</a>
+   </li>
+   <li>
+      <a href="#versionName"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#versionName">version name</a>
+   </li>
+</ul><h4>Named Individuals</h4><ul class="hlist">
+   <li>
+      <a href="#blockerSeverity"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#blockerSeverity">
+         <span>blocker severity</span>
+      </a>
+   </li>
+   <li>
+      <a href="#closedIssue"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#closedIssue">
+         <span>closed issue</span>
+      </a>
+   </li>
+   <li>
+      <a href="#criticalSeverity"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#criticalSeverity">
+         <span>critical severity</span>
+      </a>
+   </li>
+   <li>
+      <a href="#graveSeverity"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#graveSeverity">
+         <span>grave severity</span>
+      </a>
+   </li>
+   <li>
+      <a href="#highPriority"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#highPriority">
+         <span>high priority</span>
+      </a>
+   </li>
+   <li>
+      <a href="#ITDomain"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#ITDomain">
+         <span>i t domain</span>
+      </a>
+   </li>
+   <li>
+      <a href="#issueInProgress"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#issueInProgress">
+         <span>issue in progress</span>
+      </a>
+   </li>
+   <li>
+      <a href="#lowPriority"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#lowPriority">
+         <span>low priority</span>
+      </a>
+   </li>
+   <li>
+      <a href="#mediumPriority"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#mediumPriority">
+         <span>medium priority</span>
+      </a>
+   </li>
+   <li>
+      <a href="#normalSeverity"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#normalSeverity">
+         <span>normal severity</span>
+      </a>
+   </li>
+   <li>
+      <a href="#openIssue"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#openIssue">
+         <span>open issue</span>
+      </a>
+   </li>
+   <li>
+      <a href="#trivialSeverity"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#trivialSeverity">
+         <span>trivial severity</span>
+      </a>
+   </li>
+   <li>
+      <a href="#veryHighPriority"
+         title="http://www.smartdeveloperhub.org/vocabulary/it#veryHighPriority">
+         <span>very high priority</span>
+      </a>
+   </li>
+</ul>
