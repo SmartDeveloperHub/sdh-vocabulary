@@ -216,7 +216,7 @@
 					</includes>
 				</configuration>
 			</plugin>
-			<!-- Skip external ontologies from license maintenance -->
+			<!-- Skip specific files from license maintenance -->
 			<plugin>
 				<groupId>com.mycila</groupId>
 				<artifactId>license-maven-plugin</artifactId>
@@ -226,6 +226,7 @@
 						<exclude>src/test/resources/assets/**</exclude>
 						<exclude>src/test/resources/templates/**</exclude>
 						<exclude>src/test/resources/org/smartdeveloperhub/vocabulary/language/lexvo.pack</exclude>
+						<exclude>src/test/assembly/resources/readme.txt</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
