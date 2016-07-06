@@ -26,7 +26,7 @@
 ====
 
 ----------------------------------------------------------------------------------------------------
--- Vocabulary Publisher v${vocabularium.version}-b${git.commitsCount} (${git.branch}@${git.buildnumber})
+-- Vocabulary Publisher v@{vocabularium.version}-b@{git.commitsCount} (@{git.branch}@@{git.buildnumber})
 ----------------------------------------------------------------------------------------------------
 
 The purpose of the Vocabulary Publisher is to enable publishing a OWL-based 

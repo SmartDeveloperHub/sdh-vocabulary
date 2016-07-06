@@ -316,7 +316,7 @@
 								<descriptor>src${file.separator}test${file.separator}assembly${file.separator}assembly.xml</descriptor>
 							</descriptors>
 							<delimiters>
-								<delimiter>@</delimiter>
+								<delimiter>@{*}</delimiter>
 							</delimiters>
 						</configuration>
 						<phase>package</phase>
