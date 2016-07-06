@@ -37,9 +37,9 @@ public final class Build extends Resource<Build> {
 	private final List<Execution> executions;
 	private BuildType buildType;
 	private String codebase;
-	private String buildName;
+	private final String buildName;
 
-	Build(DataSet dataSet, String id) {
+	Build(final DataSet dataSet, final String id) {
 		super(id,Build.class);
 		this.dataSet=dataSet;
 		this.buildName = id;
@@ -60,6 +60,7 @@ public final class Build extends Resource<Build> {
 		return this.buildType;
 	}
 
+	@Override
 	public String location() {
 		String result=super.location();
 		if(result==null) {
@@ -80,30 +81,30 @@ public final class Build extends Resource<Build> {
 		return this.executions;
 	}
 
-	public Execution addExecution(String created) {
-		Execution execution =
+	public Execution addExecution(final String created) {
+		final Execution execution =
 			new Execution(this,this.executions.size()).
 				withCreated(created);
 		this.executions.add(execution);
 		return execution;
 	}
 
-	public Build withBuildType(BuildType buildType) {
+	public Build withBuildType(final BuildType buildType) {
 		this.buildType=buildType;
 		return this;
 	}
 
-	public Build withCodebase(String codebase) {
+	public Build withCodebase(final String codebase) {
 		this.codebase=codebase;
 		return this;
 	}
 
 	@Override
-	void assembleItem(Assembler assembler, ValueFactory factory) {
+	void assembleItem(final Assembler assembler, final ValueFactory factory) {
 		super.assembleItem(assembler, factory);
 		assembler.addProperty("ci:codebase", factory.typedLiteral(codebase(),"http://www.w3.org/2001/XMLSchema#anyURI"));
-		List<Value> values=Lists.newArrayList();
-		for(Execution execution:executions) {
+		final List<Value> values=Lists.newArrayList();
+		for(final Execution execution:this.executions) {
 			values.add(factory.relativeUri(execution.id()));
 		}
 		assembler.addProperty("ci:hasExecution", values.toArray(new Value[values.size()]));

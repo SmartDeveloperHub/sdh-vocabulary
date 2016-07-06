@@ -38,9 +38,9 @@ public final class Execution extends Resource<Execution> {
 	private String finished;
 	private Result result;
 
-	private long executionNumber;
+	private final long executionNumber;
 
-	Execution(Build build, long id) {
+	Execution(final Build build, final long id) {
 		super(build.id()+"/"+id,Execution.class);
 		this.build = build;
 		this.executionNumber = id;
@@ -53,7 +53,7 @@ public final class Execution extends Resource<Execution> {
 		return ImmutableList.copyOf(this.state.types());
 	}
 
-	private void setState(State state, Verdict verdict, String finished) {
+	private void setState(final State state, final Verdict verdict, final String finished) {
 		this.state=state;
 		this.finished=finished;
 		this.result=
@@ -81,25 +81,26 @@ public final class Execution extends Resource<Execution> {
 		return this.result.withLocation(resultLocation());
 	}
 
+	@Override
 	public String location() {
-		String result = super.location();
-		if(result==null) {
-			result=composePath(this.build.location(),this.executionNumber);
+		String location = super.location();
+		if(location==null) {
+			location=composePath(this.build.location(),this.executionNumber);
 		}
-		return result;
+		return location;
 	}
 
-	public Execution failed(String finished) {
+	public Execution failed(final String finished) {
 		setState(State.COMPLETE, Verdict.FAILED, finished);
 		return this;
 	}
 
-	public Execution passed(String finished) {
+	public Execution passed(final String finished) {
 		setState(State.COMPLETE, Verdict.PASSED, finished);
 		return this;
 	}
 
-	public Execution warning(String finished) {
+	public Execution warning(final String finished) {
 		setState(State.COMPLETE, Verdict.WARNING, finished);
 		return this;
 	}
@@ -115,11 +116,11 @@ public final class Execution extends Resource<Execution> {
 	}
 
 	@Override
-	void assembleItem(Assembler assembler, ValueFactory factory) {
+	void assembleItem(final Assembler assembler, final ValueFactory factory) {
 		super.assembleItem(assembler, factory);
 		assembler.addProperty("oslc_auto:state", factory.qualifiedName(this.state.resourceName()));
 		assembler.addProperty("oslc_auto:executesAutomationPlan", factory.relativeUri(this.build.id()));
-		if(finished!=null) {
+		if(this.finished!=null) {
 			assembler.addProperty("ci:finished", factory.typedLiteral(this.finished,"http://www.w3.org/2001/XMLSchema#dateTime"));
 		}
 		assembler.addProperty("ci:hasResult", factory.relativeUri(this.result.id()));

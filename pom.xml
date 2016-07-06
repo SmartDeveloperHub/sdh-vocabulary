@@ -59,8 +59,13 @@
 	<!-- =================================================================== -->
 
 	<properties>
-		<sesame.version>2.7.9</sesame.version>
+		<ldp4j.version>0.3.0-SNAPSHOT</ldp4j.version>
+		<vocabularium.version>0.1.0-SNAPSHOT</vocabularium.version>
+		<sesame.version>2.7.16</sesame.version>
 		<jena.version>2.13.0</jena.version>
+		<undertow.version>1.3.17.Final</undertow.version>
+		<jackson.version>2.7.4</jackson.version>
+		<app.publisher.main>org.smartdeveloperhub.vocabulary.publisher.VocabularyPublisher</app.publisher.main>
 	</properties>
 
 	<dependencyManagement>
@@ -84,12 +89,7 @@
 			<artifactId>guava</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-			<scope>test</scope>
-		</dependency>
-
+		<!-- RDF/SPARQL support -->
 		<dependency>
 			<groupId>org.apache.jena</groupId>
 			<artifactId>jena-arq</artifactId>
@@ -102,16 +102,85 @@
 			</exclusions>
 		</dependency>
 
+		<!-- HTTP Server -->
+		<dependency>
+			<groupId>io.undertow</groupId>
+			<artifactId>undertow-core</artifactId>
+			<version>${undertow.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Content negotiation support -->
+		<dependency>
+			<groupId>org.ldp4j.commons</groupId>
+			<artifactId>ldp4j-commons-http</artifactId>
+			<version>${ldp4j.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.ldp4j.commons</groupId>
+			<artifactId>ldp4j-commons-core</artifactId>
+			<version>${ldp4j.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- JSON/YAML parsing -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>${jackson.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jackson.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-yaml</artifactId>
+			<version>${jackson.version}</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<!-- Default logger -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.jayway.restassured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<version>2.9.0</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- CI Testing  -->
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<scope>test</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>org.openrdf.sesame</groupId>
 			<artifactId>sesame-rio-turtle</artifactId>
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Default logger -->
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
+			<groupId>org.ldp4j.commons</groupId>
+			<artifactId>ldp4j-commons-testing</artifactId>
+			<version>${ldp4j.version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -137,17 +206,155 @@
 
 	<build>
 		<plugins>
-			<!-- Skip external ontologies from license maintenance -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<includes>
+						<include>**/*Test.java</include>
+						<include>**/URITests.java</include>
+					</includes>
+				</configuration>
+			</plugin>
+			<!-- Skip specific files from license maintenance -->
 			<plugin>
 				<groupId>com.mycila</groupId>
 				<artifactId>license-maven-plugin</artifactId>
 				<configuration>
 					<excludes>
 						<exclude>src/main/resources/vocabulary/external/**</exclude>
+						<exclude>src/test/resources/assets/**</exclude>
+						<exclude>src/test/resources/templates/**</exclude>
+						<exclude>src/test/resources/org/smartdeveloperhub/vocabulary/language/lexvo.pack</exclude>
+						<exclude>src/test/assembly/resources/readme.txt</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>appassembler-maven-plugin</artifactId>
+				<version>1.10</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>assemble</goal>
+						</goals>
+						<configuration>
+							<assembleDirectory>${project.build.directory}${file.separator}client</assembleDirectory>
+							<binFileExtensions>
+								<unix>.sh</unix>
+							</binFileExtensions>
+							<repositoryLayout>flat</repositoryLayout>
+							<repositoryName>lib</repositoryName>
+							<endorsedDir>ext</endorsedDir>
+							<configurationDirectory>conf</configurationDirectory>
+							<includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
+							<programs>
+								<program>
+									<id>publisher</id>
+									<mainClass>${app.publisher.main}</mainClass>
+									<jvmSettings>
+										<extraArguments>
+											<extraArgument>-Dservice.version=${vocabularium.version}</extraArgument>
+											<extraArgument>-Dservice.build=${git.commitsCount} (${git.branch}@${git.buildnumber})</extraArgument>
+											<extraArgument>-Dlog4j.configuration=logging.cfg</extraArgument>
+										</extraArguments>
+									</jvmSettings>
+								</program>
+							</programs>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<configuration>
+					<outputDirectory>${project.build.directory}/client/ext</outputDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<id>copy-application</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>${project.artifactId}</artifactId>
+									<version>${project.version}</version>
+									<type>test-jar</type>
+									<overWrite>true</overWrite>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<includes>io.undertow:undertow-core,org.apache.jena:jena-arq,org.slf4j:slf4j-log4j12,org.ldp4j.commons:ldp4j-commons-http</includes>
+							<excludes>org.ldp4j.commons:ldp4j-commons-testing</excludes>
+							<excludeGroupIds>org.openrdf.sesame,org.jmockit,junit,org.hamcrest,joda-time,org.codehaus.sonar-plugins.java</excludeGroupIds>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>Create Vocabularium Distribution</id>
+						<configuration>
+							<appendAssemblyId>true</appendAssemblyId>
+							<attach>true</attach>
+							<descriptors>
+								<descriptor>src${file.separator}test${file.separator}assembly${file.separator}assembly.xml</descriptor>
+							</descriptors>
+							<delimiters>
+								<delimiter>@{*}</delimiter>
+								<delimiter>${*}</delimiter>
+							</delimiters>
+						</configuration>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>publisher</id>
+			<build>
+				<defaultGoal>exec:java</defaultGoal>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.4.0</version>
+						<configuration>
+							<mainClass>${app.publisher.main}</mainClass>
+							<classpathScope>test</classpathScope>
+							<systemProperties>
+								<systemProperty>
+									<key>service.version</key>
+									<value>${project.version}</value>
+								</systemProperty>
+							</systemProperties>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>

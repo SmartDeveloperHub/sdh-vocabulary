@@ -40,22 +40,22 @@ public final class VocabularyUtil {
 
 	private static synchronized String vocabularyBase() throws AssertionError {
 		if(vocabularyBase==null) {
-			URL resource = ClassLoader.getSystemResource("org/smartdeveloperhub/vocabulary/vocabulary.properties");
+			final URL resource = ClassLoader.getSystemResource("org/smartdeveloperhub/vocabulary/vocabulary.properties");
 			if(resource==null) {
 				throw new AssertionError("Could not find vocabulary properties");
 			}
-			Properties properties=new Properties();
+			final Properties properties=new Properties();
 			try(InputStream is = resource.openStream()) {
 				properties.load(is);
 				vocabularyBase = properties.getProperty("vocabulary.base");
-			} catch(IOException e) {
-				throw new IllegalStateException("Could not load vocabulary properties");
+			} catch(final IOException e) {
+				throw new IllegalStateException("Could not load vocabulary properties",e);
 			}
 		}
 		return vocabularyBase;
 	}
 
-	public static String vocabularyNamespace(String vocabName) {
+	public static String vocabularyNamespace(final String vocabName) {
 		return vocabularyBase()+vocabName+"#";
 	}
 
