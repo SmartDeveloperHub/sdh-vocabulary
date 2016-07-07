@@ -54,6 +54,53 @@
 
 	<description>The ontologies of the Smart Developer Hub project</description>
 
+	<url>http://www.smartdeveloperhub.org/</url>
+
+	<!-- The development team -->
+
+	<developers>
+		<developer>
+			<id>mestebangutierrez</id>
+			<name>Miguel Esteban Gutiérrez</name>
+			<email>m.esteban.gutierrez@gmail.com</email>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+				<role>product owner</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<id>mestebangutierrez</id>
+			<name>Miguel Esteban Gutiérrez</name>
+			<email>m.esteban.gutierrez@gmail.com</email>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+				<role>product owner</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<id>andresgs77</id>
+			<name>Andrés García Silva</name>
+			<email>andresgs77@gmail.com</email>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<id>mariapoveda</id>
+			<name>María Poveda Villalón</name>
+			<email>mpoveda@fi.upm.es</email>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
+
 	<!-- =================================================================== -->
 	<!--   BUILD SETTINGS                                                    -->
 	<!-- =================================================================== -->
@@ -356,5 +403,25 @@
 			</build>
 		</profile>
 	</profiles>
+
+	<!-- =================================================================== -->
+	<!--   ENVIRONMENT SETTINGS                                              -->
+	<!-- =================================================================== -->
+
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/SmartDeveloperHub/sdh-vocabulary/issues</url>
+	</issueManagement>
+
+	<ciManagement>
+		<system>Travis-CI</system>
+		<url>https://travis-ci.org/SmartDeveloperHub/sdh-vocabulary</url>
+	</ciManagement>
+
+	<scm>
+		<connection>scm:git:git://git@github.com:SmartDeveloperHub/sdh-vocabulary.git</connection>
+		<developerConnection>scm:git:ssh://github.com/SmartDeveloperHub/sdh-vocabulary.git</developerConnection>
+		<url>git://github.com/SmartDeveloperHub/sdh-vocabulary.git</url>
+	</scm>
 
 </project>
