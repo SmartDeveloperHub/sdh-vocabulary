@@ -21,8 +21,8 @@
       See the License for the specific language governing permissions and
       limitations under the License.
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
-      Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:0.3.0-SNAPSHOT
-      Bundle      : sdh-vocabulary-0.3.0-SNAPSHOT.jar
+      Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:0.3.0
+      Bundle      : sdh-vocabulary-0.3.0.jar
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
 
 -->
@@ -44,7 +44,7 @@
 
 	<groupId>org.smartdeveloperhub.vocabulary</groupId>
 	<artifactId>sdh-vocabulary</artifactId>
-	<version>0.3.0-SNAPSHOT</version>
+	<version>0.3.0</version>
 
 	<!-- =================================================================== -->
 	<!--   MODULE INFORMATION                                                -->
