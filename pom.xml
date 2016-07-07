@@ -7,7 +7,7 @@
       Center for Open Middleware
         http://www.centeropenmiddleware.com/
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
-      Copyright (C) 2015 Center for Open Middleware.
+      Copyright (C) 2015-2016 Center for Open Middleware.
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
       Licensed under the Apache License, Version 2.0 (the "License");
       you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@
       See the License for the specific language governing permissions and
       limitations under the License.
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
-      Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:0.2.0
-      Bundle      : sdh-vocabulary-0.2.0.jar
+      Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:0.3.0
+      Bundle      : sdh-vocabulary-0.3.0.jar
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
 
 -->
@@ -39,12 +39,12 @@
 	<parent>
 		<groupId>org.smartdeveloperhub</groupId>
 		<artifactId>sdh-build</artifactId>
-		<version>0.2.0</version>
+		<version>0.3.0</version>
 	</parent>
 
 	<groupId>org.smartdeveloperhub.vocabulary</groupId>
 	<artifactId>sdh-vocabulary</artifactId>
-	<version>0.2.0</version>
+	<version>0.3.0</version>
 
 	<!-- =================================================================== -->
 	<!--   MODULE INFORMATION                                                -->
@@ -54,38 +54,69 @@
 
 	<description>The ontologies of the Smart Developer Hub project</description>
 
+	<url>http://www.smartdeveloperhub.org/</url>
+
+	<!-- The development team -->
+
+	<developers>
+		<developer>
+			<id>mestebangutierrez</id>
+			<name>Miguel Esteban Gutiérrez</name>
+			<email>m.esteban.gutierrez@gmail.com</email>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+				<role>product owner</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<id>mestebangutierrez</id>
+			<name>Miguel Esteban Gutiérrez</name>
+			<email>m.esteban.gutierrez@gmail.com</email>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+				<role>product owner</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<id>andresgs77</id>
+			<name>Andrés García Silva</name>
+			<email>andresgs77@gmail.com</email>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<id>mariapoveda</id>
+			<name>María Poveda Villalón</name>
+			<email>mpoveda@fi.upm.es</email>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
+
 	<!-- =================================================================== -->
 	<!--   BUILD SETTINGS                                                    -->
 	<!-- =================================================================== -->
 
 	<properties>
-		<sesame.version>2.7.9</sesame.version>
+		<ldp4j.version>0.2.1</ldp4j.version>
+		<vocabularium.version>0.1.0</vocabularium.version>
+		<sesame.version>2.7.16</sesame.version>
 		<jena.version>2.13.0</jena.version>
-		<buildDirectoryURI>NULL</buildDirectoryURI>
+		<undertow.version>1.3.17.Final</undertow.version>
+		<jackson.version>2.7.4</jackson.version>
+		<app.publisher.main>org.smartdeveloperhub.vocabulary.publisher.VocabularyPublisher</app.publisher.main>
 	</properties>
 
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>org.ldp4j.commons.rmf</groupId>
-				<artifactId>rmf-api</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openrdf.sesame</groupId>
-				<artifactId>sesame-repository-sail</artifactId>
-				<version>${sesame.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openrdf.sesame</groupId>
-				<artifactId>sesame-sail-memory</artifactId>
-				<version>${sesame.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openrdf.sesame</groupId>
-				<artifactId>sesame-rio-rdfxml</artifactId>
-				<version>${sesame.version}</version>
-			</dependency>
 			<dependency>
 				<groupId>org.openrdf.sesame</groupId>
 				<artifactId>sesame-rio-turtle</artifactId>
@@ -105,18 +136,7 @@
 			<artifactId>guava</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<scope>test</scope>
-		</dependency>
-
+		<!-- RDF/SPARQL support -->
 		<dependency>
 			<groupId>org.apache.jena</groupId>
 			<artifactId>jena-arq</artifactId>
@@ -129,24 +149,51 @@
 			</exclusions>
 		</dependency>
 
+		<!-- HTTP Server -->
 		<dependency>
-			<groupId>org.openrdf.sesame</groupId>
-			<artifactId>sesame-repository-sail</artifactId>
+			<groupId>io.undertow</groupId>
+			<artifactId>undertow-core</artifactId>
+			<version>${undertow.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Content negotiation support -->
+		<dependency>
+			<groupId>org.ldp4j.commons</groupId>
+			<artifactId>ldp4j-commons-http</artifactId>
+			<version>${ldp4j.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.openrdf.sesame</groupId>
-			<artifactId>sesame-sail-memory</artifactId>
+			<groupId>org.ldp4j.commons</groupId>
+			<artifactId>ldp4j-commons-core</artifactId>
+			<version>${ldp4j.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- JSON/YAML parsing -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.openrdf.sesame</groupId>
-			<artifactId>sesame-rio-rdfxml</artifactId>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>${jackson.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.openrdf.sesame</groupId>
-			<artifactId>sesame-rio-turtle</artifactId>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jackson.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-yaml</artifactId>
+			<version>${jackson.version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -154,6 +201,33 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.jayway.restassured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<version>2.9.0</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- CI Testing  -->
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.openrdf.sesame</groupId>
+			<artifactId>sesame-rio-turtle</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.ldp4j.commons</groupId>
+			<artifactId>ldp4j-commons-testing</artifactId>
+			<version>${ldp4j.version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -171,11 +245,6 @@
 
 		<!-- Default mocking frameworks -->
 		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.jmockit</groupId>
 			<artifactId>jmockit</artifactId>
 			<scope>test</scope>
@@ -183,50 +252,158 @@
 	</dependencies>
 
 	<build>
-		<testResources>
-			<testResource>
-				<directory>src${file.separator}test${file.separator}resources</directory>
-				<filtering>true</filtering>
-				<includes>
-					<include>**/*.*</include>
-				</includes>
-			</testResource>
-		</testResources>
 		<plugins>
 			<plugin>
-				<groupId>org.codehaus.gmaven</groupId>
-				<artifactId>gmaven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>buildDirectoryURI</id>
-						<phase>validate</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<color>true</color>
-							<source>
-								prop='buildDirectoryURI'
-								outputDirectory=project.build.properties.get('outputDirectory')
-								buildDirectoryURI=new File(outputDirectory).toURI().toString()+"/"
-								project.properties.setProperty(prop,buildDirectoryURI)
-								println "Project build directory URI ["+prop +"]: " + project.properties.getProperty(prop)
-							</source>
-						</configuration>
-					</execution>
-				</executions>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<includes>
+						<include>**/*Test.java</include>
+						<include>**/URITests.java</include>
+					</includes>
+				</configuration>
 			</plugin>
-			<!-- Skip external ontologies from license maintenance -->
+			<!-- Skip specific files from license maintenance -->
 			<plugin>
 				<groupId>com.mycila</groupId>
 				<artifactId>license-maven-plugin</artifactId>
 				<configuration>
 					<excludes>
 						<exclude>src/main/resources/vocabulary/external/**</exclude>
+						<exclude>src/test/resources/assets/**</exclude>
+						<exclude>src/test/resources/templates/**</exclude>
+						<exclude>src/test/resources/org/smartdeveloperhub/vocabulary/language/lexvo.pack</exclude>
+						<exclude>src/test/assembly/resources/readme.txt</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>appassembler-maven-plugin</artifactId>
+				<version>1.10</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>assemble</goal>
+						</goals>
+						<configuration>
+							<assembleDirectory>${project.build.directory}${file.separator}client</assembleDirectory>
+							<binFileExtensions>
+								<unix>.sh</unix>
+							</binFileExtensions>
+							<repositoryLayout>flat</repositoryLayout>
+							<repositoryName>lib</repositoryName>
+							<endorsedDir>ext</endorsedDir>
+							<configurationDirectory>conf</configurationDirectory>
+							<includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
+							<programs>
+								<program>
+									<id>publisher</id>
+									<mainClass>${app.publisher.main}</mainClass>
+									<jvmSettings>
+										<extraArguments>
+											<extraArgument>-Dservice.version=${vocabularium.version}</extraArgument>
+											<extraArgument>-Dservice.build=${git.commitsCount} (${git.branch}@${git.buildnumber})</extraArgument>
+											<extraArgument>-Dlog4j.configuration=logging.cfg</extraArgument>
+										</extraArguments>
+									</jvmSettings>
+								</program>
+							</programs>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<configuration>
+					<outputDirectory>${project.build.directory}/client/ext</outputDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<includes>io.undertow:undertow-core,org.apache.jena:jena-arq,org.slf4j:slf4j-log4j12,org.ldp4j.commons:ldp4j-commons-http</includes>
+							<excludes>org.ldp4j.commons:ldp4j-commons-testing</excludes>
+							<excludeGroupIds>org.openrdf.sesame,org.jmockit,junit,org.hamcrest,joda-time,org.codehaus.sonar-plugins.java</excludeGroupIds>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>Create Vocabularium Distribution</id>
+						<configuration>
+							<appendAssemblyId>true</appendAssemblyId>
+							<attach>true</attach>
+							<descriptors>
+								<descriptor>src${file.separator}test${file.separator}assembly${file.separator}assembly.xml</descriptor>
+							</descriptors>
+							<delimiters>
+								<delimiter>@{*}</delimiter>
+								<delimiter>${*}</delimiter>
+							</delimiters>
+						</configuration>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>publisher</id>
+			<build>
+				<defaultGoal>exec:java</defaultGoal>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.4.0</version>
+						<configuration>
+							<mainClass>${app.publisher.main}</mainClass>
+							<classpathScope>test</classpathScope>
+							<systemProperties>
+								<systemProperty>
+									<key>service.version</key>
+									<value>${project.version}</value>
+								</systemProperty>
+							</systemProperties>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<!-- =================================================================== -->
+	<!--   ENVIRONMENT SETTINGS                                              -->
+	<!-- =================================================================== -->
+
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/SmartDeveloperHub/sdh-vocabulary/issues</url>
+	</issueManagement>
+
+	<ciManagement>
+		<system>Travis-CI</system>
+		<url>https://travis-ci.org/SmartDeveloperHub/sdh-vocabulary</url>
+	</ciManagement>
+
+	<scm>
+		<connection>scm:git:git://git@github.com:SmartDeveloperHub/sdh-vocabulary.git</connection>
+		<developerConnection>scm:git:ssh://github.com/SmartDeveloperHub/sdh-vocabulary.git</developerConnection>
+		<url>git://github.com/SmartDeveloperHub/sdh-vocabulary.git</url>
+	</scm>
 
 </project>

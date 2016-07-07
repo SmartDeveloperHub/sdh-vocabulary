@@ -10,39 +10,42 @@ DOAP (http://usefulinc.com/ns/doap#) : src/main/resources/vocabulary/external/do
 FOAF (http://xmlns.com/foaf/0.1/) : src/main/resources/vocabulary/external/foaf/foaf.rdf
 + Retrieved from: http://xmlns.com/foaf/spec/
 + Retrieved on: May 25, 2015
-+ License: Creative Commons, Attibution 1.0 Generic
++ License: Creative Commons, Attribution 1.0 Generic
 
 OSLC-ASSET (http://open-services.net/ns/asset#) : src/main/resources/vocabulary/external/oslc/asset.rdf
 + Retrieved from: http://open-services.net/wiki/asset-management/OSLC-Asset-Management-Vocabulary/
 + Retrieved on: May 25, 2015
-+ License: Creative Commons, Attibution 3.0 US
++ License: Creative Commons, Attribution 3.0 US
 
 OSLC-AUTO (http://open-services.net/ns/auto#) : src/main/resources/vocabulary/external/oslc/auto.rdf
 + Retrieved from: http://open-services.net/wiki/automation/OSLC-Automation-Vocabulary/
 + Retrieved on: May 25, 2015
-+ License: Creative Commons, Attibution 3.0 US
++ License: Creative Commons, Attribution 3.0 US
 
 OSLC-CORE (http://open-services.net/ns/core#) : src/main/resources/vocabulary/external/oslc/core.rdf
 + Retrieved from: http://open-services.net/wiki/core/CoreVocabulary/
 + Retrieved on: May 25, 2015
-+ License: Creative Commons, Attibution 3.0 US
++ License: Creative Commons, Attribution 3.0 US
 
 DCTERMS (http://purl.org/dc/terms/#) : src/main/resources/vocabulary/external/dcmi/dcterms.rdf
 + Retrieved from: http://dublincore.org/documents/dcmi-terms/
 + Retrieved on: May 25, 2015
-+ License: Creative Commons, Attibution 3.0 Unported License
++ License: Creative Commons, Attribution 3.0 Unported License
 
 DCMITYPE (http://purl.org/dc/dcmitype/) : src/main/resources/vocabulary/external/dcmi/dctype.rdf
 + Retrieved from: http://dublincore.org/documents/dcmi-terms/
 + Retrieved on: May 25, 2015
-+ License: Creative Commons, Attibution 3.0 Unported License
++ License: Creative Commons, Attribution 3.0 Unported License
 
 DCAM (http://purl.org/dc/dcam/) : src/main/resources/vocabulary/external/dcmi/dcam.rdf
 + Retrieved from: http://dublincore.org/documents/dcmi-terms/
 + Retrieved on: May 25, 2015
-+ License: Creative Commons, Attibution 3.0 Unported License
++ License: Creative Commons, Attribution 3.0 Unported License
 
 DCELEMENTS (http://purl.org/dc/elements/1.1/) : src/main/resources/vocabulary/external/dcmi/dcelements.rdf
 + Retrieved from: http://dublincore.org/documents/dcmi-terms/
 + Retrieved on: May 25, 2015
-+ License: Creative Commons, Attibution 3.0 Unported License
++ License: Creative Commons, Attribution 3.0 Unported License
+
+In addition, this repository contains the jQuery 1.10 distribution which is licensed 
+under the MIT License.

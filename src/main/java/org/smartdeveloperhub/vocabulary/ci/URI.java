@@ -6,7 +6,7 @@
  *   Center for Open Middleware
  *     http://www.centeropenmiddleware.com/
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
- *   Copyright (C) 2015 Center for Open Middleware.
+ *   Copyright (C) 2015-2016 Center for Open Middleware.
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
- *   Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:0.2.0
- *   Bundle      : sdh-vocabulary-0.2.0.jar
+ *   Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:0.3.0
+ *   Bundle      : sdh-vocabulary-0.3.0.jar
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  */
 package org.smartdeveloperhub.vocabulary.ci;
@@ -30,11 +30,11 @@ import org.smartdeveloperhub.vocabulary.ci.spi.RDFUtil;
 
 final class URI {
 
-	private String uriString;
+	private final String uriString;
 
-	private String namespace;
+	private final String namespace;
 
-	private String localName;
+	private final String localName;
 
 	/**
 	 * Creates a new URI from the supplied string.
@@ -44,11 +44,11 @@ final class URI {
 	 * @throws IllegalArgumentException
 	 *         If the supplied URI is not a valid (absolute) URI.
 	 */
-	public URI(String uriString) {
+	public URI(final String uriString) {
 		if(uriString.indexOf(':') < 0) {
 			throw new IllegalArgumentException("Not a valid (absolute) URI: " + uriString);
 		}
-		int localNameIdx = RDFUtil.getLocalNameIndex(uriString);
+		final int localNameIdx = RDFUtil.getLocalNameIndex(uriString);
 		this.uriString = uriString;
 		this.localName=uriString.substring(localNameIdx);
 		this.namespace=uriString.substring(0, localNameIdx);
@@ -72,7 +72,7 @@ final class URI {
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if(this==o) {
 			return true;
 		}

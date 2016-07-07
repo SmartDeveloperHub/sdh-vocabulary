@@ -6,7 +6,7 @@
 #   Center for Open Middleware
 #     http://www.centeropenmiddleware.com/
 # #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
-#   Copyright (C) 2015 Center for Open Middleware.
+#   Copyright (C) 2015-2016 Center for Open Middleware.
 # #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 # #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
-#   Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:0.2.0
-#   Bundle      : sdh-vocabulary-0.2.0.jar
+#   Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:0.3.0
+#   Bundle      : sdh-vocabulary-0.3.0.jar
 # #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
 #
 
@@ -97,12 +97,15 @@
 
 <sdh> rdf:type owl:Ontology ;
   owl:versionIRI <v1/sdh> ;
-  owl:imports 
-    <v1/platform> , 
-    <v1/ci> , 
-    <v1/scm> , 
-    <v1/organization> , 
-    <v1/metrics> .
+  owl:imports
+    <v1/platform> ,
+    <v1/ci> ,
+    <v1/scm> ,
+    <v1/organization> ,
+    <v1/metrics> ,
+    <v1/views> ,
+    <v1/stoa> ,
+    <v1/curator> .
 
 ##-- ENUMERATIONS-------------------------------------------------------------##
 

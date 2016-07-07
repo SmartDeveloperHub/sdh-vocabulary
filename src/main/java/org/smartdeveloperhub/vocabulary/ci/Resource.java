@@ -6,7 +6,7 @@
  *   Center for Open Middleware
  *     http://www.centeropenmiddleware.com/
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
- *   Copyright (C) 2015 Center for Open Middleware.
+ *   Copyright (C) 2015-2016 Center for Open Middleware.
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
- *   Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:0.2.0
- *   Bundle      : sdh-vocabulary-0.2.0.jar
+ *   Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:0.3.0
+ *   Bundle      : sdh-vocabulary-0.3.0.jar
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  */
 package org.smartdeveloperhub.vocabulary.ci;
@@ -43,6 +43,62 @@ public abstract class Resource<T extends Resource<T>> {
 
 	}
 
+	private final class LocalAssembler implements Assembler {
+
+		private final StringBuilder builder;
+		private boolean started;
+
+		private LocalAssembler() {
+			this.builder=
+				new StringBuilder();
+		}
+
+		@Override
+		public void startIndividual(final String id) {
+			this.builder.
+				append("<").append(id).append(">").
+				append(System.lineSeparator());
+			this.started=true;
+		}
+
+		@Override
+		public void endIndividual() {
+			this.builder.append(" .").append(System.lineSeparator());
+		}
+
+		@Override
+		public void addProperty(final String property, final Value... values) {
+			if(values.length==0) {
+				return;
+			}
+			if(!this.started) {
+				this.builder.append(" ;").append(System.lineSeparator());
+			} else {
+				this.started=false;
+			}
+			this.builder.append("  ").append(property).append(" ");
+			if(values.length==1) {
+				this.builder.append(values[0].lexicalForm());
+			} else {
+				final Iterator<Value> iterator = Iterators.forArray(values);
+				do {
+					this.builder.append(System.lineSeparator()).append("    ");
+					this.builder.append(iterator.next().lexicalForm());
+					if(iterator.hasNext()) {
+						this.builder.append(",");
+					}
+				} while(iterator.hasNext());
+			}
+		}
+
+		@Override
+		public String toString() {
+			return this.builder.toString();
+		}
+
+	}
+
+
 	private final String id;
 
 	private String title;
@@ -52,7 +108,7 @@ public abstract class Resource<T extends Resource<T>> {
 
 	private final Class<? extends T> clazz;
 
-	Resource(String id, Class<? extends T> clazz) {
+	Resource(final String id, final Class<? extends T> clazz) {
 		this.id=id;
 		this.clazz = clazz;
 	}
@@ -73,22 +129,22 @@ public abstract class Resource<T extends Resource<T>> {
 		return this.location;
 	}
 
-	public T withTitle(String title) {
+	public T withTitle(final String title) {
 		this.title = title;
-		return clazz.cast(this);
+		return this.clazz.cast(this);
 	}
 
-	public T withCreated(String created) {
+	public T withCreated(final String created) {
 		this.created = created;
-		return clazz.cast(this);
+		return this.clazz.cast(this);
 	}
 
-	public T withLocation(String location) {
+	public T withLocation(final String location) {
 		this.location=location;
-		return clazz.cast(this);
+		return this.clazz.cast(this);
 	}
 
-	final String composePath(String base, Object child) {
+	final String composePath(final String base, final Object child) {
 		String tmp=base;
 		if(!tmp.endsWith("/")) {
 			tmp+="/";
@@ -99,70 +155,15 @@ public abstract class Resource<T extends Resource<T>> {
 
 	abstract List<String> types();
 
-	final String assemble(ValueFactory factory) {
-		class LocalAssembler implements Resource.Assembler {
-
-			private final StringBuilder builder;
-			private boolean started;
-
-			private LocalAssembler() {
-				this.builder=
-					new StringBuilder();
-			}
-
-			@Override
-			public void startIndividual(String id) {
-				this.builder.
-					append("<").append(id).append(">").
-					append(System.lineSeparator());
-				this.started=true;
-			}
-
-			@Override
-			public void endIndividual() {
-				this.builder.append(" .").append(System.lineSeparator());
-			}
-
-			@Override
-			public void addProperty(String property, Value... values) {
-				if(values.length==0) {
-					return;
-				}
-				if(!this.started) {
-					this.builder.append(" ;").append(System.lineSeparator());
-				} else {
-					this.started=false;
-				}
-				this.builder.append("  ").append(property).append(" ");
-				if(values.length==1) {
-					this.builder.append(values[0].lexicalForm());
-				} else {
-					Iterator<Value> iterator = Iterators.forArray(values);
-					do {
-						this.builder.append(System.lineSeparator()).append("    ");
-						this.builder.append(iterator.next().lexicalForm());
-						if(iterator.hasNext()) {
-							this.builder.append(",");
-						}
-					} while(iterator.hasNext());
-				}
-			}
-
-			@Override
-			public String toString() {
-				return this.builder.toString();
-			}
-
-		}
-
-		Assembler assembler=new LocalAssembler();
+	final String assemble(final ValueFactory factory) {
+		final Assembler assembler=new LocalAssembler();
 		assembler.startIndividual(this.id);
 		assembleItem(assembler,factory);
 		assembler.endIndividual();
 		return assembler.toString();
 	}
 
-	void assembleItem(Resource.Assembler assembler, ValueFactory factory) {
+	void assembleItem(final Resource.Assembler assembler, final ValueFactory factory) {
 		assembler.addProperty("a", factory.qualifiedNames(types()));
 		assembler.addProperty("dcterms:identifier", factory.literal(this.id));
 		assembler.addProperty("dcterms:title", factory.literal(this.title));

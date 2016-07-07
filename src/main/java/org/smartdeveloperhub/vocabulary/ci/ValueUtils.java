@@ -6,7 +6,7 @@
  *   Center for Open Middleware
  *     http://www.centeropenmiddleware.com/
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
- *   Copyright (C) 2015 Center for Open Middleware.
+ *   Copyright (C) 2015-2016 Center for Open Middleware.
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
- *   Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:0.2.0
- *   Bundle      : sdh-vocabulary-0.2.0.jar
+ *   Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:0.3.0
+ *   Bundle      : sdh-vocabulary-0.3.0.jar
  * #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
  */
 package org.smartdeveloperhub.vocabulary.ci;
@@ -45,13 +45,13 @@ final class ValueUtils {
 		private final String id;
 		private final int priority;
 
-		Namespace(String id, int priority) {
+		Namespace(final String id, final int priority) {
 			this.id = id;
 			this.priority = priority;
 		}
 
-		static Namespace fromURI(URI uri) {
-			for(Namespace namespace:values()) {
+		static Namespace fromURI(final URI uri) {
+			for(final Namespace namespace:values()) {
 				if(namespace.getId().equals(uri.getNamespace())) {
 					return namespace;
 				}
@@ -59,12 +59,12 @@ final class ValueUtils {
 			return UNKNOWN;
 		}
 
-		int compare(Namespace n) {
-			return priority-n.priority;
+		int compare(final Namespace n) {
+			return this.priority-n.priority;
 		}
 
 		String getId() {
-			return id;
+			return this.id;
 		}
 
 	}
@@ -77,16 +77,16 @@ final class ValueUtils {
 	private final Map<String, String> namespaceTable;
 	private final URI base;
 
-	ValueUtils(URI base, Map<String,String> namespaceTable) {
+	ValueUtils(final URI base, final Map<String,String> namespaceTable) {
 		this.base = base;
 		this.namespaceTable = Maps.newLinkedHashMap();
-		for(Entry<String, String> entry:namespaceTable.entrySet()) {
+		for(final Entry<String, String> entry:namespaceTable.entrySet()) {
 			this.namespaceTable.put(entry.getValue(), entry.getKey());
 		}
 	}
 
-	String writeLiteral(String label, String language, URI datatype) {
-		StringBuilder builder=new StringBuilder();
+	String writeLiteral(final String label, final String language, final URI datatype) {
+		final StringBuilder builder=new StringBuilder();
 
 		if(isMultiLineString(label)) {
 			// Write label as long string
@@ -104,27 +104,24 @@ final class ValueUtils {
 			// Append the literal's language
 			builder.append("@");
 			builder.append(language);
-		} else if(datatype!=null) {
-			// TODO: This should be configurable
-			if(!canOmmitDatatype(datatype)) {
-				/**
-				 * Append the literal's datatype (possibly written as an abbreviated
-				 * URI)
-				 */
-				builder.append("^^");
-				builder.append(writeURIRef(datatype));
-			}
+		} else if(datatype!=null && !canOmmitDatatype(datatype)) {
+			/**
+			 * Append the literal's datatype (possibly written as an abbreviated
+			 * URI)
+			 */
+			builder.append("^^");
+			builder.append(writeURIRef(datatype));
 		}
 		return builder.toString();
 	}
 
-	String writeURI(URI uri) {
+	String writeURI(final URI uri) {
 		return String.format("<%s>",RDFUtil.encodeURIString(uri.toString()));
 	}
 
-	String writeURIRef(URI uri) {
+	String writeURIRef(final URI uri) {
 		String result=null;
-		String prefix=this.namespaceTable.get(uri.getNamespace());
+		final String prefix=this.namespaceTable.get(uri.getNamespace());
 		if(prefix!=null) {
 			// Namespace is mapped to a prefix; write abbreviated URI
 			result=String.format("%s:%s",prefix,uri.getLocalName());
@@ -135,25 +132,25 @@ final class ValueUtils {
 		return result;
 	}
 
-	private java.net.URI resolve(URI uri) {
+	private java.net.URI resolve(final URI uri) {
 		java.net.URI resolved = toURI(uri);
-		if(base!=null) {
-			resolved = toURI(base).relativize(resolved);
+		if(this.base!=null) {
+			resolved = toURI(this.base).relativize(resolved);
 		}
 		return resolved;
 	}
 
-	private java.net.URI toURI(URI uri) {
+	private java.net.URI toURI(final URI uri) {
 		return java.net.URI.create(uri.toString()).normalize();
 	}
 
-	private boolean canOmmitDatatype(URI datatype) {
+	private boolean canOmmitDatatype(final URI datatype) {
 		return
-			datatype.getLocalName().equals("string") &&
-			datatype.getNamespace().equals("http://www.w3.org/2001/XMLSchema#");
+			"string".equals(datatype.getLocalName()) &&
+			"http://www.w3.org/2001/XMLSchema#".equals(datatype.getNamespace());
 	}
 
-	private boolean isMultiLineString(String label) {
+	private boolean isMultiLineString(final String label) {
 		return
 			label.indexOf(NEW_LINE)!=-1 ||
 			label.indexOf(LINE_FEED)!= -1 ||

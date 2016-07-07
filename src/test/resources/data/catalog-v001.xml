@@ -8,7 +8,7 @@
       Center for Open Middleware
         http://www.centeropenmiddleware.com/
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
-      Copyright (C) 2015 Center for Open Middleware.
+      Copyright (C) 2015-2016 Center for Open Middleware.
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
       Licensed under the Apache License, Version 2.0 (the "License");
       you may not use this file except in compliance with the License.
@@ -22,27 +22,15 @@
       See the License for the specific language governing permissions and
       limitations under the License.
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
-      Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:0.2.0
-      Bundle      : sdh-vocabulary-0.2.0.jar
+      Artifact    : org.smartdeveloperhub.vocabulary:sdh-vocabulary:0.3.0
+      Bundle      : sdh-vocabulary-0.3.0.jar
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
 
 -->
-<catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/sdh" uri="${buildDirectoryURI}vocabulary/v1/sdh.ttl"/>
-    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/platform" uri="${buildDirectoryURI}vocabulary/v1/platform.ttl"/>
-    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/ci" uri="${buildDirectoryURI}vocabulary/v1/ci.ttl"/>
-    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/scm" uri="${buildDirectoryURI}vocabulary/v1/scm.ttl"/>
-    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/metrics" uri="${buildDirectoryURI}vocabulary/v1/metrics.ttl"/>
-    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/organization" uri="${buildDirectoryURI}vocabulary/v1/organization.ttl"/>
-    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/curator" uri="${buildDirectoryURI}vocabulary/v1/curator.ttl"/>
-    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/amqp" uri="${buildDirectoryURI}vocabulary/v1/amqp.ttl"/>
-    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/types" uri="${buildDirectoryURI}vocabulary/v1/types.ttl"/>
-    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/oslc_core_plus" uri="${buildDirectoryURI}vocabulary/v1/oslc_core_plus.ttl"/>
-    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/oslc_auto_plus" uri="${buildDirectoryURI}vocabulary/v1/oslc_auto_plus.ttl"/>
-    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/v1/oslc_scm_plus" uri="${buildDirectoryURI}vocabulary/v1/oslc_scm_plus.ttl"/>
-    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/external/dcmi/dctype.rdf" uri="${buildDirectoryURI}vocabulary/external/dcmi/dctype.rdf"/>
-    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/external/dcmi/dcterms.rdf" uri="${buildDirectoryURI}vocabulary/external/dcmi/dcterms.rdf"/>
-    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/external/doap/doap.rdf" uri="${buildDirectoryURI}vocabulary/external/doap/doap.rdf"/>
-    <uri id="User Entered Import Resolution" name="http://www.smartdeveloperhub.org/vocabulary/external/foaf/foaf.rdf" uri="${buildDirectoryURI}vocabulary/external/foaf/foaf.rdf"/>
-    <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base=""/>
+<catalog
+	prefer="public"
+	xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:oasis:names:tc:entity:xmlns:xml:catalog Catalog.xsd">
+	<nextCatalog id="default" catalog="../../../main/resources/vocabulary/catalog.xml"/>
 </catalog>
