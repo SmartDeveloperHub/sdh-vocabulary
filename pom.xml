@@ -107,7 +107,7 @@
 
 	<properties>
 		<ldp4j.version>0.2.1</ldp4j.version>
-		<vocabularium.version>0.1.0-SNAPSHOT</vocabularium.version>
+		<vocabularium.version>0.1.0</vocabularium.version>
 		<sesame.version>2.7.16</sesame.version>
 		<jena.version>2.13.0</jena.version>
 		<undertow.version>1.3.17.Final</undertow.version>
